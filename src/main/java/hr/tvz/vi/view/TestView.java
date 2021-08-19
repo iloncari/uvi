@@ -62,6 +62,8 @@ public class TestView extends VVerticalLayout {
   VechileRepository vechileRepository;
   @Autowired
   PersonRepository personRepository;
+  
+  OrganziationConstants organziationConstants = new OrganziationConstants();
 
   final List<String> oibList = new ArrayList<>();
 
@@ -242,7 +244,7 @@ public class TestView extends VVerticalLayout {
     personDutyPerPersonOib.clear();
     oibList.clear();
     // zajednica zupanija
-    Arrays.asList(OrganziationConstants.vatroganeZajedniceZupanija.split("Next\\r\\n")).stream().forEach(zajednicaZupanije -> {
+    Arrays.asList(organziationConstants.getvatroganeZajedniceZupanija().split("Next\\r\\n")).stream().forEach(zajednicaZupanije -> {
       final List<String> redovi = Arrays.asList(zajednicaZupanije.split("\\r\\n")).stream().collect(Collectors.toList());
       String streetNumber = null;
       String street = null;
@@ -279,7 +281,7 @@ public class TestView extends VVerticalLayout {
     log.info("\n");
     log.info("___________________VZO________________");
     log.info("\n");
-    Arrays.asList(OrganziationConstants.vatroganeZajedniceGradaOpcine.split("Next\\r\\n")).stream().forEach(zajednicaOpcine -> {
+    Arrays.asList(organziationConstants.getvatroganeZajedniceGradaOpcine().split("Next\\r\\n")).stream().forEach(zajednicaOpcine -> {
       final List<String> redovi = Arrays.asList(zajednicaOpcine.split("\\r\\n")).stream().collect(Collectors.toList());
       String streetNumber = null;
       String street = null;
@@ -324,7 +326,7 @@ public class TestView extends VVerticalLayout {
     });
 
     final Map<String, List<String>> opcinaGradovi = new HashMap<>();
-    Arrays.asList(OrganziationConstants.gradOpcina.split("Next\\r\\n")).forEach(gO -> {
+    Arrays.asList(organziationConstants.getgradOpcina().split("Next\\r\\n")).forEach(gO -> {
       final String gradOpcina = gO.replace("\\r\\n", "").trim();
       final List<String> gradOpcinaList = Arrays.asList(gradOpcina.split(","));
       if (opcinaGradovi.containsKey(gradOpcinaList.get(1).toLowerCase())) {
@@ -340,7 +342,7 @@ public class TestView extends VVerticalLayout {
     log.info("___________________DVD________________");
     log.info("\n");
 
-    Arrays.asList(OrganziationConstants.orgDVD.split("Next\\r\\n")).stream().forEach(zajednicaDVD -> {
+    Arrays.asList(organziationConstants.getorgDVD().split("Next\\r\\n")).stream().forEach(zajednicaDVD -> {
       final List<String> redovi = Arrays.asList(zajednicaDVD.split("\\r\\n")).stream().collect(Collectors.toList());
       String streetNumber = null;
       String street = null;

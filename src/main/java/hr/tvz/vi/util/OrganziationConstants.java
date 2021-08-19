@@ -5,7 +5,22 @@
 package hr.tvz.vi.util;
 
 public class OrganziationConstants {
-  public static String vatroganeZajedniceZupanija = "Vatrogasna zajednica Sisačko-moslavačke županije\r\n" +
+	
+	public String getvatroganeZajedniceZupanija() {
+		return vatroganeZajedniceZupanija;
+	}
+	
+	public String getvatroganeZajedniceGradaOpcine() {
+		return vatroganeZajedniceGradaOpcine;
+	}
+	public String getgradOpcina() {
+		return gradOpcina;
+	}
+	
+	public String getorgDVD() {
+		return orgDVD;
+	}
+  public String vatroganeZajedniceZupanija = "Vatrogasna zajednica Sisačko-moslavačke županije\r\n" +
     "Vatrogasna 1, 44000 Sisak\r\n" +
     "tel: +38544526011, +38544526012\r\n" +
     "mob: +38598390100\r\n" +
@@ -145,7 +160,7 @@ public class OrganziationConstants {
     "Predsjednik: Željko Petrović, mob: +385912740430, email: zpetrovic@vzzps.hr\r\n" +
     "Zapovjednik: Josip Ugrin, mob: +385912740517, +38598682717, email: ugrin.josip@gmail.com";
 
-  public static String vatroganeZajedniceGradaOpcine = "Vatrogasna zajednica Sisačko-moslavačke županije\r\n" +
+  public String vatroganeZajedniceGradaOpcine = "Vatrogasna zajednica Sisačko-moslavačke županije\r\n" +
     "Javna vatrogasna postrojba Grada Novske\r\n" +
     "Osječka 20, 44330 Novska\r\n" +
     "Next\r\n" +
@@ -1641,7 +1656,7 @@ public class OrganziationConstants {
     "Predsjednik: Danijel Jurkaš, mob: +385915147543, email: danijel.jurkas@gmail.com\r\n" +
     "Zapovjednik: Tomislav Hribljan, mob: +385914793034, email: tomislavhribljan@gmail.com";
 
-  public static String gradOpcina = " ADA,ŠODOLOVCI\r\n" +
+  public String gradOpcina = " ADA,ŠODOLOVCI\r\n" +
     "Next\r\n" +
     " ADAMOVEC,GRAD ZAGREB\r\n" +
     "Next\r\n" +
@@ -15213,7 +15228,7 @@ public class OrganziationConstants {
     "Next\r\n" +
     " VAROŠ,PERUŠIĆ";
 
-  public static String orgDVD = "Vatrogasna zajednica Vukovarsko-srijemske županije\r\n" +
+  public  String orgDVD = "Vatrogasna zajednica Vukovarsko-srijemske županije\r\n" +
     "Dobrovoljno vatrogasno društvo Antin\r\n" +
     "Gundulićeva 85, 32213 Antin\r\n" +
     "Next\r\n" +
