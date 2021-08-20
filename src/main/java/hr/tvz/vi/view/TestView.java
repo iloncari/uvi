@@ -146,6 +146,8 @@ public class TestView extends VVerticalLayout {
 		  bat = s.useDelimiter("\\Z").next();
 	  }catch (Exception e) {
 		// TODO: handle exception
+		  log.info("error");
+		  log.error(e + "");
 		  return new ArrayList<String>();
 	}
 	  return Arrays.asList(bat.split("Next\\r\\n")).stream().filter(data -> !data.isBlank()).collect(Collectors.toList());
