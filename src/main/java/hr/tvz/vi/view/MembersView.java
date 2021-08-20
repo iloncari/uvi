@@ -103,12 +103,12 @@ public class MembersView extends AbstractGridView<Person> implements HasDynamicT
   protected VHorizontalLayout initBellowButtonLayout() {
     final VHorizontalLayout buttonsLayout = new VHorizontalLayout();
 
-    final VButton newMemberButton = new VButton(getTranslation("membersView.button.newMember.label"));
+    final VButton newMemberButton = new VButton(getTranslation("membersView.button.newMember.label")).withEnabled(getCurrentUser().hasManagerRole());
     newMemberButton.addClickListener(e -> showNewMemberDialog());
     buttonsLayout.add(newMemberButton);
 
     if (!activeOrganization.getChilds().isEmpty()) {
-      final VButton addMemberFromChildButton = new VButton(getTranslation("membersView.button.addFromChilds.label"));
+      final VButton addMemberFromChildButton = new VButton(getTranslation("membersView.button.addFromChilds.label")).withEnabled(getCurrentUser().hasManagerRole());
       addMemberFromChildButton.addClickListener(e -> showAddMemberDialog());
       buttonsLayout.add(addMemberFromChildButton);
     }
@@ -140,7 +140,7 @@ public class MembersView extends AbstractGridView<Person> implements HasDynamicT
   protected void initGrid() {
     getGrid().removeAllColumns();
     getGrid().setSelectionMode(SelectionMode.SINGLE);
-    getGrid().addSelectionListener(e -> removeMemberButton.setEnabled(!e.getFirstSelectedItem().isEmpty()));
+    getGrid().addSelectionListener(e -> removeMemberButton.setEnabled(!e.getFirstSelectedItem().isEmpty() && getCurrentUser().hasManagerRole()));
 
     getGrid().addComponentColumn(per -> {
       if (Utils.isUserHasEditRights(getCurrentUser(), per)) {
@@ -160,7 +160,7 @@ public class MembersView extends AbstractGridView<Person> implements HasDynamicT
     getGrid().addColumn(per -> {
       final Optional<PersonOrganization> perOrg = organizationServiceRef.get().getPersonOrganization(per,
         activeOrganization);
-      return perOrg.isPresent() ? perOrg.get().getDuty() : StringUtils.EMPTY;
+      return perOrg.isPresent() ? getTranslation(perOrg.get().getDuty().getProfessionTranslationKey()) : StringUtils.EMPTY;
     }).setHeader(getTranslation("membersView.membersGrid.duty"));
 
     getGrid().addColumn(per -> personServiceRef.get().isPersonHaveAccessToOrganization(per, activeOrganization) == true

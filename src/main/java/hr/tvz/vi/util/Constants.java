@@ -39,6 +39,10 @@ public final class Constants {
     /** The name. */
     @Getter
     private final String name;
+    
+    public String getProfessionTranslationKey() {
+        return "duty.".concat(name).concat(".label");
+      }
   }
 
   /**
@@ -313,9 +317,7 @@ public final class Constants {
 
     MANAGER("manager"),
 
-    SPECTATOR("spectator"),
-
-    ADMIN("admin");
+    SPECTATOR("spectator");
 
     @Getter
     private final String name;

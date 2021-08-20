@@ -24,9 +24,12 @@ import hr.tvz.vi.util.Constants.Duty;
 import hr.tvz.vi.util.Constants.Gender;
 import hr.tvz.vi.util.Constants.Professions;
 import hr.tvz.vi.util.Constants.UserRole;
-import hr.tvz.vi.util.OrganziationConstants;
 import hr.tvz.vi.util.Utils;
 
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +57,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TestView extends VVerticalLayout {
 
-  @Autowired
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5494255513579362212L;
+@Autowired
   FuelConsuptionRepository fuelConsuptionRepository;
   @Autowired
   ServiceRepository serviceRepository;
@@ -62,8 +69,7 @@ public class TestView extends VVerticalLayout {
   VechileRepository vechileRepository;
   @Autowired
   PersonRepository personRepository;
-  
-  OrganziationConstants organziationConstants = new OrganziationConstants();
+
 
   final List<String> oibList = new ArrayList<>();
 
@@ -93,7 +99,9 @@ public class TestView extends VVerticalLayout {
         clear();
       } else if ("initRealData".equals(operationTextFiedl.getValue())) {
         initRealData();
-      }
+      } else if ("test".equals(operationTextFiedl.getValue())) {
+          test();
+        }
     });
     add(operationTextFiedl);
     add(reinitButton);
@@ -121,6 +129,31 @@ public class TestView extends VVerticalLayout {
 
     organizationRepo.deleteAll();
     log.info("Tables content deleted!");
+
+  }
+  
+  /**
+	 * Gets the file content.
+	 *
+	 * @param fileName the file name
+	 * @return the file content
+	 */
+  private List<String> getFileContent(String fileName) {
+	  try {
+			Path path = Path.of(this.getClass().getResource("/"+fileName).toURI());
+			 RandomAccessFile randomAccessFile = new RandomAccessFile(path.toFile(), "r");
+		        FileChannel fileChannel = randomAccessFile.getChannel();
+		        int bucketSize = 204400;
+		 	   ByteBuffer byteBuffer = ByteBuffer.allocate(bucketSize);
+		 	   fileChannel.read(byteBuffer);
+		 	   byteBuffer.flip();
+		 	  return Arrays.asList(new String(byteBuffer.array()).split("Next\\r\\n")).stream().filter(data -> !data.isBlank()).collect(Collectors.toList());
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			return new ArrayList<String>();
+		}
+
   }
 
   /**
@@ -131,8 +164,8 @@ public class TestView extends VVerticalLayout {
    */
   private List<Person> extractPersonFromOrganization(List<String> redovi) {
     final List<Person> members = new ArrayList<>();
-    Arrays.asList("Predsjednik:", "Zapovjednik:", "Tajnik:").forEach(titula -> {
-      String personRed = redovi.stream().filter(red -> red.startsWith(titula)).findFirst().orElse(null);
+    Arrays.asList("Predsjednik:", "Zapovjednik:", "Tajnik:", "Član:").forEach(titula -> {
+     redovi.stream().filter(red -> red.startsWith(titula)).forEach(personRed ->{
       if (StringUtils.isNotBlank(personRed)) {
         personRed = personRed.replace(titula, "").trim();
         final List<String> personPodaciList = Arrays.asList(personRed.split(","));
@@ -160,7 +193,7 @@ public class TestView extends VVerticalLayout {
             person.setPhoneNumber(mob);
             person.setProfession(Arrays.asList(Professions.values()).get(RandomUtils.nextInt(0, Arrays.asList(Professions.values()).size() - 1)));
             person.setUsername(name.concat(lastname));
-            final Duty duty = titula.equals("Predsjednik:") ? Duty.PRESIDENT : (titula.equals("Tajnik:") ? Duty.SECRETARY : Duty.COMMANDER);
+            final Duty duty = titula.equals("Predsjednik:") ? Duty.PRESIDENT : ((titula.equals("Tajnik:") ? Duty.SECRETARY : (titula.equals("Zapovjednik:") ? Duty.COMMANDER : Duty.NONE)));
             personDutyPerPersonOib.put(person.getIdentificationNumber(), duty);
           }
           if (!members.stream().anyMatch(m -> m.getName().equals(person.getName()))) {
@@ -169,9 +202,19 @@ public class TestView extends VVerticalLayout {
         }
 
       }
+     });
     });
 
     return members;
+  }
+  
+  private void test() {
+	  getFileContent("VZZ.txt").stream().limit(2).forEach(vzz -> {
+		  final List<String> redovi = Arrays.asList(vzz.split("\\r\\n")).stream().collect(Collectors.toList());
+		  log.info("site: " +redovi.size());
+		  redovi.forEach(r -> log.info("*"+r+"*"));
+	  });
+
   }
 
   /**
@@ -232,7 +275,6 @@ public class TestView extends VVerticalLayout {
    */
   private void initRealData() {
     clear();
-    Utils.showSuccessNotification(2000, Position.TOP_CENTER, "Baza inicijalizirana");
 
     final Map<String, Organization> zajednicaZupanijeOrg = new HashMap<>();
     final Map<String, Organization> zajednicaOPcineGrada = new HashMap<>();
@@ -244,7 +286,7 @@ public class TestView extends VVerticalLayout {
     personDutyPerPersonOib.clear();
     oibList.clear();
     // zajednica zupanija
-    Arrays.asList(organziationConstants.getvatroganeZajedniceZupanija().split("Next\\r\\n")).stream().forEach(zajednicaZupanije -> {
+    getFileContent("VZZ.txt").stream().forEach(zajednicaZupanije -> {
       final List<String> redovi = Arrays.asList(zajednicaZupanije.split("\\r\\n")).stream().collect(Collectors.toList());
       String streetNumber = null;
       String street = null;
@@ -277,11 +319,16 @@ public class TestView extends VVerticalLayout {
       final Organization saveOrgZ = saveOrganization(naziv, city, phone, email, street, streetNumber, url);
       zajednicaZupanijeOrg.put(naziv, saveOrgZ);
     });
+    
+    if(zajednicaZupanijeOrg.isEmpty()) {
+    	Utils.showErrorNotification(2000, Position.MIDDLE, "zajednicaEmpty", "VZZ");
+    	return;
+    }
 
     log.info("\n");
     log.info("___________________VZO________________");
     log.info("\n");
-    Arrays.asList(organziationConstants.getvatroganeZajedniceGradaOpcine().split("Next\\r\\n")).stream().forEach(zajednicaOpcine -> {
+   getFileContent("VZO.txt").stream().forEach(zajednicaOpcine -> {
       final List<String> redovi = Arrays.asList(zajednicaOpcine.split("\\r\\n")).stream().collect(Collectors.toList());
       String streetNumber = null;
       String street = null;
@@ -310,7 +357,7 @@ public class TestView extends VVerticalLayout {
       }
       personPerOrgName.put(naziv, extractPersonFromOrganization(redovi));
       final Organization saveOrgOpc = saveOrganization(naziv, city, phone, email, street, streetNumber, url);
-
+      
       zajednicaOPcineGrada.put(naziv, saveOrgOpc);
       final String parentNaziv = redovi.stream().filter(red -> red.contains("županije")).findFirst().orElse(null);
 
@@ -324,9 +371,15 @@ public class TestView extends VVerticalLayout {
         }
       }
     });
+    
+    if(zajednicaOPcineGrada.isEmpty()) {
+    	Utils.showErrorNotification(2000, Position.MIDDLE, "zajednicaEmpty", "VZO");
+    	return;
+    }
+   
 
     final Map<String, List<String>> opcinaGradovi = new HashMap<>();
-    Arrays.asList(organziationConstants.getgradOpcina().split("Next\\r\\n")).forEach(gO -> {
+  getFileContent("MjestaOpcine.txt").forEach(gO -> {
       final String gradOpcina = gO.replace("\\r\\n", "").trim();
       final List<String> gradOpcinaList = Arrays.asList(gradOpcina.split(","));
       if (opcinaGradovi.containsKey(gradOpcinaList.get(1).toLowerCase())) {
@@ -337,12 +390,18 @@ public class TestView extends VVerticalLayout {
         opcinaGradovi.put(gradOpcinaList.get(1).trim().toLowerCase(), gradovu);
       }
     });
+    
+    if(opcinaGradovi.isEmpty()) {
+    	Utils.showErrorNotification(2000, Position.MIDDLE, "zajednicaEmpty", "Opcina Grad");
+    	return;
+    }
+    
 
     log.info("\n");
     log.info("___________________DVD________________");
     log.info("\n");
 
-    Arrays.asList(organziationConstants.getorgDVD().split("Next\\r\\n")).stream().forEach(zajednicaDVD -> {
+   getFileContent("DVD.txt").stream().forEach(zajednicaDVD -> {
       final List<String> redovi = Arrays.asList(zajednicaDVD.split("\\r\\n")).stream().collect(Collectors.toList());
       String streetNumber = null;
       String street = null;
@@ -408,7 +467,14 @@ public class TestView extends VVerticalLayout {
         }
       }
     });
-
+    
+    if(zajednicaDVDMap.isEmpty()) {
+    	Utils.showErrorNotification(2000, Position.MIDDLE, "zajednicaEmpty", "DVD");
+    	return;
+    }
+    
+    
+log.info("_______________________PARENT DVD____________________");
     nazivChildsDVD.forEach((vzo, childs) -> {
       final Organization parent = zajednicaOPcineGrada.get(vzo);
       if (parent == null) {
@@ -425,6 +491,7 @@ public class TestView extends VVerticalLayout {
       organizationRepo.save(parent);
     });
 
+    log.info("_______________________PARENT VZO____________________");
     nazivChildsVZO.forEach((vzz, childs) -> {
       final Organization parent = zajednicaZupanijeOrg.get(vzz);
       if (parent == null) {
@@ -440,7 +507,7 @@ public class TestView extends VVerticalLayout {
       parent.setChilds(childOrgs);
       organizationRepo.save(parent);
     });
-
+    log.info("_______________________MEMBERS____________________");
     final List<Organization> organizacije = organizationRepo.findAll();
     personPerOrgName.forEach((naziv, clanovi) -> {
       final Organization org = organizacije.stream().filter(o -> o.getName().equals(naziv)).findFirst().orElse(null);
@@ -453,7 +520,7 @@ public class TestView extends VVerticalLayout {
       });
     });
 
-    Utils.showSuccessNotification(2000, Position.TOP_CENTER, "Baza inicijalizirana");
+    Utils.showSuccessNotification(2000, Position.TOP_CENTER, "zajednicaNotEmpty");
   }
 
   /**
