@@ -150,6 +150,7 @@ public class TestView extends VVerticalLayout {
 		 	  return Arrays.asList(new String(byteBuffer.array()).split("Next\\r\\n")).stream().filter(data -> !data.isBlank()).collect(Collectors.toList());
 			
 		} catch (Exception e) {
+			log.info("Exception while trying to fetch file content " + e.getMessage());
 			// TODO: handle exception
 			return new ArrayList<String>();
 		}
