@@ -26,9 +26,15 @@ import hr.tvz.vi.util.Constants.Professions;
 import hr.tvz.vi.util.Constants.UserRole;
 import hr.tvz.vi.util.Utils;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.io.Reader;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -39,6 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -132,6 +139,20 @@ public class TestView extends VVerticalLayout {
 
   }
   
+  private List<String> getFileContent1(String fileName) {
+	  String bat = "";
+	  try {
+		  Scanner s = new Scanner(getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8");
+		  bat = s.useDelimiter("\\Z").next();
+	  }catch (Exception e) {
+		// TODO: handle exception
+		  return new ArrayList<String>();
+	}
+	  return Arrays.asList(bat.split("Next\\r\\n")).stream().filter(data -> !data.isBlank()).collect(Collectors.toList());
+		
+	 
+  }
+  
   /**
 	 * Gets the file content.
 	 *
@@ -210,7 +231,7 @@ public class TestView extends VVerticalLayout {
   }
   
   private void test() {
-	  getFileContent("VZZ.txt").stream().limit(2).forEach(vzz -> {
+	  getFileContent1("VZZ.txt").stream().limit(2).forEach(vzz -> {
 		  final List<String> redovi = Arrays.asList(vzz.split("\\r\\n")).stream().collect(Collectors.toList());
 		  log.info("site: " +redovi.size());
 		  redovi.forEach(r -> log.info("*"+r+"*"));
@@ -287,7 +308,7 @@ public class TestView extends VVerticalLayout {
     personDutyPerPersonOib.clear();
     oibList.clear();
     // zajednica zupanija
-    getFileContent("VZZ.txt").stream().forEach(zajednicaZupanije -> {
+    getFileContent1("VZZ.txt").stream().forEach(zajednicaZupanije -> {
       final List<String> redovi = Arrays.asList(zajednicaZupanije.split("\\r\\n")).stream().collect(Collectors.toList());
       String streetNumber = null;
       String street = null;
@@ -329,7 +350,7 @@ public class TestView extends VVerticalLayout {
     log.info("\n");
     log.info("___________________VZO________________");
     log.info("\n");
-   getFileContent("VZO.txt").stream().forEach(zajednicaOpcine -> {
+   getFileContent1("VZO.txt").stream().forEach(zajednicaOpcine -> {
       final List<String> redovi = Arrays.asList(zajednicaOpcine.split("\\r\\n")).stream().collect(Collectors.toList());
       String streetNumber = null;
       String street = null;
@@ -380,7 +401,7 @@ public class TestView extends VVerticalLayout {
    
 
     final Map<String, List<String>> opcinaGradovi = new HashMap<>();
-  getFileContent("MjestaOpcine.txt").forEach(gO -> {
+  getFileContent1("MjestaOpcine.txt").forEach(gO -> {
       final String gradOpcina = gO.replace("\\r\\n", "").trim();
       final List<String> gradOpcinaList = Arrays.asList(gradOpcina.split(","));
       if (opcinaGradovi.containsKey(gradOpcinaList.get(1).toLowerCase())) {
@@ -402,7 +423,7 @@ public class TestView extends VVerticalLayout {
     log.info("___________________DVD________________");
     log.info("\n");
 
-   getFileContent("DVD.txt").stream().forEach(zajednicaDVD -> {
+   getFileContent1("DVD.txt").stream().forEach(zajednicaDVD -> {
       final List<String> redovi = Arrays.asList(zajednicaDVD.split("\\r\\n")).stream().collect(Collectors.toList());
       String streetNumber = null;
       String street = null;
