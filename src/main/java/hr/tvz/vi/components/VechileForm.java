@@ -10,9 +10,12 @@ import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.data.binder.Binder;
 
 import hr.tvz.vi.converter.DoubleToIntegerConverter;
+import hr.tvz.vi.event.ChangeBroadcaster;
+import hr.tvz.vi.event.VechileChangedChangedEvent;
 import hr.tvz.vi.orm.Vechile;
 import hr.tvz.vi.service.AbstractService;
 import hr.tvz.vi.service.VechileService;
+import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.VechileCondition;
 import hr.tvz.vi.util.Constants.VechileType;
@@ -114,6 +117,7 @@ public class VechileForm extends AbstractForm<Vechile> {
         formEntity.setOrganization(currentUser.getActiveOrganization().getOrganization());
         ((VechileService) entityService).saveOrUpdateVechile(formEntity);
         Utils.showSuccessNotification(2000, Position.TOP_CENTER, "memberForm.notification.memberSaved");
+        ChangeBroadcaster.firePushEvent(new VechileChangedChangedEvent(this, formEntity, EventAction.MODIFIED));
         if (navigateToParentsView) {
           UI.getCurrent().navigate(VechilesView.class);
         }

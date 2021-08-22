@@ -14,15 +14,21 @@ import com.vaadin.flow.router.Route;
 
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.components.CustomFormLayout;
+import hr.tvz.vi.orm.Address;
+import hr.tvz.vi.orm.City;
+import hr.tvz.vi.orm.County;
 import hr.tvz.vi.orm.Organization;
+import hr.tvz.vi.service.AddressService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.StyleConstants;
+import jdk.internal.jline.internal.Log;
 import hr.tvz.vi.util.Utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.firitin.components.datepicker.VDatePicker;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
+import org.vaadin.firitin.components.select.VSelect;
 import org.vaadin.firitin.components.textfield.VTextField;
 
 import de.codecamp.vaadin.serviceref.ServiceRef;
@@ -43,43 +49,100 @@ public class OrganizationView extends VVerticalLayout implements HasDynamicTitle
 
   /** The current user. */
   private final CurrentUser currentUser;
-
-  /** The active organization binder. */
-  private final Binder<Organization> activeOrganizationBinder = new Binder<>(Organization.class);
+  
+  /** The organization form layout. */
+  private final CustomFormLayout<Organization> organizationFormLayout;
 
   /** The active organization. */
   private final Organization activeOrganization;
+  
+  /** The county. */
+  private VSelect<County> county;
+	
+  /** The city. */
+  private VSelect<City> city;
 
   /** The organization service ref. */
   @Autowired
   private ServiceRef<OrganizationService> organizationServiceRef;
+  
+  /** The address service ref. */
+  @Autowired
+  private ServiceRef<AddressService> addressServiceRef;
 
   /**
    * Instantiates a new organization view.
    */
   public OrganizationView() {
+	  
+	  
     currentUser = Utils.getCurrentUser(UI.getCurrent());
     activeOrganization = currentUser.getActiveOrganization().getOrganization();
-
-    final CustomFormLayout<Organization> organizationFormLayout = new CustomFormLayout<>(new Binder<>(Organization.class), activeOrganization);
+    
+    organizationFormLayout = new CustomFormLayout<>(new Binder<>(Organization.class), activeOrganization);
     organizationFormLayout.setFormTitle("organizationView.activeOrganization.title");
 
     final VTextField activeOrgName = new VTextField();
     organizationFormLayout.setLabel(activeOrgName, "organizationView.form.field.name");
     organizationFormLayout.processBinder(activeOrgName, null, null, true, "name");
     organizationFormLayout.addTwoColumnItemsLayout(activeOrgName, StyleConstants.WIDTH_75, null, null);
-
-    final VTextField activeOrgCity = new VTextField();
-    organizationFormLayout.setLabel(activeOrgCity, "organizationView.form.field.city");
-    organizationFormLayout.processBinder(activeOrgCity, null, null, true, "city");
-    organizationFormLayout.addTwoColumnItemsLayout(activeOrgCity, null);
-
+    
+    county = new VSelect<County>();
+	county.setItemLabelGenerator(c -> c.getName());
+	organizationFormLayout.setLabel(county, "organizationView.form.field.county");
+	city = new VSelect<City>();
+	city.setItemLabelGenerator(c -> c.getName());
+	county.addValueChangeListener(e -> city.setItems(addressServiceRef.get().getCities(e.getValue())));
+	organizationFormLayout.setLabel(city, "organizationView.form.field.city");
+	organizationFormLayout.processBinder(city, null, null, true, org -> {
+		if(org.getAddress()==null) {
+			return null;
+		}
+		return org.getAddress().getCity();
+	}, (org, city) -> {
+		if(city==null) {
+			return;
+		}
+		Address address = org.getAddress();
+		if(org.getAddress()==null) {
+			address = new Address();
+		}
+		address.setCity(city);
+		org.setAddress(address);
+	});
+	organizationFormLayout.addTwoColumnItemsLayout(county, city);
+	
     final VTextField activeOrgStreet = new VTextField();
     organizationFormLayout.setLabel(activeOrgStreet, "organizationView.form.field.street");
-    organizationFormLayout.processBinder(activeOrgStreet, null, null, true, "street");
+    organizationFormLayout.processBinder(activeOrgStreet, null, null, true, org -> {
+		if(org.getAddress()==null) {
+			return null;
+		}
+		return org.getAddress().getStreet();
+	}, (org, street) -> {
+		Address address = org.getAddress();
+		if(org.getAddress()==null) {
+			address = new Address();
+		}
+		address.setStreet(street);
+		org.setAddress(address);
+	});
+   
     final VTextField activeOrgStreetNumber = new VTextField();
     organizationFormLayout.setLabel(activeOrgStreetNumber, "organizationView.form.field.streetNumber");
-    organizationFormLayout.processBinder(activeOrgStreetNumber, null, null, true, "streetNumber");
+    organizationFormLayout.processBinder(activeOrgStreetNumber, null, null, true, org -> {
+		if(org.getAddress()==null) {
+			return null;
+		}
+		return org.getAddress().getStreetNumber();
+	}, (org, streetNo) -> {
+		Address address = org.getAddress();
+		if(org.getAddress()==null) {
+			address = new Address();
+		}
+		address.setStreetNumber(streetNo);
+		org.setAddress(address);
+	});
     organizationFormLayout.addTwoColumnItemsLayout(activeOrgStreet, StyleConstants.WIDTH_75, activeOrgStreetNumber, StyleConstants.WIDTH_25);
 
     final VTextField activeOrgIDNumber = new VTextField();
@@ -97,6 +160,7 @@ public class OrganizationView extends VVerticalLayout implements HasDynamicTitle
 
     organizationFormLayout.addSaveBeanButton(e -> {
       if (organizationFormLayout.writeBean()) {
+    	  addressServiceRef.get().saveOrUpdateAddress(activeOrganization.getAddress());
         organizationServiceRef.get().saveOrUpdateOrganization(activeOrganization);
         Utils.showSuccessNotification(2000, Position.TOP_CENTER, "organizationView.notification.saveSuccess");
       }
@@ -124,6 +188,11 @@ public class OrganizationView extends VVerticalLayout implements HasDynamicTitle
   @Override
   protected void onAttach(AttachEvent attachEvent) {
     super.onAttach(attachEvent);
-    activeOrganizationBinder.readBean(activeOrganization);
+   
+    county.setItems(addressServiceRef.get().getAllCounties());
+    if(activeOrganization.getAddress() != null ) {
+	 county.setValue(activeOrganization.getAddress().getCity().getCounty());
+    }
+	 organizationFormLayout.readBean();
   }
 }

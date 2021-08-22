@@ -4,6 +4,7 @@
  */
 package hr.tvz.vi.service;
 
+import hr.tvz.vi.orm.Organization;
 import hr.tvz.vi.orm.Person;
 import hr.tvz.vi.orm.PersonRepository;
 
@@ -21,11 +22,7 @@ import org.springframework.stereotype.Service;
  * @since 8:17:25 PM Aug 10, 2021
  */
 @Service
-public class AuthentificationService {
-
-  /** The person repository. */
-  @Autowired
-  PersonRepository personRepository;
+public class AuthentificationService extends AbstractService<Person> {
 
   /**
    * Login.
@@ -39,7 +36,7 @@ public class AuthentificationService {
       return null;
     }
 
-    final Optional<Person> person = personRepository.findByUsername(username);
+    final Optional<Person> person = ((PersonRepository)repository).findByUsername(username);
     if (person.isEmpty()) {
       return null;
     }

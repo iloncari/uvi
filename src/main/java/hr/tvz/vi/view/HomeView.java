@@ -35,6 +35,12 @@ public class HomeView extends VVerticalLayout implements HasDynamicTitle {
       add(new Span(po.getExitDate() + " " + po.isAppRights()));
       add(new Span("______________________________________"));
     });
+    
+    
+    
+    cu.getActiveOrganization().getOrganization().getChilds().forEach(o -> {
+    	add(new Span(o.getName()));
+    });
   }
 
   /**

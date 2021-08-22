@@ -451,9 +451,6 @@ Vatrogasna zajednica grada Zadra
 Put Murvice 24, 23000 Zadar
 fax: 385
 Next
-Vatrogasna zajednica Grada Zagreba
-Našićka 14, 10000 Zagreb
-Next
 Vatrogasna zajednica Zagrebačke županije
 Vatrogasna zajednica grada Dugo Selo
 Osječka 2, 10370 Dugo Selo
@@ -872,14 +869,6 @@ Matije Gupca 8, 49245 Gornja Stubica
 fax: 38549500173
 email: dvd-dobri-zdenci@kr.t-com.hr
 Next
-Vatrogasna zajednica Bjelovarsko-bilogorske županije
-Vatrogasna zajednica općine Hercegovac
-Vladimira Nazora 5, 43284 Hercegovac
-fax: 385
-Predsjednik: Veno Prohaska, mob: +385915758814, email: vprohaska1966@gmail.com
-Zapovjednik: Stjepan Anžlovar, mob: +385992853553, email: stjepan.anzlovar@gmail.com
-Tajnik: Željko Cindrić, mob: +385958336416
-Next
 Vatrogasna zajednica Koprivničko-križevačke županije
 Vatrogasna zajednica općine Hlebine-Koprivnički Bregi
 Trg sv. Roka 1, 48324 Koprivnički Bregi
@@ -898,17 +887,6 @@ fax: 385
 Predsjednik: Veno Prohaska, mob: +385915758814, email: vprohaska1966@gmail.com
 Zapovjednik: Stjepan Anžlovar, mob: +385992853553, email: stjepan.anzlovar@gmail.com
 Tajnik: Željko Cindrić, mob: +385958336416
-Next
-Vatrogasna zajednica Koprivničko-križevačke županije
-Vatrogasna zajednica općine Hlebine-Koprivnički Bregi
-Trg sv. Roka 1, 48324 Koprivnički Bregi
-Predsjednik: Maja Solina, mob: +385992264556, email: solina.maja@gmail.com
-Zapovjednik: Ivica Hrženjak, mob: +385995173663, email: hrzenjakivica415@gmail.com
-Next
-Vatrogasna zajednica Krapinsko-zagorske županije
-Vatrogasna zajednica općine Hum na Sutli
-Hum na Sutli 175, 49231 Hum na Sutli
-fax: 385
 Next
 Vatrogasna zajednica Sisačko-moslavačke županije
 Vatrogasna zajednica općine Jasenovac
@@ -1177,18 +1155,6 @@ Predsjednik: Antun Jošić, mob: +385981722796
 Zapovjednik: Dagmar Kratofil, mob: +385911444507
 Tajnik: Tomislav Jurić, mob: +38598862696
 Next
-Vatrogasna zajednica Varaždinske županije
-Vatrogasna zajednica općine Petrijanec
-Trg Svetog Petra 8, 42206 Petrijanec
-fax: 385
-email: vzo.petrijanec193@gmail.com
-Next
-Vatrogasna zajednica Virovitičko-podravske županije
-Vatrogasna zajednica općine Pitomača
-Vinogradska 32, 33405 Pitomača
-email: vzopitomaca@gmail.com
-Tajnik: David Tržić, mob: +385993315615, email: davidtrzic@gmail.com
-Next
 Vatrogasna zajednica Zagrebačke županije
 Vatrogasna zajednica općine Pisarovina
 Trg Stjepana Radića 13, 10451 Pisarovina
@@ -1198,13 +1164,6 @@ fax: 38516287612
 email: vzo.pisarovina193@gmail.com
 Predsjednik: Ivan Stepić, mob: +38598451195
 Tajnik: Tomislav Stepić, mob: +385989066595, email: tomislav.stepic@zg.t-com.hr
-Next
-Vatrogasna zajednica Koprivničko-križevačke županije
-Vatrogasna zajednica općine Peteranec
-Matije Gupca bb, 48321 Peteranec
-Predsjednik: Damir Jakupec, mob: +38598249491
-Zapovjednik: Darko Palaš, mob: +385989753630, email: dpalas350@gmail.com
-Tajnik: Katarina Palaš, mob: +385917887920
 Next
 Vatrogasna zajednica Koprivničko-križevačke županije
 Vatrogasna zajednica općine Podravske Sesvete
@@ -1222,26 +1181,12 @@ Vinogradska 32, 33405 Pitomača
 email: vzopitomaca@gmail.com
 Tajnik: David Tržić, mob: +385993315615, email: davidtrzic@gmail.com
 Next
-Vatrogasna zajednica Zagrebačke županije
-Vatrogasna zajednica općine Pisarovina
-Trg Stjepana Radića 13, 10451 Pisarovina
-tel: +38516287612
-mob: +38598451195
-fax: 38516287612
-email: vzo.pisarovina193@gmail.com
-Predsjednik: Ivan Stepić, mob: +38598451195
-Tajnik: Tomislav Stepić, mob: +385989066595, email: tomislav.stepic@zg.t-com.hr
-Next
 Vatrogasna zajednica Koprivničko-križevačke županije
 Vatrogasna zajednica općine Peteranec
 Matije Gupca bb, 48321 Peteranec
 Predsjednik: Damir Jakupec, mob: +38598249491
 Zapovjednik: Darko Palaš, mob: +385989753630, email: dpalas350@gmail.com
 Tajnik: Katarina Palaš, mob: +385917887920
-Next
-Vatrogasna zajednica Koprivničko-križevačke županije
-Vatrogasna zajednica općine Podravske Sesvete
-Trg bana Josipa Jelačića 1, 48363 Podravske Sesvete
 Next
 Vatrogasna zajednica Sisačko-moslavačke županije
 Vatrogasna zajednica općine Sunja

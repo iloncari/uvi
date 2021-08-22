@@ -5,9 +5,11 @@
 
 package hr.tvz.vi.view;
 
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -17,12 +19,16 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.router.Route;
 
+import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.components.CustomFormLayout;
 import hr.tvz.vi.components.VechileForm;
 import hr.tvz.vi.event.ChangeBroadcaster;
+import hr.tvz.vi.event.VechileChangedChangedEvent;
 import hr.tvz.vi.orm.Service;
 import hr.tvz.vi.orm.Vechile;
 import hr.tvz.vi.service.VechileService;
+import hr.tvz.vi.util.Utils;
+import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.StyleConstants;
@@ -81,6 +87,18 @@ public class VechileView extends VVerticalLayout implements HasDynamicTitle, Has
   public String getPageTitle() {
     return getTranslation(Routes.getPageTitleKey(Routes.VECHILE));
   }
+  
+  /**
+	 * Vechile changed.
+	 *
+	 * @param changeEvent the change event
+	 */
+  @Subscribe
+  public void vechileChanged(VechileChangedChangedEvent changeEvent) {
+	  if(vechile.getId().equals(changeEvent.getVechile().getId())) {		  
+			  getUI().ifPresent(ui -> ui.access(() -> ui.getPage().reload()));
+	  }
+  }
 
   /**
    * Inits the services grid layout.
@@ -95,10 +113,10 @@ public class VechileView extends VVerticalLayout implements HasDynamicTitle, Has
 
     servicesGrid = new VGrid<>();
     servicesGrid.setItems(vechile.getServices());
-    servicesGrid.addColumn(service -> service.getServiceDate()).setHeader(getTranslation("serviceView.servicesGrid.date"));
-    servicesGrid.addColumn(service -> service.getServiceName()).setHeader(getTranslation("serviceView.servicesGrid.name"));
+    servicesGrid.addColumn(service -> service.getServiceDate()).setHeader(getTranslation("vechileView.servicesGrid.date"));
+    servicesGrid.addColumn(service -> service.getServiceName()).setHeader(getTranslation("vechileView.servicesGrid.name"));
     servicesGrid.addColumn(service -> ObjectUtils.defaultIfNull(service.getPrice(), 0).toString().concat(" kn"))
-      .setHeader(getTranslation("serviceView.servicesGrid.price"));
+      .setHeader(getTranslation("vechileView.servicesGrid.price"));
     servicesGrid.addItemClickListener(e -> servicesGrid.setDetailsVisible(e.getItem(),
       StringUtils.isNotBlank(e.getItem().getServiceDescription()) && !servicesGrid.isDetailsVisible(e.getItem())));
     servicesGrid.setItemDetailsRenderer(new ComponentRenderer<>(s -> {
@@ -153,7 +171,8 @@ public class VechileView extends VVerticalLayout implements HasDynamicTitle, Has
     }
 
     this.vechile = vechileServiceRef.get().getById(Long.valueOf(vechileId)).orElse(null);
-    if (vechile == null) {
+    CurrentUser currentUser = Utils.getCurrentUser(UI.getCurrent());
+    if (vechile == null || vechile.getOrganization().getId() != currentUser.getActiveOrganization().getOrganization().getId()) {
       throw new AccessDeniedException("Access Denied");
     }
   }
@@ -189,7 +208,7 @@ public class VechileView extends VVerticalLayout implements HasDynamicTitle, Has
       if (serviceForm.writeBean()) {
         vechileServiceRef.get().saveOrUpdateServiceRecord(service, vechile);
         dialog.close();
-        UI.getCurrent().getPage().reload();
+        ChangeBroadcaster.firePushEvent(new VechileChangedChangedEvent(this, vechile, EventAction.MODIFIED));
       }
     });
 

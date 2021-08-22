@@ -14,6 +14,7 @@ import com.vaadin.flow.router.Route;
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.components.MemberForm;
 import hr.tvz.vi.orm.Person;
+import hr.tvz.vi.service.AddressService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.PersonService;
 import hr.tvz.vi.util.Constants.Routes;
@@ -53,6 +54,10 @@ public class AddMemberView extends VVerticalLayout implements HasDynamicTitle, H
   /** The organization service ref. */
   @Autowired
   private ServiceRef<OrganizationService> organizationServiceRef;
+  
+  /** The address service ref. */
+  @Autowired
+  private ServiceRef<AddressService> addressServiceRef;
 
   /**
    * Gets the page title.
@@ -74,7 +79,7 @@ public class AddMemberView extends VVerticalLayout implements HasDynamicTitle, H
     super.onAttach(attachEvent);
     final Person newPerson = new Person();
     newPerson.setIdentificationNumber(newMemberIdNumber);
-    final MemberForm newMemberForm = new MemberForm(newPerson, perServiceRef.get(), organizationServiceRef.get(), true);
+    final MemberForm newMemberForm = new MemberForm(newPerson, perServiceRef.get(), organizationServiceRef.get(),addressServiceRef.get(), true);
     add(newMemberForm);
   }
 

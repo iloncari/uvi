@@ -9,6 +9,12 @@ import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
+import hr.tvz.vi.orm.Address;
+import hr.tvz.vi.orm.AddressRepository;
+import hr.tvz.vi.orm.City;
+import hr.tvz.vi.orm.CityRepository;
+import hr.tvz.vi.orm.County;
+import hr.tvz.vi.orm.CountyRepository;
 import hr.tvz.vi.orm.FuelConsuptionRepository;
 import hr.tvz.vi.orm.Organization;
 import hr.tvz.vi.orm.OrganizationRepository;
@@ -22,6 +28,7 @@ import hr.tvz.vi.orm.TaskRepository;
 import hr.tvz.vi.orm.VechileRepository;
 import hr.tvz.vi.util.Constants.Duty;
 import hr.tvz.vi.util.Constants.Gender;
+import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Professions;
 import hr.tvz.vi.util.Constants.UserRole;
 import hr.tvz.vi.util.Utils;
@@ -52,6 +59,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.TransientPropertyValueException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.util.CollectionUtils;
@@ -76,6 +84,10 @@ public class TestView extends VVerticalLayout {
   VechileRepository vechileRepository;
   @Autowired
   PersonRepository personRepository;
+  @Autowired
+  CityRepository cityRepository;
+  @Autowired
+  CountyRepository countyRepository;
 
 
   final List<String> oibList = new ArrayList<>();
@@ -89,6 +101,11 @@ public class TestView extends VVerticalLayout {
   TaskRepository taskRepository;
   @Autowired
   ReportRepository reportRepository;
+  @Autowired
+  AddressRepository addressRepository;
+  
+  List<City> addedCities = new ArrayList<City>();
+  List<County> addedCounties = new ArrayList<County>();
 
   Map<String, List<Person>> personPerOrgName = new HashMap<>();
 
@@ -118,23 +135,40 @@ public class TestView extends VVerticalLayout {
    * Clear.
    */
   private void clear() {
+	  personOrganizationRepository.deleteAll();
     log.info("Deleting tables...");
-    fuelConsuptionRepository.deleteAll();
-    serviceRepository.deleteAll();
-    vechileRepository.deleteAll();
-
-    taskRepository.deleteAll();
-    reportRepository.deleteAll();
-
-    personRepository.findAll().forEach(p -> {
-      p.setOrgList(null);
-      personRepository.save(p);
-    });
-
-    personOrganizationRepository.deleteAll();
-    personRepository.deleteAll();
-
     organizationRepo.deleteAll();
+    log.info("Org deleted");
+    addressRepository.deleteAll();
+    log.info("Address deleted");
+    cityRepository.deleteAll();
+    log.info("City deleted");
+    countyRepository.deleteAll();
+    log.info("Couty deleted");
+   
+    personRepository.deleteAll();
+    log.info("Person deleted");
+    
+    personOrganizationRepository.deleteAll();
+    log.info("PersonOrganizations deleted");
+    
+    
+    fuelConsuptionRepository.deleteAll();
+    log.info("Fuel deleted");
+    serviceRepository.deleteAll();
+    log.info("Service deleted");
+    vechileRepository.deleteAll();
+    log.info("Vechile deleted");
+    
+    taskRepository.deleteAll();
+    log.info("Task deleted");
+    reportRepository.deleteAll();
+    log.info("Report deleted");
+    
+    
+
+   
+
     log.info("Tables content deleted!");
 
   }
@@ -213,6 +247,7 @@ public class TestView extends VVerticalLayout {
             person.setIdentificationNumber(generateOIB());
             person.setLastname(lastname);
             person.setHashedPassword(BCrypt.hashpw(name.concat(lastname), BCrypt.gensalt()));
+            person.setPasswordLength(name.concat(lastname).length());
             person.setName(name);
             person.setPhoneNumber(mob);
             person.setProfession(Arrays.asList(Professions.values()).get(RandomUtils.nextInt(0, Arrays.asList(Professions.values()).size() - 1)));
@@ -309,6 +344,36 @@ public class TestView extends VVerticalLayout {
 
     personDutyPerPersonOib.clear();
     oibList.clear();
+    
+    
+   addedCounties = new ArrayList<County>();
+    getFileContent1("MjestaOpcineZupanije.txt").forEach(red -> {
+    	List<String> redList = Arrays.asList(red.split(",")).stream().collect(Collectors.toList());
+    	if(!addedCounties.stream().anyMatch(county -> county.getName().equals(redList.get(2).trim()))) {
+    		County county = new County();
+    		county.setName(redList.get(2).trim());
+    		addedCounties.add(countyRepository.save(county));
+    	}
+    });
+    
+    addedCounties.clear();
+    addedCounties.addAll(countyRepository.findAll());
+    
+    addedCities = new ArrayList<City>();
+    getFileContent1("MjestaOpcineZupanije.txt").forEach(red -> {
+    	List<String> redList = Arrays.asList(red.split(",")).stream().collect(Collectors.toList());
+    	if(!addedCities.stream().anyMatch(city -> city.getName() == redList.get(0).trim() && city.getMunicipality()==redList.get(1).trim())) {
+    		City city = new City();
+    		city.setName(redList.get(0).trim());
+    		city.setMunicipality(redList.get(1).trim());
+    		city.setCounty(addedCounties.stream().filter(county -> county.getName().equals(redList.get(2).trim())).findFirst().orElse(null));
+    		addedCities.add(cityRepository.save(city));
+    	}
+    });
+    addedCities.clear();
+    addedCities.addAll(cityRepository.findAll());
+    
+   Organization hvz = saveOrganization("Hrvatska vatrogasna zajednica", "Zagreb", "01/3025 026", "hvz@hvz.hr", "Selsa cesta", "90a", "www.hvz.gov.hr");    
     // zajednica zupanija
     getFileContent1("VZZ.txt").stream().forEach(zajednicaZupanije -> {
       final List<String> redovi = Arrays.asList(zajednicaZupanije.split("\\r\\n")).stream().collect(Collectors.toList());
@@ -383,7 +448,7 @@ public class TestView extends VVerticalLayout {
       final Organization saveOrgOpc = saveOrganization(naziv, city, phone, email, street, streetNumber, url);
       
       zajednicaOPcineGrada.put(naziv, saveOrgOpc);
-      final String parentNaziv = redovi.stream().filter(red -> red.contains("županije")).findFirst().orElse(null);
+      final String parentNaziv = redovi.stream().filter(red -> red.contains("županije") || red.toLowerCase().equals("vatrogasna zajednica grada zagreba")).findFirst().orElse(null);
 
       if (StringUtils.isNotBlank(parentNaziv)) {
         if (nazivChildsVZO.containsKey(parentNaziv)) {
@@ -431,7 +496,7 @@ public class TestView extends VVerticalLayout {
       String street = null;
       String city = null;
 
-      final String naziv = redovi.stream().filter(red -> red.startsWith("Dobrovoljno vatrogasno")).findFirst().orElse("");
+      final String naziv = redovi.stream().filter(red -> red.toLowerCase().startsWith("dobrovoljno vatrogasno")).findFirst().orElse("");
       String phone = getRed("tel:", redovi);
       if (phone != null && phone.contains(",")) {
         phone = Arrays.asList(phone.split(",")).get(0);
@@ -462,7 +527,7 @@ public class TestView extends VVerticalLayout {
 
       String opcina = "";
       for (final Entry<String, List<String>> opcinaGrads : opcinaGradovi.entrySet()) {
-        final String mjestoNaziv = naziv.replace("Dobrovoljno vatrogasno društvo ", "").toLowerCase();
+        final String mjestoNaziv = naziv.toLowerCase().replace("dobrovoljno vatrogasno društvo ", "").trim();
         if (opcinaGrads.getValue().stream().anyMatch(naselje -> mjestoNaziv.equals(naselje))) {
           opcina = opcinaGrads.getKey();
         }
@@ -512,7 +577,10 @@ log.info("_______________________PARENT DVD____________________");
         }
       });
       parent.setChilds(childOrgs);
+   
+   
       organizationRepo.save(parent);
+  
     });
 
     log.info("_______________________PARENT VZO____________________");
@@ -531,6 +599,26 @@ log.info("_______________________PARENT DVD____________________");
       parent.setChilds(childOrgs);
       organizationRepo.save(parent);
     });
+    
+    log.info("_______________________PARENT HVZ____________________");
+    hvz.setChilds(zajednicaZupanijeOrg.values().stream().collect(Collectors.toSet()));
+    organizationRepo.save(hvz);
+    Person hvzMember = new Person();
+    hvzMember.setBirthDate(genLocalDate(1980, 1990));
+    hvzMember.setEmail("slavko.tucakovic@hvz.hr");
+    hvzMember.setGender(Gender.MALE);
+    hvzMember.setHashedPassword(BCrypt.hashpw("SlavkoTucaković", BCrypt.gensalt()));
+    hvzMember.setPasswordLength("SlavkoTucaković".length());
+    hvzMember.setIdentificationNumber(generateOIB());
+    hvzMember.setLastname("Tucaković");
+    hvzMember.setName("Slavko");
+    hvzMember.setPhoneNumber("016475647");
+    hvzMember.setProfession(Professions.FIRST_CLASS_OFFICER);
+    hvzMember.setUsername("SlavkoTucaković");
+    
+    personPerOrgName.put("Hrvatska vatrogasna zajednica", Arrays.asList(hvzMember));
+    personDutyPerPersonOib.put(hvzMember.getIdentificationNumber(), Duty.PRESIDENT);
+    
     log.info("_______________________MEMBERS____________________");
     final List<Organization> organizacije = organizationRepo.findAll();
     personPerOrgName.forEach((naziv, clanovi) -> {
@@ -563,16 +651,33 @@ log.info("_______________________PARENT DVD____________________");
     String url) {
     final String oib = generateOIB();
     final Organization organization = new Organization();
-    organization.setCity(city);
+    
+    City addressCity = addedCities.stream().filter(c -> c.getName().equals(city)).findFirst().orElse(null);
+   if(addressCity != null) {
+	   Address address = new  Address();
+	   address.setCity(addressCity);
+	   address.setStreet(street);
+	   address.setStreetNumber(streetN);
+	//   Address savedAddress = addressRepository.save(address);
+	 //  organization.setAddress(savedAddress);
+   }
+ 
     organization.setContactNumber(phone);
     organization.setEmail(email);
     organization.setIban("HR" + oib);
     organization.setIdentificationNumber(oib);
     organization.setName(name);
     organization.setEstablishmentDate(genLocalDate(1890, 2020));
-    organization.setStreet(street);
-    organization.setStreetNumber(streetN);
     organization.setUrl(url);
+    if(name.equals("Hrvatska vatrogasna zajednica")) {
+    	organization.setLevel(OrganizationLevel.COUNTRY_LEVEL);
+    }else if(name.toLowerCase().contains("županije") || name.toLowerCase().contains("vatrogasna zajednica grada zagreba")) {
+    	organization.setLevel(OrganizationLevel.REGIONAL_LEVEL);
+    }else if(name.toLowerCase().contains("vatrogasna zajednica grada") || name.toLowerCase().contains("vatrogasna zajednica općine")) {
+    	organization.setLevel(OrganizationLevel.CITY_LEVEL);
+    }else {
+    	organization.setLevel(OrganizationLevel.OPERATIONAL_LEVEL);
+    }
     return organizationRepo.save(organization);
   }
 

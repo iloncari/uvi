@@ -14,10 +14,12 @@ import hr.tvz.vi.orm.PersonOrganizationRepository;
 import hr.tvz.vi.orm.PersonRepository;
 import hr.tvz.vi.util.Constants.Duty;
 import hr.tvz.vi.util.Constants.EventAction;
+import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.UserRole;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -73,6 +75,30 @@ public class OrganizationService extends AbstractService<Organization> {
     return personRepository
       .findByUsernameIsNotNullAndOrgList_ExitDateIsNullAndOrgList_JoinDateIsNotNullAndOrgList_AppRightsTrueAndOrgList_OrganizationIdIn(
         parentOrganization.getChilds().stream().map(Organization::getId).collect(Collectors.toList()));
+  }
+  
+  /**
+	 * Gets the report selectable childs per level.
+	 *
+	 * @param organization the organization
+	 * @return the report selectable childs per level
+	 */
+  public List<Organization> getReportSelectableChildsPerLevel(Organization organization){
+	 
+	  if(organization == null || organization.getLevel() == null) {
+		  return new ArrayList<Organization>();
+	  }
+
+	  if(OrganizationLevel.COUNTRY_LEVEL.equals(organization.getLevel() )) {
+		  return ((OrganizationRepository)repository).findByLevel(OrganizationLevel.OPERATIONAL_LEVEL);
+	  }else if(OrganizationLevel.REGIONAL_LEVEL.equals(organization.getLevel())){
+		  List<Integer> parentIds = new ArrayList<Integer>();
+		  organization.getChilds().forEach(cityLevelOrg -> parentIds.add(cityLevelOrg.getId().intValue()));
+		  return ((OrganizationRepository)repository).findByLevelAndParentIdIn(OrganizationLevel.OPERATIONAL_LEVEL, parentIds);
+	  }else if(OrganizationLevel.CITY_LEVEL.equals(organization.getLevel() )) {
+		  return ((OrganizationRepository)repository).findByLevelAndParentId(OrganizationLevel.OPERATIONAL_LEVEL, organization.getId().intValue());
+	  }
+	  return Arrays.asList(organization);
   }
 
   /**

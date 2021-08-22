@@ -112,7 +112,18 @@ public class LoginView extends VVerticalLayout implements HasDynamicTitle {
     passwordField.addClassNames(StyleConstants.WIDTH_100.getName());
     // passwordField.setValue("sk8EbXy6");
     formLayout.add(passwordField);
-
+    usernameField.setValueChangeMode(ValueChangeMode.EAGER);
+    usernameField.addValueChangeListener(e -> {
+    	if(e.getValue().equals("I") && passwordField.isEmpty()) {
+    		usernameField.setValue("IgorLončarić");
+    		passwordField.setValue("IgorLončarić");
+    	}
+    	if(e.getValue().equals("T") && passwordField.isEmpty()) {
+    		usernameField.setValue("TestTest");
+    		passwordField.setValue("TestTest");
+    	}
+    });
+    
     final VButton signInButton = new VButton(getTranslation("loginView.form.button.signIn.label"),
       e -> login());
     signInButton.addClassNames(StyleConstants.BUTTON_BLUE.getName(), StyleConstants.WIDTH_100.getName());

@@ -4,14 +4,20 @@
  */
 package hr.tvz.vi.components;
 
+import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.value.ValueChangeMode;
 
+import hr.tvz.vi.orm.Address;
+import hr.tvz.vi.orm.City;
+import hr.tvz.vi.orm.County;
 import hr.tvz.vi.orm.Organization;
 import hr.tvz.vi.orm.Person;
+import hr.tvz.vi.orm.PersonOrganization;
 import hr.tvz.vi.service.AbstractService;
+import hr.tvz.vi.service.AddressService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.PersonService;
 import hr.tvz.vi.util.Constants.Gender;
@@ -22,6 +28,7 @@ import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.view.MembersView;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -44,9 +51,18 @@ public class MemberForm extends AbstractForm<Person> {
 
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = 252125676081010394L;
+  
+  /** The county. */
+  private VSelect<County> county;
 
+   /** The contact layout. */
+   CustomFormLayout<Person> contactLayout;
+   
   /** The organization service. */
   private final OrganizationService organizationService;
+  
+  /** The address service ref. */
+  private final AddressService addressService;
 
   /**
    * Instantiates a new member form.
@@ -55,9 +71,10 @@ public class MemberForm extends AbstractForm<Person> {
    * @param personService the person service
    * @param organizationService the organization service
    */
-  public MemberForm(Person person, AbstractService<Person> personService, AbstractService<Organization> organizationService, boolean navigateToParentsView) {
+  public MemberForm(Person person, AbstractService<Person> personService, AbstractService<Organization> organizationService, AbstractService<Address> addressService, boolean navigateToParentsView) {
     super(person, personService, navigateToParentsView);
     this.organizationService = (OrganizationService) organizationService;
+    this.addressService = (AddressService)addressService;
   }
 
   /**
@@ -66,7 +83,8 @@ public class MemberForm extends AbstractForm<Person> {
   @Override
   @SuppressWarnings("unchecked")
   protected void initForm() {
-    final CustomFormLayout<Person> basicDataLayout = (CustomFormLayout<Person>) new CustomFormLayout<>(new Binder<>(Person.class), formEntity)
+	  Binder<Person> b = new Binder<>(Person.class);
+    final CustomFormLayout<Person> basicDataLayout = (CustomFormLayout<Person>) new CustomFormLayout<>(b, formEntity)
       .withClassName(StyleConstants.WIDTH_50.getName());
     basicDataLayout.setFormTitle("memberForm.basicData.label");
     final VTextField nameField = new VTextField();
@@ -99,7 +117,7 @@ public class MemberForm extends AbstractForm<Person> {
 
     basicDataLayout.readBean();
 
-    final CustomFormLayout<Person> contactLayout = new CustomFormLayout<>(new Binder<>(Person.class), formEntity);
+    contactLayout = new CustomFormLayout<>(new Binder<>(Person.class), formEntity);
     contactLayout.setFormTitle("memberForm.contactData.label");
     final VEmailField emailField = new VEmailField();
     contactLayout.setLabel(emailField, "memberForm.field.email");
@@ -109,51 +127,75 @@ public class MemberForm extends AbstractForm<Person> {
     contactLayout.processBinder(phoneNumberField, null, null, false, "phoneNumber");
     contactLayout.addTwoColumnItemsLayout(emailField, phoneNumberField);
 
-    final VTextField cityField = new VTextField();
-    contactLayout.setLabel(cityField, "memberForm.field.residenceCity");
-    contactLayout.processBinder(cityField, null, null, false, "residenceCity");
-    contactLayout.addTwoColumnItemsLayout(cityField, null);
-
-    final VEmailField streetField = new VEmailField();
+    county = new VSelect<County>();
+	county.setItemLabelGenerator(c -> c.getName());
+	contactLayout.setLabel(county, "memberForm.field.residenceCounty");
+    VSelect<City> city = new VSelect<City>();
+	city.setItemLabelGenerator(c -> c.getName());
+	county.addValueChangeListener(e -> city.setItems(addressService.getCities(e.getValue())));
+	contactLayout.setLabel(city, "reportEventView.form.residenceAddress.city");
+	contactLayout.processBinder(city, null, null, false, "residenceAddress.city");
+	contactLayout.addTwoColumnItemsLayout(county, city);
+   
+    final VTextField streetField = new VTextField();
     contactLayout.setLabel(streetField, "memberForm.field.residenceStreet");
-    contactLayout.processBinder(streetField, null, null, false, "residenceStreet");
+   contactLayout.processBinder(streetField, null, null, false, "residenceAddress.street");
     final VTextField steetNumberField = new VTextField();
     contactLayout.setLabel(steetNumberField, "memberForm.field.residenceStreetNumber");
-    contactLayout.processBinder(steetNumberField, null, null, false, "residenceStreetNumber");
+    contactLayout.processBinder(steetNumberField, null, null, false, "residenceAddress.streetNumber");
     contactLayout.addTwoColumnItemsLayout(streetField, steetNumberField);
-
-    contactLayout.readBean();
 
     final CustomFormLayout<Person> appDataLayout = (CustomFormLayout<Person>) new CustomFormLayout<>(new Binder<>(Person.class), formEntity)
       .withClassName(StyleConstants.WIDTH_50.getName());
     appDataLayout.setFormTitle("memberForm.appData.label");
 
-    final VTextField usernameField = new VTextField();
+    final boolean changePasswordEnabled = currentUser.getPerson().getIdentificationNumber().equals(formEntity.getIdentificationNumber())
+    	      || formEntity.getId()==null;
+    final VTextField usernameField = new VTextField().withEnabled(changePasswordEnabled);
     appDataLayout.setLabel(usernameField, "memberForm.field.username");
     appDataLayout.processBinder(usernameField, null, null, false, "username");
-    final VCheckBox accessRight = new VCheckBox();
+    
+    final VCheckBox accessRight = new VCheckBox().withEnabled(changePasswordEnabled || currentUser.hasManagerRole());
     accessRight.setLabelAsHtml(getTranslation("memberForm.field.accessRights"));
+    if(formEntity.getOrgList()!=null) {
+    Optional<PersonOrganization> currentPO = formEntity.getOrgList().stream().filter(po -> po.getOrganization().getId().equals(currentUser.getActiveOrganization().getId())).findFirst();
+    if(currentPO.isPresent()) {
+    	accessRight.setValue(currentPO.get().isAppRights());
+    }
+    }
     appDataLayout.addTwoColumnItemsLayout(usernameField, accessRight);
 
-    final boolean changePasswordEnabled = currentUser.getPerson().getIdentificationNumber() == formEntity.getIdentificationNumber()
-      || UserRole.MANAGER.equals(currentUser.getActiveOrganization().getRole());
-    final VPasswordField passwordField = new VPasswordField().withEnabled(changePasswordEnabled);
+   
+   StringBuilder builder = new StringBuilder();
+  for(int i = 0; i < formEntity.getPasswordLength(); i++) {
+	  builder.append("*");
+  }
+  final String value = builder.toString();
+  boolean passCleared=false || value.isBlank();
+    final VPasswordField passwordField = new VPasswordField().withEnabled(changePasswordEnabled).withValue(value);
+    passwordField.setRevealButtonVisible(passCleared);
+    
     appDataLayout.setLabel(passwordField, "memberForm.field.password");
-    final VPasswordField repeatPasswordField = new VPasswordField().withEnabled(changePasswordEnabled);
+    final VPasswordField repeatPasswordField = new VPasswordField().withEnabled(changePasswordEnabled).withValue(value);
+    repeatPasswordField.setRevealButtonVisible(passCleared);
     appDataLayout.setLabel(repeatPasswordField, "memberForm.field.repeatPassword");
     appDataLayout.addTwoColumnItemsLayout(passwordField, repeatPasswordField);
     accessRight.setEnabled(currentUser.hasManagerRole() && StringUtils.isNoneEmpty(passwordField.getValue(), repeatPasswordField.getValue()));
     appDataLayout.readBean();
 
     final VButton saveButton = new VButton(getTranslation("button.save"));
-    saveButton.addClickListener(e -> {
+    saveButton.addClickListener(e -> { 	
       boolean succes = true;
       succes = basicDataLayout.writeBean();
       succes = appDataLayout.writeBean();
       succes = contactLayout.writeBean();
-      if (succes && !repeatPasswordField.isInvalid() && !passwordField.isInvalid()) {
-        formEntity
-          .setHashedPassword(StringUtils.isNotBlank(repeatPasswordField.getValue()) ? BCrypt.hashpw(repeatPasswordField.getValue(), BCrypt.gensalt()) : null);
+      if (succes) {
+    	  if(changePasswordEnabled && !StringUtils.equals(passwordField.getValue(), value) && StringUtils.isNotBlank(repeatPasswordField.getValue())) {
+    		  formEntity
+              .setHashedPassword(BCrypt.hashpw(repeatPasswordField.getValue(), BCrypt.gensalt()));
+    	  }
+        
+        addressService.saveOrUpdateAddress(formEntity.getResidenceAddress());
         ((PersonService) entityService).saveOrUpdatePerson(formEntity);
         formEntity.getOrgList().stream().filter(po -> po.getOrganization().getId().equals(currentUser.getActiveOrganization().getId())).findFirst()
           .ifPresent(po -> po.setAppRights(accessRight.getValue()));
@@ -181,9 +223,15 @@ public class MemberForm extends AbstractForm<Person> {
           passwordField.setInvalid(true);
           repeatPasswordField.setErrorMessage(getTranslation("memberForm.field.password.notMatch.error"));
         }
+        
+        if(!StringUtils.equals(value, e.getValue()) && StringUtils.equals(value, repeatPasswordField.getValue())) {
+        	repeatPasswordField.setValue(null);
+        }
+        
         accessRight.setEnabled(currentUser.hasManagerRole() && StringUtils.isNoneEmpty(passwordField.getValue(), repeatPasswordField.getValue())
           && !passwordField.isInvalid() && !repeatPasswordField.isInvalid());
         saveButton.setEnabled(!passwordField.isInvalid() && !repeatPasswordField.isInvalid());
+        passwordField.setRevealButtonVisible(passCleared);
       });
 
       repeatPasswordField.setValueChangeMode(ValueChangeMode.EAGER);
@@ -194,6 +242,10 @@ public class MemberForm extends AbstractForm<Person> {
           repeatPasswordField.setErrorMessage(getTranslation("memberForm.field.password.notMatch.error"));
           repeatPasswordField.setInvalid(true);
         }
+        if(!StringUtils.equals(value, e.getValue()) && StringUtils.equals(value, passwordField.getValue())) {
+        	passwordField.setValue(null);
+        }
+        repeatPasswordField.setRevealButtonVisible(passCleared);
 
         accessRight.setEnabled(currentUser.hasManagerRole() && StringUtils.isNoneEmpty(passwordField.getValue(), repeatPasswordField.getValue())
           && !passwordField.isInvalid() && !repeatPasswordField.isInvalid());
@@ -205,5 +257,19 @@ public class MemberForm extends AbstractForm<Person> {
     final VHorizontalLayout userDataAppDataLayout = new VHorizontalLayout().withClassName(StyleConstants.WIDTH_100.getName());
     userDataAppDataLayout.add(basicDataLayout, appDataLayout);
     add(userDataAppDataLayout, contactLayout, saveButton);
+  }
+
+  /**
+   * On attach.
+   *
+   * @param attachEvent the attach event
+   */
+  @Override
+  protected void onAttach(AttachEvent attachEvent) {
+	  super.onAttach(attachEvent);
+	 county.setItems(addressService.getAllCounties());
+	 county.setValue(formEntity.getResidenceAddress().getCity().getCounty());
+	 contactLayout.readBean();
+	 
   }
 }

@@ -32,6 +32,7 @@ import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.ImageConstants;
+import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.SubscriberScope;
 import hr.tvz.vi.util.Utils;
@@ -68,6 +69,12 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
 
   /** The vechiles item badge. */
   private DefaultBadgeHolder vechilesItemBadge;
+  
+  /** The report event item. */
+  private LeftNavigationItem reportEventItem;
+  
+  /** The reports item. */
+  private LeftNavigationItem reportsItem;
 
   /** The person organization select. */
   private VSelect<PersonOrganization> personOrganizationSelect;
@@ -135,7 +142,14 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
       VechilesView.class);
     vechilesItemBadge = new DefaultBadgeHolder();
     vechilesItemBadge.bind(vechilesItem.getBadge());
-    leftMenuBuilder.addToSection(Section.DEFAULT, homeItem, organizationItem, membersItem, vechilesItem);
+    
+    reportEventItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.REPORT_EVENT)), VaadinIcon.PLUS.create(),
+    	      ReportEventView.class);
+    
+    reportsItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.REPORTS)), VaadinIcon.LIST.create(),
+    	      ReportsView.class);
+    leftMenuBuilder.addToSection(Section.DEFAULT, homeItem, organizationItem, membersItem, vechilesItem, reportEventItem, reportsItem);
+   
     return leftMenuBuilder.build();
   }
 
@@ -162,6 +176,7 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
     super.onAttach(attachEvent);
     ChangeBroadcaster.registerToPushEvents(this);
     setActiveOrganizationMembersBadge();
+    reportEventItem.setVisible(currentUser.hasManagerRole());
   }
 
   /**

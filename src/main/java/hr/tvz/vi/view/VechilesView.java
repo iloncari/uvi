@@ -4,6 +4,7 @@
  */
 package hr.tvz.vi.view;
 
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.data.value.ValueChangeMode;
@@ -11,11 +12,17 @@ import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 
+import hr.tvz.vi.event.ChangeBroadcaster;
+import hr.tvz.vi.event.VechileChangedChangedEvent;
 import hr.tvz.vi.orm.Organization;
 import hr.tvz.vi.orm.Vechile;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.VechileService;
+import hr.tvz.vi.util.Constants.EventAction;
+import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.Routes;
+import hr.tvz.vi.util.Constants.SubscriberScope;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +45,9 @@ import de.codecamp.vaadin.serviceref.ServiceRef;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 4:34:41 PM Aug 14, 2021
  */
+@Slf4j
 @Route(value = Routes.VECHILES, layout = MainAppLayout.class)
+@EventSubscriber(scope = SubscriberScope.PUSH)
 public class VechilesView extends AbstractGridView<Vechile> implements HasDynamicTitle {
 
   /** The Constant serialVersionUID. */
@@ -77,7 +86,20 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
   public String getPageTitle() {
     return getTranslation(Routes.getPageTitleKey(Routes.VECHILES));
   }
-
+  /**
+ 	 * Vechile changed.
+ 	 *
+ 	 * @param changeEvent the change event
+ 	 */
+   @Subscribe
+   public void vechileChanged(VechileChangedChangedEvent changeEvent) {
+ 	  if(getCurrentUser().getActiveOrganization().getOrganization().getId().equals(changeEvent.getVechile().getOrganization().getId())) {
+ 		  getUI().ifPresent(ui -> ui.access(() -> {
+ 			 getGrid().setItems(getGridItems());
+ 	 		  getGrid().getDataProvider().refreshAll(); 
+ 		  }));
+ 	  }
+   }
   /**
    * Gets the view title.
    *
@@ -106,13 +128,13 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
     buttonsLayout.add(deleteVechileButton
       .withText(getTranslation("vechilesView.button.removeVechile.label"))
       .withConfirmText(getTranslation("button.confirm"))
-      .withRejectText(getTranslation("button.cancel"))
+      .withRejectText(getTranslation("button.close"))
       .withPromptText(getTranslation("areYouSure.label"))
       .withHeaderText(getTranslation("vechilesView.removeVechileDialog.title"))
       .withConfirmHandler(() -> {
         getGrid().getSelectedItems().stream().findFirst().ifPresent(vechile -> {
           vechileServiceRef.get().deleteVechile(vechile);
-          // event
+          ChangeBroadcaster.firePushEvent(new VechileChangedChangedEvent(this, vechile, EventAction.REMOVED));
         });
       }));
 
@@ -143,8 +165,14 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
     getGrid().addColumn(vechile -> vechile.getLicencePlateNumber()).setHeader(getTranslation("vechilesView.vechilesGrid.licencePlateNumber"));
     getGrid().addColumn(vechile -> getTranslation(vechile.getCondition().getLabelKey())).setHeader(getTranslation("vechilesView.vechilesGrid.condition"));
 
-    getGrid().addItemClickListener(e -> UI.getCurrent().navigate(VechileView.class, e.getItem().getId().toString()));
+    getGrid().addItemClickListener(e -> {
+    	if(e.getClickCount() > 1) {
+    		UI.getCurrent().navigate(VechileView.class, e.getItem().getId().toString());
+    	}
+    });
   }
+  
+ 
 
   /**
    * Show transfer vechile dialog.
@@ -166,7 +194,7 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
         } else {
           getGrid().getSelectedItems().stream().findFirst().ifPresent(vechile -> {
             vechileServiceRef.get().transferVechile(vechile, organizationOptional.get());
-            // event
+            ChangeBroadcaster.firePushEvent(new VechileChangedChangedEvent(this, vechile, EventAction.REMOVED));
           });
           transferDialog.close();
         }

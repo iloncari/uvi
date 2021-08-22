@@ -22,24 +22,222 @@ import lombok.RequiredArgsConstructor;
  * @author Igor Lončarić (iloncari2@optimit.hr)
  * @since 2:12:27 PM Aug 7, 2021
  */
+
+/**
+ * Instantiates a new constants.
+ */
+
+/**
+ * Instantiates a new constants.
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Constants {
 
+	 /**
+	 * Instantiates a new event type.
+	 *
+	 * @param name the name
+	 */
+ 	@RequiredArgsConstructor
+	  public enum EventType {
+		 
+		 /** The building fire. */
+ 		BUILDING_FIRE("buildingFire"),
+		 
+		 /** The industrial fire. */
+ 		INDUSTRIAL_FIRE("industrialFire"),
+		 
+		 /** The open space fire. */
+ 		OPEN_SPACE_FIRE("openSpaceFire"),
+		 
+		 /** The traffic fire. */
+ 		TRAFFIC_FIRE("trafficFire"),
+		 
+		 /** The building technical. */
+ 		BUILDING_TECHNICAL("buildingTechnical"),
+		 
+		 /** The idustrial technical. */
+ 		IDUSTRIAL_TECHNICAL("industrialTechnical"),
+		 
+		 /** The open space technical. */
+ 		OPEN_SPACE_TECHNICAL("openSpaceTechnical"),
+		 
+		 /** The traffic technical. */
+ 		TRAFFIC_TECHNICAL("trafficTechnical"),
+		 
+		 /** The dangerous material. */
+ 		DANGEROUS_MATERIAL("dangerousMaterial"),
+		 
+		 /** The false report. */
+ 		FALSE_REPORT("falseReport"),
+		 
+		 /** The stand by. */
+ 		STAND_BY("standBy"),
+		 
+		 /** The other. */
+ 		OTHER("other");
+		 
+   	    /** The name. */
+  		private final String name;
+		  
+		  /**
+		 * Gets the event type translation key.
+		 *
+		 * @return the event type translation key
+		 */
+  		public String getEventTypeTranslationKey() {
+		      return "eventType.".concat(name).concat(".label");
+		    } 
+  		
+  	/**
+     * Checks if is intervention fire.
+     *
+     * @return true, if is intervention fire
+     */
+	  public boolean isInterventionFire() {
+  	  return this.equals(BUILDING_FIRE) || this.equals(INDUSTRIAL_FIRE) || this.equals(OPEN_SPACE_FIRE) || this.equals(TRAFFIC_FIRE);
+  	}
+	 }
+ 	
+ 	/**
+    * The Enum EventCause.
+    *
+    * @author Igor Lončarić (iloncari2@tvz.hr)
+    * @since 8:36:57 PM Aug 22, 2021
+    */
+	@RequiredArgsConstructor
+ 	public enum EventCause{
+ 	  
+ 	 /** The action of man. */
+ 	 ACTION_OF_MAN("actionOfMan"),
+ 	  
+ 	 /** The natural phenomena. */
+ 	 NATURAL_PHENOMENA("naturalPhenomena"),
+ 	 
+ 	 /** The undefined. */
+ 	 UNDEFINED("undefined"),
+ 	 
+ 	 /** The technological malfunction and technological processes. */
+ 	 TECHNOLOGICAL_MALFUNCTION_AND_TECHNOLOGICAL_PROCESSES("technologicalMalfunctionAndTechnologicalProcesses");
+ 	  
+ 	 /** The name. */
+ 	 private final String name;
+ 	  
+ 	 /**
+    * Gets the event type translation key.
+    *
+    * @return the event type translation key
+    */
+ 	 public String getEventCauseTranslationKey() {
+     return "eventCause.".concat(name).concat(".label");
+   } 
+	}
+ 	 
+ 	/**
+    * The Enum EventCausePerson.
+    *
+    * @author Igor Lončarić (iloncari2@tvz.hr)
+    * @since 8:37:12 PM Aug 22, 2021
+    */
+	 @RequiredArgsConstructor
+  public enum EventCausePerson{
+	   
+	  /** The without person act. */
+  	WITHOUT_PERSON_ACT("withoutActOfPerson"),
+	  
+	  /** The child. */
+  	CHILD("child"),
+	  
+	  /** The user. */
+  	USER("user"),
+	  
+	  /** The owner. */
+  	OWNER("owner"),
+	  
+	  /** The huner. */
+  	HUNER("hunter"),
+	  
+	  /** The worker. */
+  	WORKER("worker"),
+	  
+	  /** The guest. */
+  	GUEST("guest"),
+	  
+	  /** The unknown. */
+  	UNKNOWN("unknown"),
+	  
+	  /** The other. */
+  	OTHER("other"),
+	  
+	  /** The farmer. */
+  	FARMER("farmer"),
+	  
+	  /** The passerby. */
+  	PASSERBY("passerby");
+	   
+   	/** The name. */
+   	private final String name;
+    
+    /**
+     * Gets the event cause person translation key.
+     *
+     * @return the event cause person translation key
+     */
+    public String getEventCausePersonTranslationKey() {
+      return "eventCausePerson.".concat(name).concat(".label");
+    } 
+ 	}
+ 	  
+ 	
+	
+  /**
+	 * Instantiates a new duty.
+	 *
+	 * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
+	 * @since 1:38:32 PM Aug 22, 2021
+	 */
+  
+  /**
+	 * Instantiates a new duty.
+	 *
+	 * @param name the name
+	 */
   @RequiredArgsConstructor
   public enum Duty {
 
+    /** The president. */
     PRESIDENT("president"),
 
+    /** The secretary. */
     SECRETARY("secretary"),
 
+    /** The commander. */
     COMMANDER("commander"),
 
+    /** The none. */
     NONE("none");
 
     /** The name. */
+    
+    /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+    
+    /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
     @Getter
     private final String name;
     
+    /**
+	 * Gets the profession translation key.
+	 *
+	 * @return the profession translation key
+	 */
     public String getProfessionTranslationKey() {
         return "duty.".concat(name).concat(".label");
       }
@@ -52,10 +250,14 @@ public final class Constants {
    * @since 12:31:48 PM Aug 13, 2021
    */
   public enum EventAction {
+    
+    /** The added. */
     ADDED,
 
+    /** The removed. */
     REMOVED,
 
+    /** The modified. */
     MODIFIED;
   }
 
@@ -84,13 +286,41 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 5:41:51 PM Aug 12, 2021
    */
+  
+  /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+  
+  /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
   @Getter
+  
+  /**
+	 * Instantiates a new gender.
+	 *
+	 * @param name the name
+	 */
+  
+  /**
+	 * Instantiates a new gender.
+	 *
+	 * @param name the name
+	 */
   @RequiredArgsConstructor
   public enum Gender {
+    
+    /** The male. */
     MALE("male"),
 
+    /** The female. */
     FEMALE("female"),
 
+    /** The other. */
     OTHER("other");
 
     /** The name. */
@@ -103,7 +333,31 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@optimit.hr)
    * @since 3:12:45 PM Aug 7, 2021
    */
+  
+  /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+  
+  /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
   @Getter
+  
+  /**
+	 * Instantiates a new image constants.
+	 *
+	 * @param name the name
+	 */
+  
+  /**
+	 * Instantiates a new image constants.
+	 *
+	 * @param name the name
+	 */
   @RequiredArgsConstructor
   public enum ImageConstants {
 
@@ -113,9 +367,52 @@ public final class Constants {
     /** The src. */
     private final String name;
 
+    /**
+	 * Gets the path.
+	 *
+	 * @return the path
+	 */
     public String getPath() {
       return "img/" + name;
     }
+  }
+  
+
+  /**
+	 * The Enum OrganizationLevel.
+	 *
+	 * @author Igor Lončarić (iloncari2@tvz.hr)
+	 * @since 3:51:23 PM Aug 20, 2021
+	 */
+  
+  /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+  @Getter
+  
+  /**
+	 * Instantiates a new organization level.
+	 *
+	 * @param name the name
+	 */
+  @RequiredArgsConstructor
+  public enum OrganizationLevel {
+	  /** The country level. */
+  	COUNTRY_LEVEL("countryLevel"),
+	  
+	  /** The regional level. */
+  	REGIONAL_LEVEL("regionalLevel"),
+	  
+	  /** The city level. */
+  	CITY_LEVEL("cityLevel"),
+	  
+  	/** The operational level. */
+	  OPERATIONAL_LEVEL("operationalLevel");
+	  
+	  /** The name. */
+  	private final String name;
   }
   /**
   * The Enum Professions.
@@ -123,7 +420,31 @@ public final class Constants {
   * @author Igor Lončarić (iloncari2@tvz.hr)
   * @since 2:12:30 PM Aug 7, 2021
   */
+  
+  /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+  
+  /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
   @Getter
+  
+  /**
+	 * Instantiates a new professions.
+	 *
+	 * @param name the name
+	 */
+  
+  /**
+	 * Instantiates a new professions.
+	 *
+	 * @param name the name
+	 */
   @RequiredArgsConstructor
   public enum Professions {
 
@@ -176,14 +497,54 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 11:49:01 AM Aug 9, 2021
     */
+  
+  /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+  
+  /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
   @Getter
+  
+  /**
+	 * Instantiates a new report status.
+	 *
+	 * @param name the name
+	 */
+  
+  /**
+	 * Instantiates a new report status.
+	 *
+	 * @param name the name
+	 */
   @RequiredArgsConstructor
   public enum ReportStatus {
+    
+    /** The new. */
     NEW("new"),
+    
+    /** The prepared. */
+    PREPARED("prepared"),
 
+    /** The approved. */
     APPROVED("approved");
 
+    /** The name. */
     private final String name;
+    
+    /**
+	 * Gets the report status translation key.
+	 *
+	 * @return the report status translation key
+	 */
+    public String getReportStatusTranslationKey() {
+        return "reportStatus.".concat(name).concat(".label");
+      }
   }
 
   /**
@@ -192,6 +553,14 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 5:17:38 PM Aug 7, 2021
    */
+  
+  /**
+	 * Instantiates a new routes.
+	 */
+  
+  /**
+	 * Instantiates a new routes.
+	 */
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   @Getter
   public static final class Routes {
@@ -231,6 +600,15 @@ public final class Constants {
 
     /** The Constant VECHILE. */
     public static final String VECHILE = "vechile";
+    
+    /** The Constant REPORT_EVENT. */
+    public static final String REPORT_EVENT= "reportEvent";
+    
+    /** The Constant REPORTS. */
+    public static final String REPORTS="reports";
+    
+    /** The Constant REPORT. */
+    public static final String REPORT="report";
 
     /**
      * Gets the page title key.
@@ -249,7 +627,31 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 2:12:30 PM Aug 7, 2021
    */
+  
+  /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+  
+  /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
   @Getter
+  
+  /**
+	 * Instantiates a new style constants.
+	 *
+	 * @param name the name
+	 */
+  
+  /**
+	 * Instantiates a new style constants.
+	 *
+	 * @param name the name
+	 */
   @RequiredArgsConstructor
   public enum StyleConstants {
 
@@ -277,7 +679,13 @@ public final class Constants {
     /** The width 25. */
     WIDTH_25("width_25"),
 
+    /** The width 50. */
     WIDTH_50("width_50"),
+    
+    /** The width 33. */
+    WIDTH_33("width_33"),
+    
+    /** The theme primary error. */
     THEME_PRIMARY_ERROR("primary error"),
 
     /** The theme primary success. */
@@ -290,6 +698,12 @@ public final class Constants {
     private final String name;
   }
 
+  /**
+	 * The Enum SubscriberScope.
+	 *
+	 * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
+	 * @since 3:51:03 PM Aug 20, 2021
+	 */
   public enum SubscriberScope {
     /** The all. */
     ALL,
@@ -305,6 +719,14 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@optimit.hr)
    * @since 4:18:17 PM Aug 7, 2021
    */
+  
+  /**
+	 * Instantiates a new theme attribute.
+	 */
+  
+  /**
+	 * Instantiates a new theme attribute.
+	 */
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public final class ThemeAttribute {
 
@@ -312,13 +734,38 @@ public final class Constants {
     public static final String BUTTON_BLUE = "button blue";
   }
 
+  /**
+	 * Instantiates a new user role.
+	 *
+	 * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
+	 * @since 1:38:32 PM Aug 22, 2021
+	 */
+  
+  /**
+	 * Instantiates a new user role.
+	 *
+	 * @param name the name
+	 */
   @RequiredArgsConstructor
   public enum UserRole {
 
+    /** The manager. */
     MANAGER("manager"),
 
+    /** The spectator. */
     SPECTATOR("spectator");
 
+    /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+    
+    /**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
     @Getter
     private final String name;
   }
@@ -329,6 +776,18 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 8:49:31 PM Aug 7, 2021
    */
+  
+  /**
+	 * Instantiates a new vechile condition.
+	 *
+	 * @param name the name
+	 */
+  
+  /**
+	 * Instantiates a new vechile condition.
+	 *
+	 * @param name the name
+	 */
   @RequiredArgsConstructor
   public enum VechileCondition {
 
@@ -358,6 +817,18 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 9:19:37 PM Aug 16, 2021
    */
+  
+  /**
+	 * Instantiates a new vechile type.
+	 *
+	 * @param name the name
+	 */
+  
+  /**
+	 * Instantiates a new vechile type.
+	 *
+	 * @param name the name
+	 */
   @RequiredArgsConstructor
   public enum VechileType {
 

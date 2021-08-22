@@ -20,6 +20,7 @@ import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.event.PersonOrganizationChangedEvent;
 import hr.tvz.vi.orm.Person;
 import hr.tvz.vi.orm.PersonOrganization;
+import hr.tvz.vi.service.AddressService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.PersonService;
 import hr.tvz.vi.util.Constants.Duty;
@@ -51,7 +52,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 6:40:41 PM Aug 11, 2021
  */
-@Slf4j
 @Route(value = Routes.MEMBER, layout = MainAppLayout.class)
 @EventSubscriber(scope = SubscriberScope.PUSH)
 public class MemberView extends VVerticalLayout implements HasDynamicTitle, HasUrlParameter<String> {
@@ -75,6 +75,10 @@ public class MemberView extends VVerticalLayout implements HasDynamicTitle, HasU
   /** The person service ref. */
   @Autowired
   private ServiceRef<PersonService> personServiceRef;
+  
+  /** The address service ref. */
+  @Autowired
+  private ServiceRef<AddressService> addressServiceRef;
 
   /**
    * Gets the page title.
@@ -141,7 +145,7 @@ public class MemberView extends VVerticalLayout implements HasDynamicTitle, HasU
   protected void onAttach(AttachEvent attachEvent) {
     super.onAttach(attachEvent);
     ChangeBroadcaster.registerToPushEvents(this);
-    add(new MemberForm(member, personServiceRef.get(), organizationServiceRef.get(), false));
+    add(new MemberForm(member, personServiceRef.get(), organizationServiceRef.get(),addressServiceRef.get(), false));
     add(initOrganizationLayout());
   }
 

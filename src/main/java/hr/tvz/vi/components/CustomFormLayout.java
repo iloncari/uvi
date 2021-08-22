@@ -14,9 +14,11 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.Binder.BindingBuilder;
+import com.vaadin.flow.data.binder.Setter;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.binder.Validator;
 import com.vaadin.flow.data.converter.Converter;
+import com.vaadin.flow.function.ValueProvider;
 
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Utils;
@@ -120,6 +122,20 @@ public class CustomFormLayout<T> extends VVerticalLayout {
     add(saveButton);
     return saveButton;
   }
+  
+  /**
+	 * Adds the button.
+	 *
+	 * @param buttonKey the button key
+	 * @param listener  the listener
+	 * @return the v button
+	 */
+  public VButton addButton(String buttonKey,  ComponentEventListener<ClickEvent<Button>> listener) {
+	    final VButton button = new VButton(getTranslation(buttonKey)).withClickListener(listener);
+	    add(button);
+	    return button;
+	  }
+  
 
   /**
    * Adds the two column items layout.
@@ -138,6 +154,23 @@ public class CustomFormLayout<T> extends VVerticalLayout {
     add(layout);
     return layout;
   }
+  
+  public Component addThreeColumnItemsLayout(Component left, Component middle, Component right) {
+    final VHorizontalLayout layout = new VHorizontalLayout(left).withClassName(StyleConstants.WIDTH_100.getName());
+    if(null != middle) {
+      layout.add(middle);
+      middle.getElement().setAttribute("class", StyleConstants.WIDTH_33.getName());
+    }
+    
+    if (null != right) {
+      layout.add(right);
+      right.getElement().setAttribute("class", StyleConstants.WIDTH_33.getName());
+    }
+    left.getElement().setAttribute("class", StyleConstants.WIDTH_33.getName());
+    add(layout);
+    return layout;
+  }
+
 
   /**
    * Adds the two column items layout.
@@ -175,6 +208,7 @@ public class CustomFormLayout<T> extends VVerticalLayout {
   public <R, S> void processBinder(final HasValue<?, R> field, final Converter<R, S> converter, final Validator<? super R> validator, final boolean required,
     final String propertyPath) {
     final BindingBuilder<T, R> bindingBuilder = binder.forField(field);
+    
     if (required) {
       bindingBuilder.asRequired(getTranslation("form.field.required"));
     }
@@ -192,6 +226,28 @@ public class CustomFormLayout<T> extends VVerticalLayout {
     }
     bindingBuilder.bind(propertyPath);
   }
+  
+  public <R, S> void processBinder(final HasValue<?, R> field, final Converter<R, S> converter, final Validator<? super R> validator, final boolean required,
+		    final ValueProvider<T, R> getter, final Setter<T, R> setter) {
+		    final BindingBuilder<T, R> bindingBuilder = binder.forField(field);
+		    
+		    if (required) {
+		      bindingBuilder.asRequired(getTranslation("form.field.required"));
+		    }
+		    if (null != validator) {
+		      bindingBuilder.withValidator(j -> {
+		        if (j == null) {
+		          return true;
+		        }
+		        return false;
+		      }, "");
+		      bindingBuilder.withValidator(validator);
+		    }
+		    if (null != converter) {
+		      bindingBuilder.withConverter(converter);
+		    }
+		    bindingBuilder.bind(getter, setter);
+		  }
 
   /**
    * Read bead.
@@ -201,16 +257,32 @@ public class CustomFormLayout<T> extends VVerticalLayout {
   }
 
   /**
+   * Sets the bean.
+   */
+  public void setBean() {
+    binder.setBean(bean);
+  }
+  
+  /**
+   * Validate.
+   *
+   * @return true, if successful
+   */
+  public boolean validate() {
+    return binder.validate().isOk();
+  }
+  /**
    * Sets the form title.
    *
    * @param titleKey the title key
    * @param labelParams the label params
    */
   public void setFormTitle(String titleKey, Object... labelParams) {
-    getTranslation(titleKey, labelParams);
-    formTitle.setText(getTranslation(titleKey, labelParams));
+    formTitle.setText( getTranslation(titleKey, labelParams));
     formTitle.setVisible(true);
   }
+  
+
 
   /**
    * Sets the label.
