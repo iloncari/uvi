@@ -20,7 +20,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 	 * @param organizationsIds the organizations ids
 	 * @return the list
 	 */
-	List<Report> findByStatusAndEventOrganizationList_Organization_Id(ReportStatus status, Long organizationsId);
+	List<Report> findByEventOrganizationList_Organization_Id(Long organizationsId);
 	
 	/**
 	 * Find by creator id.

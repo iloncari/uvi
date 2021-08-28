@@ -48,7 +48,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 1:50:34 PM Aug 11, 2021
  */
-@Slf4j
 @Route(value = Routes.MEMBERS, layout = MainAppLayout.class)
 public class MembersView extends AbstractGridView<Person> implements HasDynamicTitle {
 
@@ -307,6 +306,16 @@ public class MembersView extends AbstractGridView<Person> implements HasDynamicT
 
     dialog.add(dialogLayout);
     dialog.open();
+  }
+
+  /**
+   * Inits the above layout.
+   *
+   * @return the v horizontal layout
+   */
+  @Override
+  protected VHorizontalLayout initAboveLayout() {
+    return null;
   }
 
 }

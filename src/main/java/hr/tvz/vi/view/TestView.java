@@ -4,6 +4,32 @@
  */
 package hr.tvz.vi.view;
 
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.file.Path;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.RandomUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.util.CollectionUtils;
+import org.vaadin.firitin.components.button.VButton;
+import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
+
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.textfield.TextField;
@@ -32,40 +58,6 @@ import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Professions;
 import hr.tvz.vi.util.Constants.UserRole;
 import hr.tvz.vi.util.Utils;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.RandomAccessFile;
-import java.io.Reader;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.RandomUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.TransientPropertyValueException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.util.CollectionUtils;
-import org.vaadin.firitin.components.button.VButton;
-import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Route(value = "test")

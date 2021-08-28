@@ -52,6 +52,7 @@ public class Vechile {
   private LocalDate firstRegistrationDate;
 
   private String description;
+  
 
   @Enumerated(EnumType.STRING)
   private VechileCondition condition;

@@ -26,19 +26,58 @@ import lombok.RequiredArgsConstructor;
 /**
  * Instantiates a new constants.
  */
-
-/**
- * Instantiates a new constants.
- */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Constants {
 
-	 /**
-	 * Instantiates a new event type.
-	 *
-	 * @param name the name
-	 */
- 	@RequiredArgsConstructor
+  /**
+   * The Enum TaskType.
+   *
+   * @author Igor Lončarić (iloncari2@tvz.hr)
+   * @since 10:04:19 PM Aug 27, 2021
+   */
+  public enum TaskType {
+    
+    /** The approve task. */
+    APPROVE_TASK,
+    
+    /** The preparation task. */
+    PREPARATION_TASK;
+  }
+  
+  /**
+   * The Enum GroupType.
+   *
+   * @author Igor Lončarić (iloncari2@tvz.hr)
+   * @since 10:05:34 PM Aug 27, 2021
+   */
+  @RequiredArgsConstructor
+  public enum GroupType{
+    
+    /** The preparers. */
+    PREPARERS("preparers"),
+    
+    /** The approvers. */
+    APPROVERS("approvers");
+    
+    /** The name. */
+    private final String name;
+    
+    /**
+     * Gets the group type localization key.
+     *
+     * @return the group type localization key
+     */
+    public String getGroupTypeLocalizationKey() {
+      return "groupType."+name+".label";
+    }
+  }
+  
+ 	/**
+    * Instantiates a new event type.
+    *
+    * @param name the name
+    */
+	 @RequiredArgsConstructor
 	  public enum EventType {
 		 
 		 /** The building fire. */
@@ -97,7 +136,521 @@ public final class Constants {
 	  public boolean isInterventionFire() {
   	  return this.equals(BUILDING_FIRE) || this.equals(INDUSTRIAL_FIRE) || this.equals(OPEN_SPACE_FIRE) || this.equals(TRAFFIC_FIRE);
   	}
+	  
 	 }
+ 	
+ 	/**
+    * The Enum BuildingType.
+    *
+    * @author Igor Lončarić (iloncari2@tvz.hr)
+    * @since 6:15:14 PM Aug 26, 2021
+    */
+ 	
+	 /**
+    * Instantiates a new building type.
+    *
+    * @param name the name
+    */
+	 
+ 	/**
+   * Instantiates a new building type.
+   *
+   * @param name the name
+   */
+ 	
+	 /**
+    * Instantiates a new building type.
+    *
+    * @param name the name
+    */
+	 
+ 	/**
+   * Instantiates a new building type.
+   *
+   * @param name the name
+   */
+ 	@RequiredArgsConstructor
+  public enum BuildingType {
+   
+	   /** The hall. */
+   	HALL("hall"),
+	   
+	   /** The two four floors building. */
+   	TWO_FOUR_FLOORS_BUILDING("TwoFourFloorBuilding"),
+	   
+	   /** The wood building. */
+   	WOOD_BUILDING("woodBuilding"),
+	   
+	   /** The container. */
+   	CONTAINER("container"),
+	   
+	   /** The ground floor building. */
+   	GROUND_FLOOR_BUILDING("groundFloorBuilding"),
+	   
+	   /** The multifloor building. */
+   	MULTIFLOOR_BUILDING("multifloorBuilding"),
+	   
+	   /** The tent. */
+   	TENT("tent"),
+	   
+	   /** The tall building. */
+   	TALL_BUILDING("tallBuilding");
+	  
+      /** The name. */
+    private final String name;
+    
+    /**
+   * Gets the event type translation key.
+   *
+   * @return the event type translation key
+   */
+    public String getBuildingTypeTranslationKey() {
+        return "buildingType.".concat(name).concat(".label");
+      } 
+ }
+ 	
+ 	/**
+    * The Enum BuildingStatus.
+    *
+    * @author Igor Lončarić (iloncari2@tvz.hr)
+    * @since 6:23:52 PM Aug 26, 2021
+    */
+	 
+ 	/**
+   * Instantiates a new building status.
+   *
+   * @param name the name
+   */
+ 	
+	 /**
+    * Instantiates a new building status.
+    *
+    * @param name the name
+    */
+	 
+ 	/**
+   * Instantiates a new building status.
+   *
+   * @param name the name
+   */
+ 	@RequiredArgsConstructor
+	 public enum BuildingStatus{
+ 	  
+ 	  /** The under construction. */
+  	 UNDER_CONSTRUCTION("underConstruction"),
+ 	  
+ 	  /** The built rusty. */
+  	 BUILT_RUSTY("builtAndRusty"),
+ 	  
+ 	  /** The built not used. */
+  	 BUILT_NOT_USED("builtAndNotUsed"),
+ 	  
+ 	  /** The built in use. */
+  	 BUILT_IN_USE("buildAndInUse");
+ 	  
+ 	  
+ 	  /** The name. */
+  	 private final String name;
+ 	  
+ 	 /**
+    * Gets the building status translation key.
+    *
+    * @return the building status translation key
+    */
+ 	 public String getBuildingStatusTranslationKey() {
+     return "buildingStatus.".concat(name).concat(".label");
+   } 
+ 	  
+ 	}
+ 	
+ 	
+ 	/**
+    * The Enum TrafficFireVechileType.
+    *
+    * @author Igor Lončarić (iloncari2@tvz.hr)
+    * @since 6:51:31 PM Aug 26, 2021
+    */
+	 
+ 	/**
+   * Instantiates a new traffic fire vechile type.
+   *
+   * @param name the name
+   */
+ 	
+	 /**
+    * Instantiates a new traffic fire vechile type.
+    *
+    * @param name the name
+    */
+	 @RequiredArgsConstructor
+  public enum TrafficFireVechileType{
+   
+   /** The without vechile. */
+   WITHOUT_VECHILE("withoutVechile"),
+   
+   /** The vessels. */
+   VESSELS("vessels"),
+   
+   /** The road passenger trasport. */
+   ROAD_PASSENGER_TRASPORT("roadPassengerTransport"),
+   
+   /** The road goods transport. */
+   ROAD_GOODS_TRANSPORT("roadGoodsTransport"),
+   
+   /** The road machinery. */
+   ROAD_MACHINERY("roadMachinery"),
+   
+   /** The airplane. */
+   AIRPLANE("airplane"),
+   
+   /** The railway vechile. */
+   RAILWAY_VECHILE("railwayVechile");
+   
+   
+   /** The name. */
+    private final String name;
+   
+
+  /**
+   * Gets the traffic fire vechile type translation key.
+   *
+   * @return the traffic fire vechile type translation key
+   */
+  public String getTrafficFireVechileTypeTranslationKey() {
+    return "trafficFireVechileType.".concat(name).concat(".label");
+  } 
+   
+ }
+	 
+   /**
+    * The Enum IndustrialPlantType.
+    *
+    * @author Igor Lončarić (iloncari2@tvz.hr)
+    * @since 6:34:44 PM Aug 26, 2021
+    */
+   
+   /**
+    * Instantiates a new industrial plant type.
+    *
+    * @param name the name
+    */
+   
+   /**
+    * Instantiates a new industrial plant type.
+    *
+    * @param name the name
+    */
+   
+   /**
+    * Instantiates a new industrial plant type.
+    *
+    * @param name the name
+    */
+   @RequiredArgsConstructor
+   public enum IndustrialPlantType{
+    
+    /** The production plant. */
+    PRODUCTION_PLANT("productionPlant"),
+    
+    /** The storage space. */
+    STORAGE_SPACE("storageSpace"),
+    
+    /** The administrative building. */
+    ADMINISTRATIVE_BUILDING("administrative building");
+    
+    /** The name. */
+     private final String name;
+    
+   /**
+    * Gets the building status translation key.
+    *
+    * @return the building status translation key
+    */
+   public String getIndustrialPlantTypeTranslationKey() {
+     return "industrialPlantType.".concat(name).concat(".label");
+   } 
+    
+  }
+   
+   
+   /**
+    * The Enum OpenSpaceFireType.
+    *
+    * @author Igor Lončarić (iloncari2@tvz.hr)
+    * @since 6:38:30 PM Aug 26, 2021
+    */
+   
+   /**
+    * Instantiates a new open space fire type.
+    *
+    * @param name the name
+    */
+   
+   /**
+    * Instantiates a new open space fire type.
+    *
+    * @param name the name
+    */
+   
+   /**
+    * Instantiates a new open space fire type.
+    *
+    * @param name the name
+    */
+   @RequiredArgsConstructor
+   public enum OpenSpaceFireType{
+    
+    /** The combined fire. */
+    COMBINED_FIRE("combinedFire"),
+    
+    /** The low surface fire. */
+    LOW_SURFACE_FIRE("lowSurfaceFire"),
+    
+    /** The underground fire. */
+    UNDERGROUND_FIRE("undergroundFire"),
+    
+    /** The high tree canopy fire. */
+    HIGH_TREE_CANOPY_FIRE("highTreeCanopyFire");
+    
+    /** The name. */
+     private final String name;
+    
+   /**
+    * Gets the building status translation key.
+    *
+    * @return the building status translation key
+    */
+   public String getOpenSpaceFireTypeTranslationKey() {
+     return "openSpaceFireType.".concat(name).concat(".label");
+   } 
+    
+  }
+
+
+  /**
+   * Instantiates a new event activity.
+   *
+   * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
+   * @since 6:20:37 PM Aug 26, 2021
+   */
+  
+  /**
+   * Instantiates a new event activity.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new event activity.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new event activity.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new event activity.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new event activity.
+   *
+   * @param name the name
+   */
+  @RequiredArgsConstructor
+  public enum EventActivity {
+    
+    /** The wirhout extinguishing. */
+    WIRHOUT_EXTINGUISHING("withoutExtinguishing"),
+    
+    /** The extinguishing. */
+    EXTINGUISHING("extinguishing"),
+    
+    /** The evacuation. */
+    EVACUATION("evacuation"),
+    
+    /** The wrecked building rescuing. */
+    WRECKED_BUILDING_RESCUING("wreckedBuildingRescuing"),
+    
+    /** The peoples animals assets salvage. */
+    PEOPLES_ANIMALS_ASSETS_SALVAGE("salvageOfPeoplesAnimalsAssets"),
+    
+    /** The height depth salvage. */
+    HEIGHT_DEPTH_SALVAGE("salvageFromHeightOrDepth"),
+    
+    /** The animal removal. */
+    ANIMAL_REMOVAL("animalRemoval");
+   
+    /** The name. */
+    private final String name;
+    
+    /**
+   * Gets the event type translation key.
+   *
+   * @return the event type translation key
+   */
+    public String getEventActivityTranslationKey() {
+        return "eventActivity.".concat(name).concat(".label");
+      } 
+  }
+  
+  /**
+   * The Enum FIRESIZE.
+   *
+   * @author Igor Lončarić (iloncari2@tvz.hr)
+   * @since 11:46:12 PM Aug 25, 2021
+   */
+  
+  /**
+   * Instantiates a new fire size.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new fire size.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new fire size.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new fire size.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new fire size.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new fire size.
+   *
+   * @param name the name
+   */
+  @RequiredArgsConstructor
+  public enum FireSize {
+    
+    /** The small. */
+    SMALL("small"),
+    
+    /** The medium. */
+    MEDIUM("medium"),
+    
+    /** The big. */
+    BIG("big");
+    
+    /** The name. */
+    private final String name;
+    
+    /**
+   * Gets the event type translation key.
+   *
+   * @return the event type translation key
+   */
+    public String getFireSizeTranslationKey() {
+        return "fireSize.".concat(name).concat(".label");
+      }
+    
+  }
+  
+  
+  /**
+   * The Enum ItemOnFire.
+   *
+   * @author Igor Lončarić (iloncari2@tvz.hr)
+   * @since 11:46:12 PM Aug 25, 2021
+   */
+  
+  /**
+   * Instantiates a new item on fire.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new item on fire.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new item on fire.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new item on fire.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new item on fire.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new item on fire.
+   *
+   * @param name the name
+   */
+  @RequiredArgsConstructor
+  public enum ItemOnFire {
+    
+    /** The vechile part. */
+    VECHILE_PART("vechilePart"),
+    
+    /** The electrical devices. */
+    ELECTRICAL_DEVICES("electricalDevices"),
+    
+    /** The building elements. */
+    BUILDING_ELEMENTS("buildingElements"),
+    
+    /** The apartment furniture. */
+    APARTMENT_FURNITURE("apartmentFurniture"),
+    
+    /** The basic substances. */
+    BASIC_SUBSTANCES("basicSubstances"),
+    
+    /** The undetermined. */
+    UNDETERMINED("undetermined"),
+    
+    /** The other. */
+    OTHER("other"),
+    
+    /** The machinery. */
+    MACHINERY("machinery");
+    
+    /** The name. */
+    private final String name;
+    
+    /**
+   * Gets the event type translation key.
+   *
+   * @return the event type translation key
+   */
+    public String getItemOnFireTranslationKey() {
+        return "itemOnFire.".concat(name).concat(".label");
+      }
+    
+  }
  	
  	/**
     * The Enum EventCause.
@@ -105,6 +658,48 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 8:36:57 PM Aug 22, 2021
     */
+	
+	/**
+   * Instantiates a new event cause.
+   *
+   * @param name the name
+   */
+	
+	/**
+   * Instantiates a new event cause.
+   *
+   * @param name the name
+   */
+	
+	/**
+   * Instantiates a new event cause.
+   *
+   * @param name the name
+   */
+	
+	/**
+   * Instantiates a new event cause.
+   *
+   * @param name the name
+   */
+	
+	/**
+   * Instantiates a new event cause.
+   *
+   * @param name the name
+   */
+	
+	/**
+   * Instantiates a new event cause.
+   *
+   * @param name the name
+   */
+	
+	/**
+   * Instantiates a new event cause.
+   *
+   * @param name the name
+   */
 	@RequiredArgsConstructor
  	public enum EventCause{
  	  
@@ -139,7 +734,49 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 8:37:12 PM Aug 22, 2021
     */
-	 @RequiredArgsConstructor
+	 
+ 	/**
+   * Instantiates a new event cause person.
+   *
+   * @param name the name
+   */
+ 	
+	 /**
+    * Instantiates a new event cause person.
+    *
+    * @param name the name
+    */
+	 
+ 	/**
+   * Instantiates a new event cause person.
+   *
+   * @param name the name
+   */
+ 	
+	 /**
+    * Instantiates a new event cause person.
+    *
+    * @param name the name
+    */
+	 
+ 	/**
+   * Instantiates a new event cause person.
+   *
+   * @param name the name
+   */
+ 	
+	 /**
+    * Instantiates a new event cause person.
+    *
+    * @param name the name
+    */
+	 
+ 	/**
+   * Instantiates a new event cause person.
+   *
+   * @param name the name
+   */
+ 	@RequiredArgsConstructor
   public enum EventCausePerson{
 	   
 	  /** The without person act. */
@@ -202,6 +839,48 @@ public final class Constants {
 	 *
 	 * @param name the name
 	 */
+  
+  /**
+   * Instantiates a new duty.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new duty.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new duty.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new duty.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new duty.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new duty.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new duty.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum Duty {
 
@@ -230,6 +909,48 @@ public final class Constants {
 	 *
 	 * @return the name
 	 */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     @Getter
     private final String name;
     
@@ -298,6 +1019,48 @@ public final class Constants {
 	 *
 	 * @return the name
 	 */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
   @Getter
   
   /**
@@ -311,6 +1074,48 @@ public final class Constants {
 	 *
 	 * @param name the name
 	 */
+  
+  /**
+   * Instantiates a new gender.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new gender.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new gender.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new gender.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new gender.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new gender.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new gender.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum Gender {
     
@@ -345,6 +1150,48 @@ public final class Constants {
 	 *
 	 * @return the name
 	 */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
   @Getter
   
   /**
@@ -358,6 +1205,48 @@ public final class Constants {
 	 *
 	 * @param name the name
 	 */
+  
+  /**
+   * Instantiates a new image constants.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new image constants.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new image constants.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new image constants.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new image constants.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new image constants.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new image constants.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum ImageConstants {
 
@@ -390,6 +1279,48 @@ public final class Constants {
 	 *
 	 * @return the name
 	 */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
   @Getter
   
   /**
@@ -397,6 +1328,48 @@ public final class Constants {
 	 *
 	 * @param name the name
 	 */
+  
+  /**
+   * Instantiates a new organization level.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new organization level.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new organization level.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new organization level.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new organization level.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new organization level.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new organization level.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum OrganizationLevel {
 	  /** The country level. */
@@ -432,6 +1405,48 @@ public final class Constants {
 	 *
 	 * @return the name
 	 */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
   @Getter
   
   /**
@@ -445,6 +1460,48 @@ public final class Constants {
 	 *
 	 * @param name the name
 	 */
+  
+  /**
+   * Instantiates a new professions.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new professions.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new professions.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new professions.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new professions.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new professions.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new professions.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum Professions {
 
@@ -509,6 +1566,48 @@ public final class Constants {
 	 *
 	 * @return the name
 	 */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
   @Getter
   
   /**
@@ -522,6 +1621,48 @@ public final class Constants {
 	 *
 	 * @param name the name
 	 */
+  
+  /**
+   * Instantiates a new report status.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new report status.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new report status.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new report status.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new report status.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new report status.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new report status.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum ReportStatus {
     
@@ -553,14 +1694,6 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 5:17:38 PM Aug 7, 2021
    */
-  
-  /**
-	 * Instantiates a new routes.
-	 */
-  
-  /**
-	 * Instantiates a new routes.
-	 */
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   @Getter
   public static final class Routes {
@@ -609,6 +1742,10 @@ public final class Constants {
     
     /** The Constant REPORT. */
     public static final String REPORT="report";
+    
+    /** The Constant TASKS. */
+    public static final String TASKS="tasks";
+    
 
     /**
      * Gets the page title key.
@@ -639,6 +1776,48 @@ public final class Constants {
 	 *
 	 * @return the name
 	 */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
   @Getter
   
   /**
@@ -652,6 +1831,48 @@ public final class Constants {
 	 *
 	 * @param name the name
 	 */
+  
+  /**
+   * Instantiates a new style constants.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new style constants.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new style constants.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new style constants.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new style constants.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new style constants.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new style constants.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum StyleConstants {
 
@@ -727,6 +1948,34 @@ public final class Constants {
   /**
 	 * Instantiates a new theme attribute.
 	 */
+  
+  /**
+   * Instantiates a new theme attribute.
+   */
+  
+  /**
+   * Instantiates a new theme attribute.
+   */
+  
+  /**
+   * Instantiates a new theme attribute.
+   */
+  
+  /**
+   * Instantiates a new theme attribute.
+   */
+  
+  /**
+   * Instantiates a new theme attribute.
+   */
+  
+  /**
+   * Instantiates a new theme attribute.
+   */
+  
+  /**
+   * Instantiates a new theme attribute.
+   */
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public final class ThemeAttribute {
 
@@ -746,6 +1995,48 @@ public final class Constants {
 	 *
 	 * @param name the name
 	 */
+  
+  /**
+   * Instantiates a new user role.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new user role.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new user role.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new user role.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new user role.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new user role.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new user role.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum UserRole {
 
@@ -766,6 +2057,48 @@ public final class Constants {
 	 *
 	 * @return the name
 	 */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     @Getter
     private final String name;
   }
@@ -788,6 +2121,48 @@ public final class Constants {
 	 *
 	 * @param name the name
 	 */
+  
+  /**
+   * Instantiates a new vechile condition.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new vechile condition.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new vechile condition.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new vechile condition.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new vechile condition.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new vechile condition.
+   *
+   * @param name the name
+   */
+  
+  /**
+   * Instantiates a new vechile condition.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum VechileCondition {
 
@@ -806,7 +2181,7 @@ public final class Constants {
      * @return the label key
      */
     public String getLabelKey() {
-      return "vechileType.".concat(name).concat(".label");
+      return "vechileCondition.".concat(name).concat(".label");
     }
 
   }
@@ -819,16 +2194,16 @@ public final class Constants {
    */
   
   /**
-	 * Instantiates a new vechile type.
-	 *
-	 * @param name the name
-	 */
+   * Instantiates a new vechile type.
+   *
+   * @param name the name
+   */
   
   /**
-	 * Instantiates a new vechile type.
-	 *
-	 * @param name the name
-	 */
+   * Instantiates a new vechile type.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum VechileType {
 

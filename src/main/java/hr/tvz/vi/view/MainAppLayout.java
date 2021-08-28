@@ -29,6 +29,7 @@ import hr.tvz.vi.event.PersonOrganizationChangedEvent;
 import hr.tvz.vi.orm.PersonOrganization;
 import hr.tvz.vi.service.AuthentificationService;
 import hr.tvz.vi.service.OrganizationService;
+import hr.tvz.vi.service.PersonService;
 import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.ImageConstants;
@@ -86,6 +87,10 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
   /** The organization service ref. */
   @Autowired
   private ServiceRef<OrganizationService> organizationServiceRef;
+  
+  /** The person service ref. */
+  @Autowired
+  private ServiceRef<PersonService> personServiceRef;
 
   /**
    * Instantiates a new main app layout.
@@ -148,8 +153,13 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
     
     reportsItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.REPORTS)), VaadinIcon.LIST.create(),
     	      ReportsView.class);
-    leftMenuBuilder.addToSection(Section.DEFAULT, homeItem, organizationItem, membersItem, vechilesItem, reportEventItem, reportsItem);
+
+    final LeftNavigationItem tasksItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.TASKS)), VaadinIcon.CAR.create(),
+      TasksView.class);
+    
+    leftMenuBuilder.addToSection(Section.DEFAULT, homeItem, organizationItem, membersItem, vechilesItem, reportEventItem, reportsItem, tasksItem);
    
+    
     return leftMenuBuilder.build();
   }
 
@@ -162,6 +172,8 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
     personOrganizationSelect.setValue(currentUser.getActiveOrganization());
     personOrganizationSelect.addValueChangeListener(e -> {
       currentUser.setActiveOrganization(e.getValue());
+      currentUser.getPerson().setLastActiveOrganizationId(e.getValue().getOrganization().getId());
+      personServiceRef.get().saveOrUpdatePerson(currentUser.getPerson());
       UI.getCurrent().getPage().reload();
     });
   }

@@ -6,6 +6,8 @@ package hr.tvz.vi.service;
 
 import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.event.PersonOrganizationChangedEvent;
+import hr.tvz.vi.orm.GroupMember;
+import hr.tvz.vi.orm.GroupMemberRepository;
 import hr.tvz.vi.orm.Organization;
 import hr.tvz.vi.orm.OrganizationRepository;
 import hr.tvz.vi.orm.Person;
@@ -14,6 +16,7 @@ import hr.tvz.vi.orm.PersonOrganizationRepository;
 import hr.tvz.vi.orm.PersonRepository;
 import hr.tvz.vi.util.Constants.Duty;
 import hr.tvz.vi.util.Constants.EventAction;
+import hr.tvz.vi.util.Constants.GroupType;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.UserRole;
 
@@ -47,6 +50,10 @@ public class OrganizationService extends AbstractService<Organization> {
   /** The person repository. */
   @Autowired
   private PersonRepository personRepository;
+  
+  /** The group member repository. */
+  @Autowired
+  private GroupMemberRepository groupMemberRepository;
 
   /**
    * Save or update organization for person.
@@ -238,6 +245,46 @@ public class OrganizationService extends AbstractService<Organization> {
       return null;
     }
     return ((OrganizationRepository) repository).save(organization);
+  }
+
+  /**
+   * Gets the organization group members.
+   *
+   * @param groupType the group type
+   * @param organizationId the organization id
+   * @return the organization group members
+   */
+  public List<GroupMember> getOrganizationGroupMembers(GroupType groupType, Long organizationId) {
+    if(groupType==null || organizationId ==null) {
+      return new ArrayList<GroupMember>();
+    }
+    
+    return groupMemberRepository.findByOrganizationIdAndGroupType(organizationId, groupType);
+  }
+
+  /**
+   * Save group member.
+   *
+   * @param newMember the new member
+   */
+  public GroupMember saveGroupMember(GroupMember member) {
+    if(member == null) {
+      return null;
+    }
+   return groupMemberRepository.save(member);
+    
+  }
+  
+  /**
+   * Delete group member.
+   *
+   * @param member the member
+   */
+  public void deleteGroupMember(GroupMember member) {
+    if(member == null) {
+      return;
+    }
+    groupMemberRepository.deleteById(member.getId());
   }
 
 }

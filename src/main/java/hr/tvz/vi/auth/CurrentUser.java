@@ -42,7 +42,10 @@ public class CurrentUser {
    */
   public CurrentUser(Person person) {
     this.person = person;
-    this.activeOrganization = getAppAvailablePersonOrganizactions().stream().findFirst().orElse(null);
+    this.activeOrganization = getAppAvailablePersonOrganizactions().stream().filter(personOrg -> personOrg.getOrganization().getId().equals(person.getLastActiveOrganizationId())).findFirst().orElse(null);
+    if(this.activeOrganization==null) {
+      this.activeOrganization = getAppAvailablePersonOrganizactions().stream().findFirst().orElse(null);
+    }
     initParentOrganization();
   }
 
@@ -103,6 +106,5 @@ public class CurrentUser {
   public void setActiveOrganization(PersonOrganization organization) {
     this.activeOrganization = organization;
     initParentOrganization();
-
   }
 }

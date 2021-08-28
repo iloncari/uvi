@@ -18,6 +18,7 @@ import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 
@@ -51,8 +52,6 @@ public class ReportsView extends AbstractGridView<Report>{
 	/** The delete button. */
 	private VButton deleteButton;
 	
-	/** The prepare button. */
-	private VButton prepareButton;
 	
 	/** The report service ref. */
 	@Autowired
@@ -66,7 +65,7 @@ public class ReportsView extends AbstractGridView<Report>{
 	@Override
 	public List<Report> getGridItems() {
 		if(OrganizationLevel.OPERATIONAL_LEVEL.equals(getCurrentUser().getActiveOrganization().getOrganization().getLevel())) {
-			return reportServiceRef.get().getReports(ReportStatus.NEW, getCurrentUser().getActiveOrganization().getOrganization());
+			return reportServiceRef.get().getReports(getCurrentUser().getActiveOrganization().getOrganization());
 		}else {
 			return reportServiceRef.get().getOwningReports(getCurrentUser().getActiveOrganization().getOrganization());
 		}
@@ -80,7 +79,6 @@ public class ReportsView extends AbstractGridView<Report>{
 	@Override
 	protected void onAttach(AttachEvent attachEvent) {
 		super.onAttach(attachEvent);
-		prepareButton.setVisible(OrganizationLevel.OPERATIONAL_LEVEL.equals(getCurrentUser().getActiveOrganization().getOrganization().getLevel()));
 		deleteButton.setVisible(!OrganizationLevel.OPERATIONAL_LEVEL.equals(getCurrentUser().getActiveOrganization().getOrganization().getLevel()));
 	}
 
@@ -109,19 +107,16 @@ public class ReportsView extends AbstractGridView<Report>{
 	 *
 	 * @return the v horizontal layout
 	 */
-	@Override
+	@SuppressWarnings("unchecked")
+  @Override
 	protected VHorizontalLayout initBellowButtonLayout() {
 		final VHorizontalLayout buttonsLayout = new VHorizontalLayout();
-
-		//ide u report view i moze se uredirati i daljni je korak posalji na odobravanje
-	    prepareButton = new VButton(getTranslation("reportsView.button.prepare.label")).withVisible(OrganizationLevel.OPERATIONAL_LEVEL.equals(getCurrentUser().getActiveOrganization().getOrganization().getLevel())).withEnabled(false);
-	    prepareButton.addClickListener(e -> UI.getCurrent().navigate(NewVechileView.class));
-	    buttonsLayout.add(prepareButton);
-	    
 	    //moze brisati samo kreator
 	    deleteButton = new VButton(getTranslation("reportsView.button.delete.label")).withVisible(!OrganizationLevel.OPERATIONAL_LEVEL.equals(getCurrentUser().getActiveOrganization().getOrganization().getLevel())).withEnabled(false);
 	    deleteButton.addClickListener(e -> getGrid().getSelectedItems().forEach(repotForDelete -> {
 	    	reportServiceRef.get().deleteReport(repotForDelete);
+	    	((ListDataProvider<Report>)getGrid().getDataProvider()).getItems().remove(repotForDelete);	
+	    	getGrid().getDataProvider().refreshAll();
 	    	//event
 	    }));
 	    buttonsLayout.add(deleteButton);
@@ -137,10 +132,7 @@ public class ReportsView extends AbstractGridView<Report>{
 	protected void initGrid() {
 		getGrid().removeAllColumns();
 	    getGrid().setSelectionMode(SelectionMode.SINGLE);
-	    getGrid().addSelectionListener(e -> {
-	      prepareButton.setEnabled(!e.getFirstSelectedItem().isEmpty() && ReportStatus.NEW.equals(e.getFirstSelectedItem().get().getStatus()) && OrganizationLevel.OPERATIONAL_LEVEL.equals(getCurrentUser().getActiveOrganization().getOrganization().getLevel()));
-	      deleteButton.setEnabled(!e.getFirstSelectedItem().isEmpty());
-	    });
+	    getGrid().addSelectionListener(e ->  deleteButton.setEnabled(!e.getFirstSelectedItem().isEmpty()) );
 
 	    getGrid().addComponentColumn(report -> new RouterLink(report.getIdentificationNumber(), ReportView.class, report.getId().toString()))
 	      .setHeader(getTranslation("reportsView.reportsGrid.identificationNumber"));
@@ -154,6 +146,16 @@ public class ReportsView extends AbstractGridView<Report>{
 	    	}
 	    });
 	}
+
+  /**
+   * Inits the above layout.
+   *
+   * @return the v horizontal layout
+   */
+  @Override
+  protected VHorizontalLayout initAboveLayout() {
+    return null;
+  }
 
 
 

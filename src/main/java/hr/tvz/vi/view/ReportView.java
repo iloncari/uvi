@@ -4,26 +4,26 @@
  */
 package hr.tvz.vi.view;
 
-import org.apache.commons.lang3.ObjectUtils;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
-import org.vaadin.firitin.components.button.VButton;
-import org.vaadin.firitin.components.grid.VGrid;
-import org.vaadin.firitin.components.html.VDiv;
 import org.vaadin.firitin.components.html.VH4;
+import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.layouts.VTabSheet;
 
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
@@ -34,26 +34,34 @@ import com.vaadin.flow.router.Route;
 
 import de.codecamp.vaadin.serviceref.ServiceRef;
 import hr.tvz.vi.auth.CurrentUser;
+import hr.tvz.vi.components.FireEventTypeDataTab;
+import hr.tvz.vi.components.ReportAuthorizationTab;
 import hr.tvz.vi.components.ReportBasicDataTab;
 import hr.tvz.vi.components.ReportForcesTab;
-import hr.tvz.vi.components.VechileForm;
 import hr.tvz.vi.event.ChangeBroadcaster;
+import hr.tvz.vi.event.EventTypeChangedObserver;
+import hr.tvz.vi.event.VechileChangedChangedEvent;
 import hr.tvz.vi.orm.Report;
+import hr.tvz.vi.orm.Task;
 import hr.tvz.vi.service.AddressService;
+import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.ReportService;
 import hr.tvz.vi.service.VechileService;
-import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.util.Constants.EventSubscriber;
+import hr.tvz.vi.util.Constants.EventType;
+import hr.tvz.vi.util.Constants.OrganizationLevel;
+import hr.tvz.vi.util.Constants.ReportStatus;
 import hr.tvz.vi.util.Constants.Routes;
-import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.SubscriberScope;
-import jdk.internal.jline.internal.Log;
+import hr.tvz.vi.util.Constants.TaskType;
 import lombok.extern.slf4j.Slf4j;
+import hr.tvz.vi.util.Utils;
 
+/** The Constant log. */
 @Slf4j
 @Route(value = Routes.REPORT, layout = MainAppLayout.class)
 @EventSubscriber(scope = SubscriberScope.PUSH)
-public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasUrlParameter<String>, BeforeLeaveObserver{
+public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasUrlParameter<String>, BeforeLeaveObserver, EventTypeChangedObserver{
 
 
 	/** The Constant serialVersionUID. */
@@ -61,6 +69,9 @@ public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasU
 	
 	/** The report. */
 	private Report report;
+	
+	/** The fire event tab. */
+	private Tab fireEventTab;
 	
 	/** The current user. */
 	private final CurrentUser currentUser = Utils.getCurrentUser(UI.getCurrent());
@@ -73,14 +84,33 @@ public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasU
 	@Autowired
   private ServiceRef<AddressService> addressServiceRef;
 	
-	private Binder<Report> binder = new Binder<>(Report.class);
+	/** The organization service ref. */
+	@Autowired
+  private ServiceRef<OrganizationService> organizationServiceRef;
+	
+	/** The vechile service ref. */
+	@Autowired
+  private ServiceRef<VechileService> vechileServiceRef;
+	
+	/** The fire event type component. */
+	private FireEventTypeDataTab fireEventTypeComponent;
+	
+	/** The is organization creator. */
+	private boolean organizationIsCreator;
+	
+	/** The user need to prepare. */
+	private boolean userNeedToPrepare;
+	
+	/** The user need to approve. */
+	private boolean userNeedToApprove;
+	
 
 	/**
-	 * Sets the parameter.
-	 *
-	 * @param event     the event
-	 * @param parameter the parameter
-	 */
+   * Sets the parameter.
+   *
+   * @param event     the event
+   * @param reportId the report id
+   */
 	@Override
 	public void setParameter(BeforeEvent event, String reportId) {
 		if (StringUtils.isBlank(reportId) || !NumberUtils.isParsable(reportId)) {
@@ -89,9 +119,33 @@ public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasU
 		}
 		CurrentUser currentUser = Utils.getCurrentUser(UI.getCurrent());
 		this.report = reportServiceRef.get().getById(Long.valueOf(reportId)).orElse(null);
-		if (report == null || !report.getEventOrganizationList().stream().anyMatch(eventOrg -> eventOrg.getOrganization().getId().equals(currentUser.getActiveOrganization().getOrganization().getId()))) {
-		    throw new AccessDeniedException("Access Denied");
+		
+		if (report == null) {
+		  throw new NotFoundException();
 		}
+	  boolean organizationIsPartOfEvent = report.getEventOrganizationList().stream().anyMatch(eventOrg -> eventOrg.getOrganization().getId().equals(currentUser.getActiveOrganization().getOrganization().getId()));
+	  
+	  organizationIsCreator = currentUser.getActiveOrganization().getOrganization().getId().toString().equals(report.getCreatorId());
+	  
+	  List<Task> assignedReportTasks = reportServiceRef.get().getAllAssignedTasks(currentUser.getActiveOrganization().getOrganization().getId(), currentUser.getPerson().getId());
+	   boolean organizationIsPartOfTask = assignedReportTasks.stream().anyMatch(task -> task.getOrganizationAssignee().getId().equals(currentUser.getActiveOrganization().getOrganization().getId()));
+	   userNeedToPrepare = assignedReportTasks.stream().anyMatch(task ->task.getExecutionDateTime()==null && task.getReportId().equals(report.getId()) && task.getType().equals(TaskType.PREPARATION_TASK));
+	   userNeedToApprove = assignedReportTasks.stream().anyMatch(task ->task.getExecutionDateTime()==null && task.getReportId().equals(report.getId()) && task.getType().equals(TaskType.APPROVE_TASK));
+    
+	  if(!organizationIsPartOfTask && !organizationIsPartOfEvent && !organizationIsCreator && !userNeedToApprove && !userNeedToPrepare) {
+	    throw new AccessDeniedException("Access Denied");
+	  }
+	  log.info("pristup -> orgIasCreator: " + organizationIsCreator + " needToPrepare: " + userNeedToPrepare + " needstoApp: " + userNeedToApprove  + " IS LOCKED: " + report.isLocked());
+	 
+
+   if((organizationIsCreator || userNeedToPrepare || userNeedToApprove) && !report.isLocked() ) {
+	    report.setLocked(true);
+	    report.setLockOwner(currentUser.getPerson());
+	    reportServiceRef.get().updateReport(report);
+	 }
+	 
+	 
+	  
 	}
 
 	/**
@@ -115,7 +169,22 @@ public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasU
     super.onAttach(attachEvent);
     ChangeBroadcaster.registerToPushEvents(this);
     add(new VH4(getPageTitle()));
+    add(initLockInformationLayout());
     add(initTabLayout());
+  }
+  
+
+  /**
+   * Inits the lock information layout.
+   *
+   * @return the v horizontal layout
+   */
+  private VHorizontalLayout initLockInformationLayout() {
+    VHorizontalLayout layout = new VHorizontalLayout();
+    if(report.isLocked()) {
+      layout.add("Izvješće je zaključano od strane korisnika " + report.getLockOwner().getName()  +  " " +report.getLockOwner().getLastname());
+    }
+    return layout;
   }
 
   /**
@@ -125,11 +194,14 @@ public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasU
    */
   private VTabSheet initTabLayout() {
     VTabSheet tabs = new VTabSheet();
-   tabs.addTab(getTranslation("reportView.tab.basicData.label"), new ReportBasicDataTab(report, addressServiceRef.get()));
-    Tab forcesTab = tabs.addTab(getTranslation("reportView.tab.forcesData.label"), new ReportForcesTab(report));
-    
-   
-
+    Map<Component, Integer> tabComponentMap = new HashMap<Component, Integer>();
+    Binder<Report> binder = new Binder<>(Report.class);
+    fireEventTypeComponent = new FireEventTypeDataTab(report,userNeedToPrepare, binder, tabComponentMap);
+    boolean basicEditRight = !report.getStatus().equals(ReportStatus.APPROVED) && (organizationIsCreator  || userNeedToPrepare);
+    tabs.addTab(getTranslation("reportView.tab.basicData.label"), new ReportBasicDataTab(report, binder, basicEditRight, tabComponentMap, addressServiceRef.get(), this));
+    tabs.addTab(getTranslation("reportView.tab.forcesData.label"), new ReportForcesTab(report, userNeedToPrepare, organizationServiceRef.get(), vechileServiceRef.get(), reportServiceRef.get()));
+    fireEventTab = tabs.addTab(getTranslation("reportView.tab.fireEventData.label"), fireEventTypeComponent);
+    tabs.addTab(getTranslation("reportView.tab.authorizationData.label"), new ReportAuthorizationTab(report, binder, userNeedToPrepare, (userNeedToPrepare || userNeedToApprove), tabs, tabComponentMap, organizationServiceRef.get(), reportServiceRef.get()));
     return tabs;
   }
 
@@ -151,7 +223,24 @@ public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasU
    */
   @Override
   public void beforeLeave(BeforeLeaveEvent event) {
+    report.setLocked(false);
+    report.setLockOwner(null);
     reportServiceRef.get().updateReport(report);
+  }
+
+  /**
+   * Event type changed.
+   *
+   * @param eventType the event type
+   */
+  @Override
+  public void eventTypeChanged(EventType eventType) {
+    if(eventType == null) {
+      return;
+    }
+    report.setEventType(eventType);
+    fireEventTab.setVisible(eventType.isInterventionFire());
+    fireEventTypeComponent.initFireEventDataForm();
   }
 
 }

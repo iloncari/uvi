@@ -4,6 +4,8 @@
  */
 package hr.tvz.vi.service;
 
+import hr.tvz.vi.orm.AddressRepository;
+import hr.tvz.vi.orm.CityRepository;
 import hr.tvz.vi.orm.Organization;
 import hr.tvz.vi.orm.Person;
 import hr.tvz.vi.orm.PersonOrganization;
@@ -31,6 +33,13 @@ public class PersonService extends AbstractService<Person> {
   /** The person organization repository. */
   @Autowired
   PersonOrganizationRepository personOrganizationRepository;
+  
+  @Autowired
+  AddressRepository addressRepository;
+  
+  @Autowired
+  CityRepository cityRepository;
+
 
   /**
    * Gets the person by id.
@@ -112,6 +121,14 @@ public class PersonService extends AbstractService<Person> {
     if (person == null) {
       return null;
     }
+    if(person.getResidenceAddress()!=null) {
+      if(person.getResidenceAddress().getCity()!=null) {
+        cityRepository.save(person.getResidenceAddress().getCity());
+      }
+      addressRepository.save(person.getResidenceAddress());
+    }
+    
+    
     return repository.save(person);
   }
 

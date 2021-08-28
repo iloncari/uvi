@@ -7,7 +7,6 @@ package hr.tvz.vi.orm;
 
 import hr.tvz.vi.util.Constants.Gender;
 import hr.tvz.vi.util.Constants.Professions;
-import jdk.internal.jline.internal.Log;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -51,6 +50,8 @@ public class Person {
   private int passwordLength;
 
   private String username;
+  
+  private Long lastActiveOrganizationId;
 
   @Enumerated(EnumType.STRING)
   private Gender gender;

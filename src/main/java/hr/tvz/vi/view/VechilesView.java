@@ -45,7 +45,6 @@ import de.codecamp.vaadin.serviceref.ServiceRef;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 4:34:41 PM Aug 14, 2021
  */
-@Slf4j
 @Route(value = Routes.VECHILES, layout = MainAppLayout.class)
 @EventSubscriber(scope = SubscriberScope.PUSH)
 public class VechilesView extends AbstractGridView<Vechile> implements HasDynamicTitle {
@@ -218,6 +217,16 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
     dialogLayout.add(dialogTitle, idField, transferButton);
     transferDialog.add(dialogLayout);
     transferDialog.open();
+  }
+
+  /**
+   * Inits the above layout.
+   *
+   * @return the v horizontal layout
+   */
+  @Override
+  protected VHorizontalLayout initAboveLayout() {
+    return null;
   }
 
 }

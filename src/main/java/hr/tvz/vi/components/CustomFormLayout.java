@@ -29,6 +29,7 @@ import org.vaadin.firitin.components.html.VH4;
 import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -48,8 +49,10 @@ public class CustomFormLayout<T> extends VVerticalLayout {
   private final VH4 formTitle = new VH4().withVisible(false);
 
   /** The binder. */
+  @Getter
   private final Binder<T> binder;
 
+  /** The bean. */
   private final T bean;
 
   /**
@@ -291,7 +294,23 @@ public class CustomFormLayout<T> extends VVerticalLayout {
    * @param taskFormModel the task form model
    */
   public void setLabel(final Component component, final String translationKey, Object... labelParams) {
-    final String label = getTranslation(translationKey, labelParams);
+    setLabel(component, false, translationKey, labelParams);
+  }
+
+  
+  /**
+   * Sets the label.
+   *
+   * @param component the component
+   * @param requiredTag the required tag
+   * @param translationKey the translation key
+   * @param labelParams the label params
+   */
+  public void setLabel(final Component component, boolean requiredTag, final String translationKey, Object... labelParams) {
+     String label = getTranslation(translationKey, labelParams);
+    if(requiredTag) {
+      label = label + "*";
+    }
     component.getElement().setAttribute("label", label);
   }
 

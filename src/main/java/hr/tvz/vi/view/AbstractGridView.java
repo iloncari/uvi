@@ -79,6 +79,13 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
    * @return the v horizontal layout
    */
   protected abstract VHorizontalLayout initBellowButtonLayout();
+  
+  /**
+   * Inits the above button layout.
+   *
+   * @return the v horizontal layout
+   */
+  protected abstract VHorizontalLayout initAboveLayout();
 
   /**
    * Inits the grid layout.
@@ -94,10 +101,17 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
   protected void onAttach(AttachEvent attachEvent) {
     super.onAttach(attachEvent);
     ChangeBroadcaster.registerToPushEvents(this);
+    VHorizontalLayout aboveGrid = initAboveLayout();
+    if(aboveGrid != null) {
+      add(aboveGrid);
+    }
     initGrid();
     add(grid);
     grid.setItems(getGridItems());
-    add(initBellowButtonLayout());
+    VHorizontalLayout buttons = initBellowButtonLayout();
+    if(buttons != null) {
+      add(buttons);
+    }
   }
 
   /**

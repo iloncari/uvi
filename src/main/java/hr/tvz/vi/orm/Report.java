@@ -5,17 +5,30 @@
  */
 package hr.tvz.vi.orm;
 
+import hr.tvz.vi.util.Constants.BuildingStatus;
+import hr.tvz.vi.util.Constants.BuildingType;
+import hr.tvz.vi.util.Constants.EventAction;
+import hr.tvz.vi.util.Constants.EventActivity;
 import hr.tvz.vi.util.Constants.EventCause;
 import hr.tvz.vi.util.Constants.EventCausePerson;
 import hr.tvz.vi.util.Constants.EventType;
+import hr.tvz.vi.util.Constants.FireSize;
+import hr.tvz.vi.util.Constants.IndustrialPlantType;
+import hr.tvz.vi.util.Constants.ItemOnFire;
+import hr.tvz.vi.util.Constants.OpenSpaceFireType;
 import hr.tvz.vi.util.Constants.ReportStatus;
+import hr.tvz.vi.util.Constants.TrafficFireVechileType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -23,6 +36,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -39,6 +55,11 @@ public class Report {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+  
+  private boolean locked;
+  
+  @OneToOne
+  private Person lockOwner;
   
   private String identificationNumber;
   
@@ -74,14 +95,50 @@ public class Report {
   
   @Enumerated(EnumType.STRING)
   private EventCausePerson eventCausePerson;
+  
+  @Column
+  @Enumerated
+  @ElementCollection(targetClass = EventActivity.class, fetch = FetchType.EAGER)
+  private Set<EventActivity> eventActivities;
+  
+  @Column
+  @Enumerated
+  @ElementCollection(targetClass = ItemOnFire.class, fetch = FetchType.EAGER)
+  private Set<ItemOnFire> itemsOnFire;
+  
+  @Enumerated(EnumType.STRING)
+  private FireSize fireSize;
+  
+  private Boolean explosion;
+  
+  private Boolean fireRepeated;
+  
+  @Enumerated(EnumType.STRING)
+  private BuildingType buildingType;
+ 
+  @Enumerated(EnumType.STRING)
+  private BuildingStatus buildingStatus;
+  
+  private Integer height;
+  
+  private Integer floor;
+ 
+  
+  @Enumerated(EnumType.STRING)
+  private IndustrialPlantType industrialPlantType;
+  
+  @Enumerated(EnumType.STRING)
+  private OpenSpaceFireType openSpaceFireType;
+  
+  private Double width;
+  
+  private Double lenght;
+  
+  private Integer numberOfVechiles;
+  
+  @Enumerated(EnumType.STRING)
+  private TrafficFireVechileType trafficFireVechileType;
 
-  @ToString.Exclude
-  @OneToMany(mappedBy = "report", fetch = FetchType.EAGER)
-  private List<hr.tvz.vi.orm.Task> tasks;
-  
-  
-
-  
   /**
 	 * Instantiates a new report.
 	 */

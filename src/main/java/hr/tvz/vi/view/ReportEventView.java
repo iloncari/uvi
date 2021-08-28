@@ -32,6 +32,7 @@ import hr.tvz.vi.orm.County;
 import hr.tvz.vi.orm.EventOrganization;
 import hr.tvz.vi.orm.Organization;
 import hr.tvz.vi.orm.Report;
+import hr.tvz.vi.orm.Task;
 import hr.tvz.vi.service.AddressService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.ReportService;
@@ -40,7 +41,7 @@ import hr.tvz.vi.util.Constants.EventType;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.StyleConstants;
-import jdk.internal.jline.internal.Log;
+import hr.tvz.vi.util.Constants.TaskType;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -163,6 +164,16 @@ public class ReportEventView extends VVerticalLayout implements HasDynamicTitle{
 		reportEventLayout.addButton("reportEventView.form.button.reportEvent", e -> {
 			if(reportEventLayout.writeBean()){
 			reportServiceRef.get().saveEventReport(eventReport, currentUser.getActiveOrganization().getOrganization().getId());
+			eventReport.getEventOrganizationList().forEach(eventOrganization -> {
+			  Task preparationTask = new Task();
+			  preparationTask.setCreationDateTime(LocalDateTime.now());
+			  preparationTask.setName(getTranslation("task.preparation.label", eventReport.getIdentificationNumber()));
+			  preparationTask.setReportId(eventReport.getId());
+			  preparationTask.setType(TaskType.PREPARATION_TASK);
+			  preparationTask.setOrganizationAssignee(eventOrganization.getOrganization());
+			  reportServiceRef.get().saveReportTask(preparationTask);
+			  //event na org
+			});
 			UI.getCurrent().navigate(HomeView.class);
 			}
 		});
