@@ -60,16 +60,10 @@ public class Vechile {
   @Enumerated(EnumType.STRING)
   private VechileType type;
 
-  /*
-   * @ManyToOne
-   *
-   * @ToString.Exclude
-   *
-   * @JoinColumn(name = "organizationId")
-   * private Organization organization;
-   */
   @ManyToOne
   private Organization organization;
+  
+  private Boolean active;
 
   @ToString.Exclude
   @OneToMany(mappedBy = "serviceVechile", fetch = FetchType.EAGER)

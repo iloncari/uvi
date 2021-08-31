@@ -5,6 +5,11 @@
 
 package hr.tvz.vi.view;
 
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.firitin.components.select.VSelect;
+
 import com.github.appreciated.app.layout.component.applayout.LeftLayouts;
 import com.github.appreciated.app.layout.component.builder.AppLayoutBuilder;
 import com.github.appreciated.app.layout.component.menu.left.builder.LeftAppMenuBuilder;
@@ -18,34 +23,25 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.page.Push;
 
-import hr.tvz.vi.auth.AccessControlFactory;
+import de.codecamp.vaadin.serviceref.ServiceRef;
 import hr.tvz.vi.auth.CurrentUser;
+import hr.tvz.vi.components.AppHeader;
 import hr.tvz.vi.event.ChangeBroadcaster;
+import hr.tvz.vi.event.NotificationEvent;
 import hr.tvz.vi.event.PersonOrganizationChangedEvent;
 import hr.tvz.vi.orm.PersonOrganization;
-import hr.tvz.vi.service.AuthentificationService;
+import hr.tvz.vi.service.NotificationService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.PersonService;
 import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.ImageConstants;
-import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.SubscriberScope;
 import hr.tvz.vi.util.Utils;
-
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
-import org.vaadin.firitin.components.select.VSelect;
-
-import de.codecamp.vaadin.serviceref.ServiceRef;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * The Class MainAppLayout.
@@ -54,8 +50,9 @@ import lombok.extern.slf4j.Slf4j;
  * @since 12:24:01 PM Aug 7, 2021
  */
 @CssImport("./styles/custom-notification.css")
+@CssImport("./styles/shared-styles.css")
+@CssImport("./styles/style.css")
 @Push
-@Slf4j
 @EventSubscriber(scope = SubscriberScope.ALL)
 public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftResponsiveHybrid> {
 
@@ -80,9 +77,13 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
   /** The person organization select. */
   private VSelect<PersonOrganization> personOrganizationSelect;
 
+  
+  /** The app header. */
+  private AppHeader appHeader;
+
   /** The auth service ref. */
   @Autowired
-  private ServiceRef<AuthentificationService> authServiceRef;
+  private ServiceRef<NotificationService> notificationServiceRef;
 
   /** The organization service ref. */
   @Autowired
@@ -96,33 +97,26 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
    * Instantiates a new main app layout.
    */
   public MainAppLayout() {
+    appHeader = new AppHeader();
     currentUser = Utils.getCurrentUser(UI.getCurrent());
     init(AppLayoutBuilder.get(LeftLayouts.LeftResponsiveHybrid.class)
       .withIcon(ImageConstants.APP_LOGO.getPath())
-      .withAppBar(buildAppBar())
+      .withAppBar(appHeader)
       .withAppMenu(buildLeftMenu())
       .build());
   }
-
+  
   /**
-   * Builds the app bar.
+   * Notification received.
    *
-   * @return the component
+   * @param event the event
    */
-  private Component buildAppBar() {
-    final VHorizontalLayout appBarLayout = new VHorizontalLayout();
-
-    personOrganizationSelect = new VSelect<>();
-    initOrganizationsSelect();
-    final Icon signOut = VaadinIcon.EXIT.create();
-    signOut.addClickListener(e -> {
-      AccessControlFactory.of().getAccessControl(authServiceRef.get()).signOut();
-      UI.getCurrent().navigate(LoginView.class);
-    });
-
-    appBarLayout.add(personOrganizationSelect, VaadinIcon.BELL.create(), signOut);
-
-    return appBarLayout;
+  @Subscribe
+  public void notificationReceived(NotificationEvent event) {
+   if(currentUser.getActiveOrganizationObject().getId().equals(event.getNotification().getOrganizationId())) {
+     getUI().ifPresent(ui -> ui.access(() -> 
+       appHeader.setActiveNotifications(notificationServiceRef.get().findAllActiveNotifications(currentUser.getActiveOrganizationObject().getId(), currentUser.getPerson().getId()))));
+   }
   }
 
   /**
@@ -189,6 +183,9 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
     ChangeBroadcaster.registerToPushEvents(this);
     setActiveOrganizationMembersBadge();
     reportEventItem.setVisible(currentUser.hasManagerRole());
+    appHeader.setPersonService(personServiceRef);
+    appHeader.setNotificationService(notificationServiceRef);
+    appHeader.setActiveNotifications(notificationServiceRef.get().findAllActiveNotifications(currentUser.getActiveOrganizationObject().getId(), currentUser.getPerson().getId()));
   }
 
   /**

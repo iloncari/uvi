@@ -27,17 +27,26 @@ import com.vaadin.flow.router.Route;
 import de.codecamp.vaadin.serviceref.ServiceRef;
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.components.CustomFormLayout;
+import hr.tvz.vi.components.GroupTasksTab;
+import hr.tvz.vi.event.ChangeBroadcaster;
+import hr.tvz.vi.event.NotificationEvent;
+import hr.tvz.vi.event.TaskChangeEvent;
 import hr.tvz.vi.orm.City;
 import hr.tvz.vi.orm.County;
 import hr.tvz.vi.orm.EventOrganization;
+import hr.tvz.vi.orm.Notification;
 import hr.tvz.vi.orm.Organization;
 import hr.tvz.vi.orm.Report;
 import hr.tvz.vi.orm.Task;
 import hr.tvz.vi.service.AddressService;
+import hr.tvz.vi.service.NotificationService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.ReportService;
 import hr.tvz.vi.util.Utils;
+import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.EventType;
+import hr.tvz.vi.util.Constants.GroupType;
+import hr.tvz.vi.util.Constants.NotificationType;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.StyleConstants;
@@ -84,6 +93,10 @@ public class ReportEventView extends VVerticalLayout implements HasDynamicTitle{
 	/** The report service ref. */
 	@Autowired
 	private ServiceRef<ReportService> reportServiceRef;
+	
+	/** The notification service ref. */
+	@Autowired
+	private ServiceRef<NotificationService> notificationServiceRef;
 	/**
 	 * Gets the page title.
 	 *
@@ -172,7 +185,20 @@ public class ReportEventView extends VVerticalLayout implements HasDynamicTitle{
 			  preparationTask.setType(TaskType.PREPARATION_TASK);
 			  preparationTask.setOrganizationAssignee(eventOrganization.getOrganization());
 			  reportServiceRef.get().saveReportTask(preparationTask);
-			  //event na org
+			  ChangeBroadcaster.firePushEvent(new TaskChangeEvent(this, preparationTask, EventAction.ADDED));
+			  
+			  Notification notification = new Notification();
+			  notification.setCreationDateTime(LocalDateTime.now());
+			  notification.setMessage(getTranslation("task.preparation.label", eventReport.getIdentificationNumber()));
+			  notification.setOrganizationId(eventOrganization.getOrganization().getId());
+			  notification.setRecipientId(null);
+			  notification.setSourceId(eventReport.getId());
+			  notification.setTitle("Novi zadatak");
+			  notification.setType(NotificationType.TASK);
+			  notificationServiceRef.get().saveOrUpdateNotification(notification);
+			  organizationServiceRef.get().getOrganizationGroupMembers(GroupType.PREPARERS, eventOrganization.getOrganization().getId()).forEach(gm -> 
+			    notificationServiceRef.get().mapNotificationToUser(notification.getId(), gm.getPerson().getId()));
+			  ChangeBroadcaster.firePushEvent(new NotificationEvent(this, notification));
 			});
 			UI.getCurrent().navigate(HomeView.class);
 			}

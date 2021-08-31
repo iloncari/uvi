@@ -22,6 +22,7 @@ import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.components.textfield.VTextArea;
 import org.vaadin.firitin.layouts.VTabSheet;
 
+import com.google.common.eventbus.Subscribe;
 import com.sun.source.util.TaskListener;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
@@ -31,14 +32,23 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.ListDataProvider;
 
 import hr.tvz.vi.auth.CurrentUser;
+import hr.tvz.vi.event.ChangeBroadcaster;
+import hr.tvz.vi.event.NotificationEvent;
+import hr.tvz.vi.event.TaskChangeEvent;
 import hr.tvz.vi.orm.EventDescription;
+import hr.tvz.vi.orm.Notification;
 import hr.tvz.vi.orm.Report;
 import hr.tvz.vi.orm.Task;
+import hr.tvz.vi.service.NotificationService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.ReportService;
+import hr.tvz.vi.util.Constants.EventAction;
+import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.GroupType;
+import hr.tvz.vi.util.Constants.NotificationType;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.ReportStatus;
+import hr.tvz.vi.util.Constants.SubscriberScope;
 import hr.tvz.vi.util.Constants.TaskType;
 import hr.tvz.vi.view.ReportsView;
 import hr.tvz.vi.util.Utils;
@@ -51,6 +61,7 @@ import lombok.extern.slf4j.Slf4j;
  * @since 7:54:47 PM Aug 26, 2021
  */
 @Slf4j
+@EventSubscriber(scope = SubscriberScope.PUSH)
 public class ReportAuthorizationTab extends VVerticalLayout{
 
   /** The Constant serialVersionUID. */
@@ -64,6 +75,9 @@ public class ReportAuthorizationTab extends VVerticalLayout{
   
   /** The organization service. */
   private OrganizationService organizationService;
+  
+  /** The notification service. */
+  private NotificationService notificationService;
   
   /** The report service. */
   private ReportService reportService;
@@ -84,6 +98,8 @@ public class ReportAuthorizationTab extends VVerticalLayout{
   
   private boolean taskExecutionRight;
   
+  private VGrid<Task> authorizationTasksGrid;
+  
   VTabSheet tabs;
   
   /**
@@ -94,7 +110,8 @@ public class ReportAuthorizationTab extends VVerticalLayout{
    * @param organizationService the organization service
    * @param reportService the report service
    */
-  public ReportAuthorizationTab(Report report, Binder<Report> binder, boolean descEditRight, boolean taskExecutionRight, VTabSheet tabs, Map<Component, Integer> tabComponentMap, OrganizationService organizationService, ReportService reportService) {
+  public ReportAuthorizationTab(Report report, Binder<Report> binder, boolean descEditRight, boolean taskExecutionRight, VTabSheet tabs, Map<Component, Integer> tabComponentMap,
+    OrganizationService organizationService, ReportService reportService, NotificationService notificationService) {
     this.report = report;
     this.organizationService = organizationService;
     this.binder = binder;
@@ -103,6 +120,7 @@ public class ReportAuthorizationTab extends VVerticalLayout{
     this.tabs = tabs;
     this.descEditRight = descEditRight;
     this.taskExecutionRight = taskExecutionRight;
+    this.notificationService = notificationService;
   }
 
   /**
@@ -113,6 +131,7 @@ public class ReportAuthorizationTab extends VVerticalLayout{
   @Override
   protected void onAttach(AttachEvent attachEvent) {
     super.onAttach(attachEvent);
+    ChangeBroadcaster.registerToPushEvents(this);
     removeAll();
     initDesctiprionForm();
     initAuthorizationGrid();
@@ -195,13 +214,37 @@ public class ReportAuthorizationTab extends VVerticalLayout{
   }
   
   /**
+   * Task changed.
+   *
+   * @param event the event
+   */
+  @SuppressWarnings("unchecked")
+  @Subscribe
+  public void taskChanged(TaskChangeEvent event) {
+    log.info("task cahnged ");
+    if(report.getId().equals(event.getTask().getReportId())) {
+      getUI().ifPresent(ui -> ui.access(() -> {
+        if(EventAction.ADDED.equals(event.getAction())) {
+          ((ListDataProvider<Task>)authorizationTasksGrid.getDataProvider()).getItems().add(event.getTask());
+        }else if(EventAction.MODIFIED.equals(event.getAction())) {
+          ((ListDataProvider<Task>)authorizationTasksGrid.getDataProvider()).getItems().removeIf(task -> task.getId().equals(event.getTask().getId()));
+          ((ListDataProvider<Task>)authorizationTasksGrid.getDataProvider()).getItems().add(event.getTask());
+        }
+        authorizationTasksGrid.getDataProvider().refreshAll();
+      }));
+      
+    }
+  }
+  
+  /**
    * Inits the authorization grid.
    */
   private void  initAuthorizationGrid() {
     VVerticalLayout authorizationLayout = new VVerticalLayout();
     List<Task> tasksList = reportService.getReportTasks(report.getId());
     
-    VGrid<Task> authorizationTasksGrid = new VGrid<Task>();
+    authorizationTasksGrid = new VGrid<Task>();
+    authorizationTasksGrid.addColumn(task -> task.getName()).setHeader(getTranslation("reportView.reportAuthorizationTab.grid.name"));
     authorizationTasksGrid.addColumn(task -> task.getOrganizationAssignee().getName()).setHeader(getTranslation("reportView.reportAuthorizationTab.grid.organization"));
     authorizationTasksGrid.addColumn(task -> { 
       if(task.getAssignee()==null) {
@@ -210,17 +253,25 @@ public class ReportAuthorizationTab extends VVerticalLayout{
       return task.getAssignee().getName() +  " " + task.getAssignee().getLastname();
     }).setHeader(getTranslation("reportView.reportAuthorizationTab.grid.assignee"));
     
+    List<Long> preparersIds = organizationService.getOrganizationGroupMembers(GroupType.PREPARERS, currentUser.getActiveOrganizationObject().getId()).stream()
+      .map(gm -> gm.getPerson().getId()).collect(Collectors.toList());
+    
+    List<Long> approversIds =  organizationService.getOrganizationGroupMembers(GroupType.APPROVERS, currentUser.getActiveOrganizationObject().getId()).stream()
+      .map(gm -> gm.getPerson().getId()).collect(Collectors.toList());
+    
     authorizationTasksGrid.addComponentColumn(task -> {
       if(task.getExecutionDateTime()!=null) {
+        log.info("vec je executan " + task.getName());
+        //task is inactive
         return VaadinIcon.CHECK.create();
       }else if(task.getAssignee() != null && task.getAssignee().getId().equals(currentUser.getPerson().getId())) {
+        log.info("assignam na usera " + task.getName());
+        //task is asigned to currentuser
         VHorizontalLayout buttons = new VHorizontalLayout();
         VButton authorize = new VButton(getTranslation("reportView.reportAuthorizationTab.button.authorize")).withClickListener(authEvent -> {
           task.setExecutionDateTime(LocalDateTime.now());
           reportService.saveReportTask(task);
-          tasksList.removeIf(t -> t.getId().equals(task.getId()));
-          tasksList.add(task);
-          authorizationTasksGrid.getDataProvider().refreshAll();
+          ChangeBroadcaster.firePushEvent(new TaskChangeEvent(this, task, EventAction.MODIFIED));
           
           if(!tasksList.stream().anyMatch(t -> t.getExecutionDateTime()==null) && OrganizationLevel.OPERATIONAL_LEVEL.equals(currentUser.getActiveOrganization().getOrganization().getLevel())) {
             Task approveTask = new Task();
@@ -230,6 +281,21 @@ public class ReportAuthorizationTab extends VVerticalLayout{
             approveTask.setReportId(report.getId());
             approveTask.setType(TaskType.APPROVE_TASK);
             reportService.saveReportTask(approveTask);
+            ChangeBroadcaster.firePushEvent(new TaskChangeEvent(this, approveTask, EventAction.ADDED));
+            
+            Notification notification = new Notification();
+            notification.setCreationDateTime(LocalDateTime.now());
+            notification.setMessage(getTranslation("task.approve.label", report.getIdentificationNumber()));
+            notification.setOrganizationId(currentUser.getParentOrganization().getId());
+            notification.setRecipientId(null);
+            notification.setSourceId(report.getId());
+            notification.setTitle("Novi zadatak");
+            notification.setType(NotificationType.TASK);
+            notificationService.saveOrUpdateNotification(notification);
+            organizationService.getOrganizationGroupMembers(GroupType.APPROVERS, currentUser.getParentOrganization().getId()).forEach(gm -> 
+              notificationService.mapNotificationToUser(notification.getId(), gm.getPerson().getId()));
+            ChangeBroadcaster.firePushEvent(new NotificationEvent(this, notification));
+            
             
             report.setStatus(ReportStatus.PREPARED);
             reportService.updateReport(report);
@@ -239,9 +305,11 @@ public class ReportAuthorizationTab extends VVerticalLayout{
             report.setStatus(ReportStatus.APPROVED);
             reportService.updateReport(report);
           }
-          UI.getCurrent().getPage().reload();
-        });
-        authorize.setEnabled(taskExecutionRight);
+          
+          
+          
+        });//listener authorize
+        authorize.setEnabled(taskExecutionRight || task.getAssignee().getId().equals(currentUser.getPerson().getId()));
         buttons.add(authorize);
         if(task.getType().equals(TaskType.APPROVE_TASK)) {
           VButton reject = new VButton(getTranslation("reportView.reportAuthorizationTab.button.reject")).withClickListener(authEvent -> {
@@ -250,35 +318,52 @@ public class ReportAuthorizationTab extends VVerticalLayout{
             tasksList.removeIf(t -> t.getId().equals(task.getId()));
             tasksList.add(task);
             authorizationTasksGrid.getDataProvider().refreshAll();
-            currentUser.getActiveOrganization().getOrganization().getChilds().stream().filter(org -> report.getEventOrganizationList().stream().anyMatch(eo -> eo.getOrganization().getId().equals(org.getId()))).forEach(child -> {
-              Task preparationTask = new Task();
-              preparationTask.setCreationDateTime(LocalDateTime.now());
-              preparationTask.setName(getTranslation("task.preparation.label", report.getIdentificationNumber()));
-              preparationTask.setOrganizationAssignee(child);
-              preparationTask.setReportId(report.getId());
-              preparationTask.setType(TaskType.PREPARATION_TASK);
-              reportService.saveReportTask(preparationTask);
-            });
-            
+            currentUser.getActiveOrganization().getOrganization().getChilds().stream().filter(org -> report.getEventOrganizationList().stream()
+              .anyMatch(eo -> eo.getOrganization().getId().equals(org.getId()))).forEach(child -> {
+                Task preparationTask = new Task();
+                preparationTask.setCreationDateTime(LocalDateTime.now());
+                preparationTask.setName(getTranslation("task.preparation.label", report.getIdentificationNumber()));
+                preparationTask.setOrganizationAssignee(child);
+                preparationTask.setReportId(report.getId());
+                preparationTask.setType(TaskType.PREPARATION_TASK);
+                reportService.saveReportTask(preparationTask);
+                ChangeBroadcaster.firePushEvent(new TaskChangeEvent(this, preparationTask, EventAction.ADDED));
+                
+                Notification notification = new Notification();
+                notification.setCreationDateTime(LocalDateTime.now());
+                notification.setMessage(getTranslation("task.preparation.label", report.getIdentificationNumber()));
+                notification.setOrganizationId(currentUser.getParentOrganization().getId());
+                notification.setRecipientId(null);
+                notification.setSourceId(report.getId());
+                notification.setTitle("Novi zadatak");
+                notification.setType(NotificationType.TASK);
+                notificationService.saveOrUpdateNotification(notification);
+                preparersIds.forEach(preparerId -> notificationService.mapNotificationToUser(notification.getId(),preparerId));
+                ChangeBroadcaster.firePushEvent(new NotificationEvent(this, notification));
+              });
             report.setStatus(ReportStatus.NEW);
-            reportService.updateReport(report);
-            UI.getCurrent().getPage().reload();
-             
+            reportService.updateReport(report);   
           });
-          reject.setEnabled(taskExecutionRight);
+          reject.setEnabled(taskExecutionRight || task.getAssignee().getId().equals(currentUser.getPerson().getId()));
           buttons.add(reject);
         }
         return buttons;
+      }else if((preparersIds.contains(currentUser.getPerson().getId()) && OrganizationLevel.OPERATIONAL_LEVEL.equals(currentUser.getActiveOrganizationObject().getLevel()) ) || (approversIds.contains(currentUser.getPerson().getId())  && OrganizationLevel.CITY_LEVEL.equals(currentUser.getActiveOrganizationObject().getLevel()) ) ) {
+        log.info("ASSIGNAN NA NEKOGA ILI na grupu " + task.getName());
+        VButton assignToMe = new VButton(getTranslation("reportView.reportAuthorizationTab.button.assignToMe")).withClickListener(assignEvent -> {
+          task.setAssignee(currentUser.getPerson());
+          reportService.saveReportTask(task);
+          ChangeBroadcaster.firePushEvent(new TaskChangeEvent(this, task, EventAction.MODIFIED));
+        });
+        return assignToMe;
       }
-      return new VSpan();
+      log.info("ni jedno " + task.getName());
+      return new VSpan("");
     });
-    authorizationTasksGrid.setItems(tasksList);
- 
     
+    authorizationTasksGrid.setItems(tasksList);
     authorizationLayout.add(authorizationTasksGrid);
     add(authorizationLayout);
-  }
-  
-  
+  }//metoda
 
 }

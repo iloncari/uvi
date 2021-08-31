@@ -27,6 +27,14 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
    * @return the list
    */
   List<Person> findByOrgList_ExitDateIsNullAndOrgList_OrganizationId(Long organizationId);
+  
+  /**
+   * Count by org list exit date is null and org list organization id.
+   *
+   * @param organizationId the organization id
+   * @return the long
+   */
+  Long countByOrgList_ExitDateIsNullAndOrgList_OrganizationId(Long organizationId);
 
   /**
    * Find by username.

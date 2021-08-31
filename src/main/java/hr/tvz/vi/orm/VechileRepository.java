@@ -11,6 +11,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface VechileRepository extends JpaRepository<Vechile, Long> {
 
-  List<Vechile> findByOrganizationId(Long organizationId);
+  List<Vechile> findByOrganizationIdAndActiveTrue(Long organizationId);
 
 }

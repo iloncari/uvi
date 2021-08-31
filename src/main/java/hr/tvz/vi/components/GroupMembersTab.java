@@ -4,21 +4,34 @@
  */
 package hr.tvz.vi.components;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.vaadin.firitin.components.button.DeleteButton;
 import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import org.vaadin.firitin.components.select.VSelect;
 
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.data.provider.ListDataProvider;
 
+import hr.tvz.vi.event.ChangeBroadcaster;
+import hr.tvz.vi.event.GroupChangeEvent;
+import hr.tvz.vi.event.NotificationEvent;
 import hr.tvz.vi.orm.GroupMember;
+import hr.tvz.vi.orm.Notification;
 import hr.tvz.vi.orm.Person;
+import hr.tvz.vi.service.NotificationService;
 import hr.tvz.vi.service.OrganizationService;
+import hr.tvz.vi.util.Constants.EventAction;
+import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.GroupType;
+import hr.tvz.vi.util.Constants.NotificationType;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Routes;
+import hr.tvz.vi.util.Constants.SubscriberScope;
 import hr.tvz.vi.view.AbstractGridView;
 import lombok.extern.slf4j.Slf4j;
 
@@ -37,6 +50,9 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
   /** The organization service. */
   private OrganizationService organizationService;
   
+  /** The notification service. */
+  private NotificationService notificationService;
+  
   /** The members select. */
   private VSelect<Person> membersSelect;
   
@@ -49,20 +65,49 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
    *
    * @param organizationService the organization service
    */
-  public GroupMembersTab(OrganizationService organizationService) {
+  public GroupMembersTab(OrganizationService organizationService, NotificationService notificationService) {
     super();
     this.organizationService = organizationService;
+    this.notificationService = notificationService;
   }
-
+  
   /**
-   * On attach.
+   * Group changed.
    *
-   * @param attachEvent the attach event
+   * @param event the event
    */
-  @Override
-  protected void onAttach(AttachEvent attachEvent) {
-    super.onAttach(attachEvent);
+  @SuppressWarnings("unchecked")
+  @Subscribe
+  public void groupChanged(GroupChangeEvent event) {
+    if(getCurrentUser().getActiveOrganizationObject().getId().equals(event.getGroupMember().getOrganizationId())) {
+      getUI().ifPresent(ui -> ui.access(() -> {
+        Notification notification = new Notification();
+        notification.setCreationDateTime(LocalDateTime.now());
+        notification.setOrganizationId(getCurrentUser().getActiveOrganizationObject().getId());
+        notification.setRecipientId(event.getGroupMember().getPerson().getId());
+        notification.setTitle("Grupa");
+        notification.setType(NotificationType.GROUP);
+      if(EventAction.ADDED.equals(event.getAction())) {
+        ((ListDataProvider<GroupMember>)getGrid().getDataProvider()).getItems().add(event.getGroupMember());
+        members.remove(event.getGroupMember().getPerson());
+        membersSelect.setItems(members);
+        notification.setMessage("Dodani ste u grupu");
+      }else if(EventAction.REMOVED.equals(event.getAction())) {
+        ((ListDataProvider<GroupMember>)getGrid().getDataProvider()).getItems().remove(event.getGroupMember());
+        members.add(event.getGroupMember().getPerson());
+        membersSelect.setItems(members);
+        notification.setMessage("Uklonjeni ste iz grupu");
+      }
+      notificationService.saveOrUpdateNotification(notification);
+      notificationService.mapNotificationToUser(notification.getId(), event.getGroupMember().getPerson().getId());
+      ChangeBroadcaster.firePushEvent(new NotificationEvent(this, notification));
+      getGrid().getDataProvider().refreshAll();
+      }));
+    }
   }
+  
+  
+
 
   /**
    * Gets the grid items.
@@ -74,6 +119,11 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
     return organizationService.getOrganizationGroupMembers(getGroupType(), getCurrentUser().getActiveOrganization().getOrganization().getId());
   }
 
+  /**
+   * Gets the page title.
+   *
+   * @return the page title
+   */
   @Override
   public String getPageTitle() {
     return getTranslation(Routes.getPageTitleKey(Routes.ORGANIZATION));
@@ -123,7 +173,6 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
       getGrid().addColumn(groupMember -> groupMember.getPerson().getIdentificationNumber()).setHeader("groupMembersTab.grid.personIdentificationNumber");
       getGrid().addColumn(groupMember -> groupMember.getPerson().getName() +" " + groupMember.getPerson().getLastname()).setHeader("groupMembersTab.grid.perosonNameLastname");
       getGrid().addComponentColumn(groupMember -> {
-        @SuppressWarnings("unchecked")
         DeleteButton delete = new DeleteButton().withText(getTranslation("button.delete"))
                                                 .withRejectText(getTranslation("button.cancel"))
                                                 .withHeaderText(getTranslation("groupMembersTab.deleteMember.label"))
@@ -131,10 +180,7 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
                                                 .withConfirmText(getTranslation("button.confirm"))
                                                 .withConfirmHandler(() -> {
                                                   organizationService.deleteGroupMember(groupMember);
-                                                  ((ListDataProvider<GroupMember>)getGrid().getDataProvider()).getItems().remove(groupMember);
-                                                  getGrid().getDataProvider().refreshAll();
-                                                  members.add(groupMember.getPerson());
-                                                  membersSelect.setItems(members);
+                                                  ChangeBroadcaster.firePushEvent(new GroupChangeEvent(this, groupMember, EventAction.REMOVED));
                                                 });
         return delete;
       });
@@ -145,13 +191,12 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
    *
    * @return the v horizontal layout
    */
-  @SuppressWarnings("unchecked")
   @Override
   protected VHorizontalLayout initAboveLayout() {
     membersSelect = new VSelect<Person>();
     membersSelect.setLabel(getTranslation("groupMembersTab.field.members"));
     membersSelect.setItemLabelGenerator(m -> m.getName() + " " + m.getLastname());
-    members= organizationService.getOrganizationMembers(getCurrentUser().getActiveOrganization().getOrganization());
+    members=organizationService.getOrganizationMembers(getCurrentUser().getActiveOrganization().getOrganization());
     List<GroupMember> groupMembers = getGridItems();
     members.removeIf(member -> groupMembers.stream().map(GroupMember::getPerson).anyMatch(groupMember -> groupMember.getId().equals(member.getId())));
     membersSelect.setItems(members);
@@ -164,10 +209,7 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
       newMember.setOrganizationId(getCurrentUser().getActiveOrganization().getOrganization().getId());
       newMember.setPerson(e.getValue());
       organizationService.saveGroupMember(newMember);
-      ((ListDataProvider<GroupMember>)getGrid().getDataProvider()).getItems().add(newMember);
-      getGrid().getDataProvider().refreshAll();
-      members.remove(e.getValue());
-      membersSelect.setItems(members);
+      ChangeBroadcaster.firePushEvent(new GroupChangeEvent(this, newMember, EventAction.ADDED));
     });
 
     return new VHorizontalLayout(membersSelect);

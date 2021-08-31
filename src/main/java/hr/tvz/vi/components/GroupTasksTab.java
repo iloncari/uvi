@@ -13,21 +13,27 @@ import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.html.VSpan;
 import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.provider.ListDataProvider;
 
 import hr.tvz.vi.auth.CurrentUser;
+import hr.tvz.vi.event.ChangeBroadcaster;
+import hr.tvz.vi.event.GroupChangeEvent;
+import hr.tvz.vi.event.TaskChangeEvent;
 import hr.tvz.vi.orm.GroupMember;
 import hr.tvz.vi.orm.Task;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.ReportService;
 import hr.tvz.vi.util.Utils;
+import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.GroupType;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.TaskType;
 import hr.tvz.vi.view.AbstractGridView;
 import hr.tvz.vi.view.ReportView;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * The Class GroupTasksTab.
@@ -35,6 +41,7 @@ import hr.tvz.vi.view.ReportView;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 1:11:00 AM Aug 28, 2021
  */
+@Slf4j
 public class GroupTasksTab extends AbstractGridView<Task>{
   
   /** The Constant serialVersionUID. */
@@ -106,6 +113,48 @@ public class GroupTasksTab extends AbstractGridView<Task>{
   protected VHorizontalLayout initAboveLayout() {
     return null;
   }
+  
+  /**
+   * Group changed.
+   *
+   * @param event the event
+   */
+  @Subscribe
+  public void groupChanged(GroupChangeEvent event) {
+    if(getCurrentUser().getActiveOrganizationObject().getId().equals(event.getGroupMember().getOrganizationId())
+        && getCurrentUser().getPerson().getId().equals(event.getGroupMember().getPerson().getId())) {
+      getUI().ifPresent(ui -> ui.access(() -> {
+        initGrid();
+        getGrid().getDataProvider().refreshAll();
+      }));
+    }
+  }
+  
+  /**
+   * Task changed.
+   *
+   * @param event the event
+   */
+  @SuppressWarnings("unchecked")
+  @Subscribe
+  public void taskChanged(TaskChangeEvent event) {
+    if(getCurrentUser().getActiveOrganizationObject().getId().equals(event.getTask().getOrganizationAssignee().getId())) {
+      getUI().ifPresent(ui -> ui.access(() -> {
+        if(EventAction.ADDED.equals(event.getAction())) {
+          //new report & task
+          ((ListDataProvider<Task>)getGrid().getDataProvider()).getItems().add(event.getTask());
+        }else if(EventAction.MODIFIED.equals(event.getAction())) {
+          //assigne changed
+         if(event.getTask().getAssignee()==null) {
+           ((ListDataProvider<Task>)getGrid().getDataProvider()).getItems().add(event.getTask());
+         }else {
+           ((ListDataProvider<Task>)getGrid().getDataProvider()).getItems().removeIf(task -> task.getId().equals(event.getTask().getId()));
+         }
+        }
+        getGrid().getDataProvider().refreshAll();
+      }));
+    }
+  }
 
   /**
    * Inits the grid.
@@ -127,8 +176,7 @@ public class GroupTasksTab extends AbstractGridView<Task>{
         VButton assign = new VButton(getTranslation("groupTasksTab.grid.button.assign")).withClickListener(e -> {
           task.setAssignee(getCurrentUser().getPerson());
           reportService.saveReportTask(task);
-          ((ListDataProvider<Task>)getGrid().getDataProvider()).getItems().remove(task);
-          getGrid().getDataProvider().refreshAll();
+          ChangeBroadcaster.firePushEvent(new TaskChangeEvent(this, task, EventAction.MODIFIED));
         });
         return assign;
       }

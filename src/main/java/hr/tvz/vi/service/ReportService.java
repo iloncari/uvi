@@ -316,6 +316,47 @@ public class ReportService extends AbstractService<Report> {
   }
   
   /**
+   * Gets the user task number.
+   *
+   * @param organizationId the organization id
+   * @param assigneeId the assignee id
+   * @return the user task number
+   */
+  public Long getUserTaskNumber(Long organizationId, Long assigneeId) {
+    if(organizationId == null || assigneeId==null) {
+      return 0L;
+    }
+    return taskRepository.countByOrganizationAssignee_IdAndAssignee_IdAndExecutionDateTimeIsNull(organizationId, assigneeId);
+  }
+  
+  /**
+   * Gets the group task number.
+   *
+   * @param organizationId the organization id
+   * @return the group task number
+   */
+  public Long getGroupTaskNumber(Long organizationId) {
+    if(organizationId == null) {
+      return 0L;
+    }
+    return taskRepository.countByOrganizationAssignee_IdAndAssigneeIsNullAndExecutionDateTimeIsNull(organizationId);
+  }
+  
+  
+  /**
+   * Gets the reports number.
+   *
+   * @param organizationId the organization id
+   * @return the reports number
+   */
+  public Long getReportsNumber(Long organizationId) {
+    if(organizationId == null) {
+      return 0L;
+    }
+    return ((ReportRepository)repository).countByEventOrganizationList_Organization_Id(organizationId);
+  }
+  
+  /**
    * Gets the all assigned tasks.
    *
    * @param organizationId the organization id

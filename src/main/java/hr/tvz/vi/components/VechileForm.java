@@ -115,9 +115,10 @@ public class VechileForm extends AbstractForm<Vechile> {
     saveButton.addClickListener(e -> {
       if (formLayout.writeBean()) {
         formEntity.setOrganization(currentUser.getActiveOrganization().getOrganization());
+        formEntity.setActive(true);
         ((VechileService) entityService).saveOrUpdateVechile(formEntity);
         Utils.showSuccessNotification(2000, Position.TOP_CENTER, "memberForm.notification.memberSaved");
-        ChangeBroadcaster.firePushEvent(new VechileChangedChangedEvent(this, formEntity, EventAction.MODIFIED));
+        ChangeBroadcaster.firePushEvent(new VechileChangedChangedEvent(this, formEntity, navigateToParentsView ? EventAction.ADDED : EventAction.MODIFIED));
         if (navigateToParentsView) {
           UI.getCurrent().navigate(VechilesView.class);
         }

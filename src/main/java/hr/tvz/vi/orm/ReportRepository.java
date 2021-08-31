@@ -23,6 +23,14 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 	List<Report> findByEventOrganizationList_Organization_Id(Long organizationsId);
 	
 	/**
+   * Count by event organization list organization id.
+   *
+   * @param organizationId the organization id
+   * @return the long
+   */
+	Long countByEventOrganizationList_Organization_Id(Long organizationId);
+	
+	/**
 	 * Find by creator id.
 	 *
 	 * @param creatorId the creator id

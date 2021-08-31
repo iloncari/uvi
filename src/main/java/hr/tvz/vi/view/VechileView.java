@@ -9,9 +9,12 @@ import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToDoubleConverter;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasDynamicTitle;
@@ -24,6 +27,8 @@ import hr.tvz.vi.components.CustomFormLayout;
 import hr.tvz.vi.components.VechileForm;
 import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.event.VechileChangedChangedEvent;
+import hr.tvz.vi.event.VechileServiceChangedChangedEvent;
+import hr.tvz.vi.orm.EventOrganizationVechile;
 import hr.tvz.vi.orm.Service;
 import hr.tvz.vi.orm.Vechile;
 import hr.tvz.vi.service.VechileService;
@@ -39,6 +44,7 @@ import java.time.LocalDate;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.hibernate.dialect.identity.GetGeneratedKeysDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.vaadin.firitin.components.button.VButton;
@@ -95,9 +101,29 @@ public class VechileView extends VVerticalLayout implements HasDynamicTitle, Has
 	 */
   @Subscribe
   public void vechileChanged(VechileChangedChangedEvent changeEvent) {
-	  if(vechile.getId().equals(changeEvent.getVechile().getId())) {		  
+	  if(vechile.getId().equals(changeEvent.getVechile().getId()) && EventAction.MODIFIED.equals(changeEvent.getAction())) {		  
 			  getUI().ifPresent(ui -> ui.access(() -> ui.getPage().reload()));
 	  }
+  }
+  
+  /**
+   * Vechile service changed.
+   *
+   * @param changeEvent the change event
+   */
+  @SuppressWarnings("unchecked")
+  @Subscribe
+  public void vechileServiceChanged(VechileServiceChangedChangedEvent changeEvent) {
+    if(vechile.getId().equals(changeEvent.getVechile().getId())) {      
+        getUI().ifPresent(ui -> ui.access(() -> {
+          if(EventAction.ADDED.equals(changeEvent.getAction())) {
+            ((ListDataProvider<Service>)servicesGrid.getDataProvider()).getItems().add(changeEvent.getService());
+          }else if(EventAction.REMOVED.equals(changeEvent.getAction())) {
+            ((ListDataProvider<Service>)servicesGrid.getDataProvider()).getItems().removeIf(service -> service.getId().equals(changeEvent.getService().getId()));
+          }
+          servicesGrid.getDataProvider().refreshAll();
+        }));
+    }
   }
 
   /**
@@ -117,6 +143,17 @@ public class VechileView extends VVerticalLayout implements HasDynamicTitle, Has
     servicesGrid.addColumn(service -> service.getServiceName()).setHeader(getTranslation("vechileView.servicesGrid.name"));
     servicesGrid.addColumn(service -> ObjectUtils.defaultIfNull(service.getPrice(), 0).toString().concat(" kn"))
       .setHeader(getTranslation("vechileView.servicesGrid.price"));
+    servicesGrid.addComponentColumn(service -> {
+      Icon delete = VaadinIcon.TRASH.create();
+    
+      delete.addClickListener(deleteEvent ->{ 
+        vechileServiceRef.get().deleteServiceRecord(service);
+        ChangeBroadcaster.firePushEvent(new VechileServiceChangedChangedEvent(this, vechile, service, EventAction.REMOVED));
+      });
+      return delete;
+   });
+    
+    
     servicesGrid.addItemClickListener(e -> servicesGrid.setDetailsVisible(e.getItem(),
       StringUtils.isNotBlank(e.getItem().getServiceDescription()) && !servicesGrid.isDetailsVisible(e.getItem())));
     servicesGrid.setItemDetailsRenderer(new ComponentRenderer<>(s -> {
@@ -132,6 +169,8 @@ public class VechileView extends VVerticalLayout implements HasDynamicTitle, Has
 
     return layout;
   }
+  
+  
 
   /**
    * On attach.
@@ -172,7 +211,11 @@ public class VechileView extends VVerticalLayout implements HasDynamicTitle, Has
 
     this.vechile = vechileServiceRef.get().getById(Long.valueOf(vechileId)).orElse(null);
     CurrentUser currentUser = Utils.getCurrentUser(UI.getCurrent());
-    if (vechile == null || vechile.getOrganization().getId() != currentUser.getActiveOrganization().getOrganization().getId()) {
+    if(vechile == null) {
+      throw new NotFoundException();
+    }
+    
+    if (!vechile.getOrganization().getId().equals(currentUser.getActiveOrganizationObject().getId())) {
       throw new AccessDeniedException("Access Denied");
     }
   }
@@ -208,7 +251,7 @@ public class VechileView extends VVerticalLayout implements HasDynamicTitle, Has
       if (serviceForm.writeBean()) {
         vechileServiceRef.get().saveOrUpdateServiceRecord(service, vechile);
         dialog.close();
-        ChangeBroadcaster.firePushEvent(new VechileChangedChangedEvent(this, vechile, EventAction.MODIFIED));
+        ChangeBroadcaster.firePushEvent(new VechileServiceChangedChangedEvent(this, vechile, service, EventAction.ADDED));
       }
     });
 

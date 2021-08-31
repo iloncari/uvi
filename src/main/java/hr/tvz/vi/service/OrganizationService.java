@@ -31,15 +31,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * The Class OrganizationService.
  *
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 10:13:29 PM Aug 10, 2021
  */
-@Slf4j
 @Service
 public class OrganizationService extends AbstractService<Organization> {
 
@@ -133,6 +130,20 @@ public class OrganizationService extends AbstractService<Organization> {
     }
 
     return personRepository.findByOrgList_ExitDateIsNullAndOrgList_OrganizationId(organization.getId());
+  }
+  
+  /**
+   * Gets the organization members number.
+   *
+   * @param organization the organization
+   * @return the organization members number
+   */
+  public Long getOrganizationMembersNumber(Organization organization) {
+    if (organization == null) {
+      return 0L;
+    }
+
+    return personRepository.countByOrgList_ExitDateIsNullAndOrgList_OrganizationId(organization.getId());
   }
 
   /**

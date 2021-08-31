@@ -34,11 +34,12 @@ public class VechileService extends AbstractService<Vechile> {
    *
    * @param vechile the vechile
    */
-  public void deleteVechile(Vechile vechile) {
+  public void deleteVechileFromOrganization(Vechile vechile) {
     if (vechile == null) {
       return;
     }
-    repository.delete(vechile);
+    vechile.setActive(false);
+    repository.save(vechile);
   }
 
   /**
@@ -60,11 +61,12 @@ public class VechileService extends AbstractService<Vechile> {
    * @param organizationId the organization id
    * @return the by organization
    */
-  public List<Vechile> getByOrganization(Long organizationId) {
+  public List<Vechile> getActiveByOrganization(Long organizationId) {
     if (organizationId == null) {
       return new ArrayList<>();
     }
-    return ((VechileRepository) repository).findByOrganizationId(organizationId);
+    
+    return ((VechileRepository) repository).findByOrganizationIdAndActiveTrue(organizationId);
   }
 
   /**
@@ -79,6 +81,19 @@ public class VechileService extends AbstractService<Vechile> {
     }
     service.setServiceVechile(vechile);
     serviceRepository.save(service);
+  }
+  
+  
+  /**
+   * Delete service record.
+   *
+   * @param service the service
+   */
+  public void deleteServiceRecord(hr.tvz.vi.orm.Service service) {
+    if (service == null) {
+      return;
+    }
+    serviceRepository.delete(service);
   }
 
   /**
@@ -104,7 +119,12 @@ public class VechileService extends AbstractService<Vechile> {
     if (vechile == null || destination == null) {
       return;
     }
+    vechile.setActive(false);
+    repository.save(vechile);
+    
     vechile.setOrganization(destination);
+    vechile.setActive(true);
+    vechile.setId(null);
     repository.save(vechile);
   }
 

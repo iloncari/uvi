@@ -7,6 +7,7 @@ package hr.tvz.vi.view;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
+import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.Route;
@@ -22,7 +23,6 @@ import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.SubscriberScope;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Optional;
@@ -73,7 +73,7 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
    */
   @Override
   public List<Vechile> getGridItems() {
-    return vechileServiceRef.get().getByOrganization(getCurrentUser().getActiveOrganization().getOrganization().getId());
+    return vechileServiceRef.get().getActiveByOrganization(getCurrentUser().getActiveOrganization().getOrganization().getId());
   }
 
   /**
@@ -90,11 +90,16 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
  	 *
  	 * @param changeEvent the change event
  	 */
-   @Subscribe
+  @SuppressWarnings("unchecked")
+  @Subscribe
    public void vechileChanged(VechileChangedChangedEvent changeEvent) {
  	  if(getCurrentUser().getActiveOrganization().getOrganization().getId().equals(changeEvent.getVechile().getOrganization().getId())) {
  		  getUI().ifPresent(ui -> ui.access(() -> {
- 			 getGrid().setItems(getGridItems());
+ 		    if(EventAction.REMOVED.equals(changeEvent.getAction())) {
+ 		      ((ListDataProvider<Vechile>)getGrid().getDataProvider()).getItems().removeIf(vechile -> vechile.getId().equals(changeEvent.getVechile().getId()));
+ 		    }else if(EventAction.ADDED.equals(changeEvent.getAction())) {
+ 		     ((ListDataProvider<Vechile>)getGrid().getDataProvider()).getItems().add(changeEvent.getVechile());
+ 		    }
  	 		  getGrid().getDataProvider().refreshAll(); 
  		  }));
  	  }
@@ -132,7 +137,7 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
       .withHeaderText(getTranslation("vechilesView.removeVechileDialog.title"))
       .withConfirmHandler(() -> {
         getGrid().getSelectedItems().stream().findFirst().ifPresent(vechile -> {
-          vechileServiceRef.get().deleteVechile(vechile);
+          vechileServiceRef.get().deleteVechileFromOrganization(vechile);
           ChangeBroadcaster.firePushEvent(new VechileChangedChangedEvent(this, vechile, EventAction.REMOVED));
         });
       }));
@@ -192,8 +197,8 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
           idField.setErrorMessage(getTranslation("vechilesView.transferDialog.organizationNotExists.error"));
         } else {
           getGrid().getSelectedItems().stream().findFirst().ifPresent(vechile -> {
-            vechileServiceRef.get().transferVechile(vechile, organizationOptional.get());
             ChangeBroadcaster.firePushEvent(new VechileChangedChangedEvent(this, vechile, EventAction.REMOVED));
+            vechileServiceRef.get().transferVechile(vechile, organizationOptional.get());
           });
           transferDialog.close();
         }

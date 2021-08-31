@@ -101,6 +101,7 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
   protected void onAttach(AttachEvent attachEvent) {
     super.onAttach(attachEvent);
     ChangeBroadcaster.registerToPushEvents(this);
+    removeAll();
     VHorizontalLayout aboveGrid = initAboveLayout();
     if(aboveGrid != null) {
       add(aboveGrid);

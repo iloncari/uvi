@@ -7,6 +7,7 @@ package hr.tvz.vi.view;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -44,11 +45,13 @@ import hr.tvz.vi.event.VechileChangedChangedEvent;
 import hr.tvz.vi.orm.Report;
 import hr.tvz.vi.orm.Task;
 import hr.tvz.vi.service.AddressService;
+import hr.tvz.vi.service.NotificationService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.ReportService;
 import hr.tvz.vi.service.VechileService;
 import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.EventType;
+import hr.tvz.vi.util.Constants.GroupType;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.ReportStatus;
 import hr.tvz.vi.util.Constants.Routes;
@@ -92,6 +95,10 @@ public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasU
 	@Autowired
   private ServiceRef<VechileService> vechileServiceRef;
 	
+	/** The notification service ref. */
+	@Autowired
+  private ServiceRef<NotificationService> notificationServiceRef;
+	
 	/** The fire event type component. */
 	private FireEventTypeDataTab fireEventTypeComponent;
 	
@@ -126,18 +133,18 @@ public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasU
 	  boolean organizationIsPartOfEvent = report.getEventOrganizationList().stream().anyMatch(eventOrg -> eventOrg.getOrganization().getId().equals(currentUser.getActiveOrganization().getOrganization().getId()));
 	  
 	  organizationIsCreator = currentUser.getActiveOrganization().getOrganization().getId().toString().equals(report.getCreatorId());
-	  
+	  //List<Task> assignedReportTasks = reportServiceRef.get().getReportTasks(report.getId());
 	  List<Task> assignedReportTasks = reportServiceRef.get().getAllAssignedTasks(currentUser.getActiveOrganization().getOrganization().getId(), currentUser.getPerson().getId());
 	   boolean organizationIsPartOfTask = assignedReportTasks.stream().anyMatch(task -> task.getOrganizationAssignee().getId().equals(currentUser.getActiveOrganization().getOrganization().getId()));
-	   userNeedToPrepare = assignedReportTasks.stream().anyMatch(task ->task.getExecutionDateTime()==null && task.getReportId().equals(report.getId()) && task.getType().equals(TaskType.PREPARATION_TASK));
+	   userNeedToPrepare = assignedReportTasks.stream().anyMatch(task ->task.getExecutionDateTime()==null  && task.getReportId().equals(report.getId()) && task.getType().equals(TaskType.PREPARATION_TASK));
 	   userNeedToApprove = assignedReportTasks.stream().anyMatch(task ->task.getExecutionDateTime()==null && task.getReportId().equals(report.getId()) && task.getType().equals(TaskType.APPROVE_TASK));
-    
+	   List<Long> preparerIds = organizationServiceRef.get().getOrganizationGroupMembers(GroupType.PREPARERS, currentUser.getActiveOrganizationObject().getId())
+	     .stream().map(gm -> gm.getPerson().getId()).collect(Collectors.toList());
+	   boolean userCanPrepare = preparerIds.contains(currentUser.getPerson().getId());
 	  if(!organizationIsPartOfTask && !organizationIsPartOfEvent && !organizationIsCreator && !userNeedToApprove && !userNeedToPrepare) {
 	    throw new AccessDeniedException("Access Denied");
 	  }
-	  log.info("pristup -> orgIasCreator: " + organizationIsCreator + " needToPrepare: " + userNeedToPrepare + " needstoApp: " + userNeedToApprove  + " IS LOCKED: " + report.isLocked());
 	 
-
    if((organizationIsCreator || userNeedToPrepare || userNeedToApprove) && !report.isLocked() ) {
 	    report.setLocked(true);
 	    report.setLockOwner(currentUser.getPerson());
@@ -201,7 +208,7 @@ public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasU
     tabs.addTab(getTranslation("reportView.tab.basicData.label"), new ReportBasicDataTab(report, binder, basicEditRight, tabComponentMap, addressServiceRef.get(), this));
     tabs.addTab(getTranslation("reportView.tab.forcesData.label"), new ReportForcesTab(report, userNeedToPrepare, organizationServiceRef.get(), vechileServiceRef.get(), reportServiceRef.get()));
     fireEventTab = tabs.addTab(getTranslation("reportView.tab.fireEventData.label"), fireEventTypeComponent);
-    tabs.addTab(getTranslation("reportView.tab.authorizationData.label"), new ReportAuthorizationTab(report, binder, userNeedToPrepare, (userNeedToPrepare || userNeedToApprove), tabs, tabComponentMap, organizationServiceRef.get(), reportServiceRef.get()));
+    tabs.addTab(getTranslation("reportView.tab.authorizationData.label"), new ReportAuthorizationTab(report, binder, userNeedToPrepare, (userNeedToPrepare || userNeedToApprove), tabs, tabComponentMap, organizationServiceRef.get(), reportServiceRef.get(), notificationServiceRef.get()));
     return tabs;
   }
 

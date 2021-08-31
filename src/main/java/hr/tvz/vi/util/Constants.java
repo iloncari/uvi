@@ -1,8 +1,8 @@
 /*
  * Constants Constants.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * 
  */
+
 package hr.tvz.vi.util;
 
 import java.lang.annotation.ElementType;
@@ -16,15 +16,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+
 /**
  * The Class Constants.
  *
  * @author Igor Lončarić (iloncari2@optimit.hr)
  * @since 2:12:27 PM Aug 7, 2021
- */
-
-/**
- * Instantiates a new constants.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Constants {
@@ -72,12 +69,29 @@ public final class Constants {
     }
   }
   
- 	/**
-    * Instantiates a new event type.
-    *
-    * @param name the name
-    */
-	 @RequiredArgsConstructor
+  
+  
+  /**
+   * The Enum NotificationType.
+   *
+   * @author Igor Lončarić (iloncari2@tvz.hr)
+   * @since 6:35:11 PM Aug 29, 2021
+   */
+  public enum NotificationType{
+    
+    GROUP,
+    
+    TASK;
+  }
+  
+ 
+	 /**
+   * The Enum EventType.
+   *
+   * @author Igor Lončarić (iloncari2@tvz.hr)
+   * @since 6:35:28 PM Aug 29, 2021
+   */
+ 	@RequiredArgsConstructor
 	  public enum EventType {
 		 
 		 /** The building fire. */
@@ -145,30 +159,6 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 6:15:14 PM Aug 26, 2021
     */
- 	
-	 /**
-    * Instantiates a new building type.
-    *
-    * @param name the name
-    */
-	 
- 	/**
-   * Instantiates a new building type.
-   *
-   * @param name the name
-   */
- 	
-	 /**
-    * Instantiates a new building type.
-    *
-    * @param name the name
-    */
-	 
- 	/**
-   * Instantiates a new building type.
-   *
-   * @param name the name
-   */
  	@RequiredArgsConstructor
   public enum BuildingType {
    
@@ -215,24 +205,6 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 6:23:52 PM Aug 26, 2021
     */
-	 
- 	/**
-   * Instantiates a new building status.
-   *
-   * @param name the name
-   */
- 	
-	 /**
-    * Instantiates a new building status.
-    *
-    * @param name the name
-    */
-	 
- 	/**
-   * Instantiates a new building status.
-   *
-   * @param name the name
-   */
  	@RequiredArgsConstructor
 	 public enum BuildingStatus{
  	  
@@ -269,18 +241,6 @@ public final class Constants {
     *
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 6:51:31 PM Aug 26, 2021
-    */
-	 
- 	/**
-   * Instantiates a new traffic fire vechile type.
-   *
-   * @param name the name
-   */
- 	
-	 /**
-    * Instantiates a new traffic fire vechile type.
-    *
-    * @param name the name
     */
 	 @RequiredArgsConstructor
   public enum TrafficFireVechileType{
@@ -328,24 +288,6 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 6:34:44 PM Aug 26, 2021
     */
-   
-   /**
-    * Instantiates a new industrial plant type.
-    *
-    * @param name the name
-    */
-   
-   /**
-    * Instantiates a new industrial plant type.
-    *
-    * @param name the name
-    */
-   
-   /**
-    * Instantiates a new industrial plant type.
-    *
-    * @param name the name
-    */
    @RequiredArgsConstructor
    public enum IndustrialPlantType{
     
@@ -378,24 +320,6 @@ public final class Constants {
     *
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 6:38:30 PM Aug 26, 2021
-    */
-   
-   /**
-    * Instantiates a new open space fire type.
-    *
-    * @param name the name
-    */
-   
-   /**
-    * Instantiates a new open space fire type.
-    *
-    * @param name the name
-    */
-   
-   /**
-    * Instantiates a new open space fire type.
-    *
-    * @param name the name
     */
    @RequiredArgsConstructor
    public enum OpenSpaceFireType{
@@ -432,36 +356,6 @@ public final class Constants {
    *
    * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
    * @since 6:20:37 PM Aug 26, 2021
-   */
-  
-  /**
-   * Instantiates a new event activity.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new event activity.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new event activity.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new event activity.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new event activity.
-   *
-   * @param name the name
    */
   @RequiredArgsConstructor
   public enum EventActivity {
@@ -506,42 +400,6 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 11:46:12 PM Aug 25, 2021
    */
-  
-  /**
-   * Instantiates a new fire size.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new fire size.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new fire size.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new fire size.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new fire size.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new fire size.
-   *
-   * @param name the name
-   */
   @RequiredArgsConstructor
   public enum FireSize {
     
@@ -574,42 +432,6 @@ public final class Constants {
    *
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 11:46:12 PM Aug 25, 2021
-   */
-  
-  /**
-   * Instantiates a new item on fire.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new item on fire.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new item on fire.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new item on fire.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new item on fire.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new item on fire.
-   *
-   * @param name the name
    */
   @RequiredArgsConstructor
   public enum ItemOnFire {
@@ -658,48 +480,6 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 8:36:57 PM Aug 22, 2021
     */
-	
-	/**
-   * Instantiates a new event cause.
-   *
-   * @param name the name
-   */
-	
-	/**
-   * Instantiates a new event cause.
-   *
-   * @param name the name
-   */
-	
-	/**
-   * Instantiates a new event cause.
-   *
-   * @param name the name
-   */
-	
-	/**
-   * Instantiates a new event cause.
-   *
-   * @param name the name
-   */
-	
-	/**
-   * Instantiates a new event cause.
-   *
-   * @param name the name
-   */
-	
-	/**
-   * Instantiates a new event cause.
-   *
-   * @param name the name
-   */
-	
-	/**
-   * Instantiates a new event cause.
-   *
-   * @param name the name
-   */
 	@RequiredArgsConstructor
  	public enum EventCause{
  	  
@@ -734,48 +514,6 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 8:37:12 PM Aug 22, 2021
     */
-	 
- 	/**
-   * Instantiates a new event cause person.
-   *
-   * @param name the name
-   */
- 	
-	 /**
-    * Instantiates a new event cause person.
-    *
-    * @param name the name
-    */
-	 
- 	/**
-   * Instantiates a new event cause person.
-   *
-   * @param name the name
-   */
- 	
-	 /**
-    * Instantiates a new event cause person.
-    *
-    * @param name the name
-    */
-	 
- 	/**
-   * Instantiates a new event cause person.
-   *
-   * @param name the name
-   */
- 	
-	 /**
-    * Instantiates a new event cause person.
-    *
-    * @param name the name
-    */
-	 
- 	/**
-   * Instantiates a new event cause person.
-   *
-   * @param name the name
-   */
  	@RequiredArgsConstructor
   public enum EventCausePerson{
 	   
@@ -833,54 +571,6 @@ public final class Constants {
 	 * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
 	 * @since 1:38:32 PM Aug 22, 2021
 	 */
-  
-  /**
-	 * Instantiates a new duty.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-   * Instantiates a new duty.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new duty.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new duty.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new duty.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new duty.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new duty.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new duty.
-   *
-   * @param name the name
-   */
   @RequiredArgsConstructor
   public enum Duty {
 
@@ -897,60 +587,6 @@ public final class Constants {
     NONE("none");
 
     /** The name. */
-    
-    /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-    
-    /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
     @Getter
     private final String name;
     
@@ -982,11 +618,12 @@ public final class Constants {
     MODIFIED;
   }
 
+
   /**
-   * Subscribe to push or session events. Defaults to session scope.
+   * The Interface EventSubscriber.
    *
-   * @author Goran Petanjek (goran.petanjek@optimit.hr)
-   * @since 13:32:01 16. tra 2020.
+   * @author Igor Lončarić (iloncari2@tvz.hr)
+   * @since 6:32:33 PM Aug 29, 2021
    */
   @Inherited
   @Retention(RetentionPolicy.RUNTIME)
@@ -1007,115 +644,7 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 5:41:51 PM Aug 12, 2021
    */
-  
-  /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-  
-  /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
   @Getter
-  
-  /**
-	 * Instantiates a new gender.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-	 * Instantiates a new gender.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-   * Instantiates a new gender.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new gender.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new gender.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new gender.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new gender.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new gender.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new gender.
-   *
-   * @param name the name
-   */
   @RequiredArgsConstructor
   public enum Gender {
     
@@ -1138,120 +667,23 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@optimit.hr)
    * @since 3:12:45 PM Aug 7, 2021
    */
-  
-  /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-  
-  /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  @Getter
-  
-  /**
-	 * Instantiates a new image constants.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-	 * Instantiates a new image constants.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-   * Instantiates a new image constants.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new image constants.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new image constants.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new image constants.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new image constants.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new image constants.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new image constants.
-   *
-   * @param name the name
-   */
   @RequiredArgsConstructor
   public enum ImageConstants {
 
     /** The app logo. */
-    APP_LOGO("app_logo.png");
+    APP_LOGO("app_logo.png"),
+    
+    /** The icon notification. */
+    ICON_NOTIFICATION("icon-notifications.svg"),
+    
+    /** The icon organization. */
+    ICON_ORGANIZATION("icon-organization.svg"),
+    
+    /** The icon log out. */
+    ICON_LOG_OUT("icon-log-out.svg"),
+    
+    /** The icon close. */
+    ICON_CLOSE("icon-cancel-red.svg");
 
     /** The src. */
     private final String name;
@@ -1273,103 +705,7 @@ public final class Constants {
 	 * @author Igor Lončarić (iloncari2@tvz.hr)
 	 * @since 3:51:23 PM Aug 20, 2021
 	 */
-  
-  /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
   @Getter
-  
-  /**
-	 * Instantiates a new organization level.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-   * Instantiates a new organization level.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new organization level.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new organization level.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new organization level.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new organization level.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new organization level.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new organization level.
-   *
-   * @param name the name
-   */
   @RequiredArgsConstructor
   public enum OrganizationLevel {
 	  /** The country level. */
@@ -1387,121 +723,14 @@ public final class Constants {
 	  /** The name. */
   	private final String name;
   }
+  
   /**
   * The Enum Professions.
   *
   * @author Igor Lončarić (iloncari2@tvz.hr)
   * @since 2:12:30 PM Aug 7, 2021
   */
-  
-  /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-  
-  /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
   @Getter
-  
-  /**
-	 * Instantiates a new professions.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-	 * Instantiates a new professions.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-   * Instantiates a new professions.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new professions.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new professions.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new professions.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new professions.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new professions.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new professions.
-   *
-   * @param name the name
-   */
   @RequiredArgsConstructor
   public enum Professions {
 
@@ -1554,115 +783,7 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 11:49:01 AM Aug 9, 2021
     */
-  
-  /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-  
-  /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
   @Getter
-  
-  /**
-	 * Instantiates a new report status.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-	 * Instantiates a new report status.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-   * Instantiates a new report status.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new report status.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new report status.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new report status.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new report status.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new report status.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new report status.
-   *
-   * @param name the name
-   */
   @RequiredArgsConstructor
   public enum ReportStatus {
     
@@ -1764,115 +885,7 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 2:12:30 PM Aug 7, 2021
    */
-  
-  /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-  
-  /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
   @Getter
-  
-  /**
-	 * Instantiates a new style constants.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-	 * Instantiates a new style constants.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-   * Instantiates a new style constants.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new style constants.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new style constants.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new style constants.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new style constants.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new style constants.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new style constants.
-   *
-   * @param name the name
-   */
   @RequiredArgsConstructor
   public enum StyleConstants {
 
@@ -1913,7 +926,39 @@ public final class Constants {
     THEME_PRIMARY_SUCCESS("primary success"),
 
     /** The color red. */
-    COLOR_RED("red_text");
+    COLOR_RED("red_text"),
+    
+
+    /** The new notification. */
+    NEW_NOTIFICATION("new-notification"),
+
+    /** The notification content. */
+    NOTIFICATION_CONTENT("notification-content"),
+
+    /** The notification icon. */
+    NOTIFICATION_ICON("notification-icon"),
+
+    /** The document access item. */
+    DOCUMENT_ACCESS_ITEM("document-access-item"),
+
+    /** The notification item. */
+    NOTIFICATION_ITEM("notification-item"),
+
+    /** The notification items. */
+    NOTIFICATION_ITEMS("notification-items"),
+
+    /** The notification item content. */
+    NOTIFICATION_ITEM_CONTENT("notification-item-content"),
+
+    /** The notification number. */
+    NOTIFICATION_NUMBER("notification-number"),
+
+    /** The notification title. */
+    NOTIFICATION_TITLE("notification-title"),
+    
+    ORGANIZATION_ICON("organization-icon");
+    
+    
 
     /** The name. */
     private final String name;
@@ -1922,7 +967,7 @@ public final class Constants {
   /**
 	 * The Enum SubscriberScope.
 	 *
-	 * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
+	 * @author Igor Lončarić (iloncari2@tvz.hr)
 	 * @since 3:51:03 PM Aug 20, 2021
 	 */
   public enum SubscriberScope {
@@ -1940,103 +985,28 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@optimit.hr)
    * @since 4:18:17 PM Aug 7, 2021
    */
-  
-  /**
-	 * Instantiates a new theme attribute.
-	 */
-  
-  /**
-	 * Instantiates a new theme attribute.
-	 */
-  
-  /**
-   * Instantiates a new theme attribute.
-   */
-  
-  /**
-   * Instantiates a new theme attribute.
-   */
-  
-  /**
-   * Instantiates a new theme attribute.
-   */
-  
-  /**
-   * Instantiates a new theme attribute.
-   */
-  
-  /**
-   * Instantiates a new theme attribute.
-   */
-  
-  /**
-   * Instantiates a new theme attribute.
-   */
-  
-  /**
-   * Instantiates a new theme attribute.
-   */
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public final class ThemeAttribute {
 
     /** The Constant BUTTON_BLUE. */
     public static final String BUTTON_BLUE = "button blue";
+    
+    /** The Constant HEADER_ITEMS. */
+    public static final String HEADER_ITEMS = "header-items";
+    
+    /** The Constant ICON. */
+    public static final String ICON = "icon";
+    
+    /** The Constant BUTTON_ICON. */
+    public static final String BUTTON_ICON = "button-icon";
   }
 
   /**
 	 * Instantiates a new user role.
 	 *
-	 * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
+	 * @author Igor Lončarić (iloncari2@tvz.hr)
 	 * @since 1:38:32 PM Aug 22, 2021
 	 */
-  
-  /**
-	 * Instantiates a new user role.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-   * Instantiates a new user role.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new user role.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new user role.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new user role.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new user role.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new user role.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new user role.
-   *
-   * @param name the name
-   */
   @RequiredArgsConstructor
   public enum UserRole {
 
@@ -2046,59 +1016,8 @@ public final class Constants {
     /** The spectator. */
     SPECTATOR("spectator");
 
-    /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-    
-    /**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
-    
-    /**
-     * Gets the name.
-     *
-     * @return the name
-     */
+  
+    /** The name. */
     @Getter
     private final String name;
   }
@@ -2108,60 +1027,6 @@ public final class Constants {
    *
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 8:49:31 PM Aug 7, 2021
-   */
-  
-  /**
-	 * Instantiates a new vechile condition.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-	 * Instantiates a new vechile condition.
-	 *
-	 * @param name the name
-	 */
-  
-  /**
-   * Instantiates a new vechile condition.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new vechile condition.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new vechile condition.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new vechile condition.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new vechile condition.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new vechile condition.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new vechile condition.
-   *
-   * @param name the name
    */
   @RequiredArgsConstructor
   public enum VechileCondition {
@@ -2185,24 +1050,13 @@ public final class Constants {
     }
 
   }
-
+  
+  
   /**
    * The Enum VechileType.
    *
    * @author Igor Lončarić (iloncari2@tvz.hr)
-   * @since 9:19:37 PM Aug 16, 2021
-   */
-  
-  /**
-   * Instantiates a new vechile type.
-   *
-   * @param name the name
-   */
-  
-  /**
-   * Instantiates a new vechile type.
-   *
-   * @param name the name
+   * @since 6:38:17 PM Aug 29, 2021
    */
   @RequiredArgsConstructor
   public enum VechileType {

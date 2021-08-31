@@ -210,7 +210,7 @@ public class ReportForcesTab extends VVerticalLayout{
    
     VSelect<Vechile> vechilesSelect = new VSelect<Vechile>().withLabel(getTranslation("reportView.reportForceTab.forceLayout.vechiles.field.organizationVechiles")).withReadOnly(!editRight);
     vechilesSelect.setItemLabelGenerator(vechile -> vechile.getMake().concat(StringUtils.isNotBlank(vechile.getMake()) ? " ".concat(vechile.getModel()) : vechile.getVechileNumber()));  
-    final List<Vechile> vechileSelectItems = new ArrayList<Vechile>(vechileService.getByOrganization(eventOrganization.getOrganization().getId()));
+    final List<Vechile> vechileSelectItems = new ArrayList<Vechile>(vechileService.getActiveByOrganization(eventOrganization.getOrganization().getId()));
     vechileSelectItems.removeIf(vechile -> eventVechiles.stream().map(EventOrganizationVechile::getVechile).map(Vechile::getId).anyMatch(eventVechile -> eventVechile.equals(vechile.getId())));
     vechilesSelect.setItems(vechileSelectItems);
     vechilesSelect.addValueChangeListener(vechileSelectedEvent -> {

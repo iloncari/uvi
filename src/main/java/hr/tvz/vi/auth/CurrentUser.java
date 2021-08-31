@@ -48,6 +48,15 @@ public class CurrentUser {
     }
     initParentOrganization();
   }
+  
+  /**
+   * Gets the active organization.
+   *
+   * @return the active organization
+   */
+  public Organization getActiveOrganizationObject() {
+    return activeOrganization.getOrganization();
+  }
 
   /**
    * Gets the active person organizactions.

@@ -24,6 +24,14 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
    * @return the list
    */
   List<Task> findByOrganizationAssignee_IdAndAssigneeIsNullAndExecutionDateTimeIsNull(Long organizationId);
+  
+  /**
+   * Count by organization assignee id and assignee is null and execution date time is null.
+   *
+   * @param organizationId the organization id
+   * @return the long
+   */
+  Long countByOrganizationAssignee_IdAndAssigneeIsNullAndExecutionDateTimeIsNull(Long organizationId);
 
   /**
    * Find by organization assignee and assignee id.
@@ -33,6 +41,15 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
    * @return the list
    */
   List<Task> findByOrganizationAssignee_IdAndAssignee_IdAndExecutionDateTimeIsNull(Long organizationId, Long assigneeId);
+  
+  /**
+   * Count by organization assignee id and assignee id and execution date time is null.
+   *
+   * @param organizationId the organization id
+   * @param assigneeId the assignee id
+   * @return the long
+   */
+  Long countByOrganizationAssignee_IdAndAssignee_IdAndExecutionDateTimeIsNull(Long organizationId, Long assigneeId);
   
   /**
    * Find by organization assignee id and assignee id.
