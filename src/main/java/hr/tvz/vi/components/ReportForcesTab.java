@@ -331,23 +331,19 @@ public class ReportForcesTab extends VVerticalLayout{
     eventFightersGrid.addColumn(eventPerson -> eventPerson.getPerson().getName() + " " +eventPerson.getPerson().getLastname()).setHeader(getTranslation("membersView.membersGrid.nameAndLastname"));
     
     eventFightersGrid.addComponentColumn(eventPerson -> {
-      log.info("component co " + eventPerson.getPerson().getId()+ " " + eventPerson.getTimeInSeconds() + " " + eventPerson.getVechile());
       VSelect<Vechile> personVechileSelect = new VSelect<Vechile>().withReadOnly(!editRight);
       personVechileSelect.setItems(eventVechiles.stream().filter(eventVec -> ObjectUtils.allNotNull(eventVec.getBaseDepartureDateTime(), eventVec.getFieldArrivedDateTime(), eventVec.getFieldDepartureDateTime(), eventVec.getBaseArrivedDateTime())).map(EventOrganizationVechile::getVechile).collect(Collectors.toList()));
       personVechileSelect.setValue(eventPerson.getVechile());
       personVechileSelect.addValueChangeListener(vechileSelected ->{ 
-        log.info("changed " + vechileSelected.getValue().getId());
         eventPerson.setVechile(vechileSelected.getValue());
         eventVechiles.stream().filter(eventVechile -> eventVechile.getVechile().getId().equals(eventPerson.getVechile().getId())).findFirst().ifPresent(eventVechile -> {
-        log.info("stream nasao " + eventVechile.getVechile().getId());
         long durationSecond =  Math.abs(eventVechile.getBaseArrivedDateTime().toEpochSecond(ZoneOffset.UTC) - eventVechile.getBaseDepartureDateTime().toEpochSecond(ZoneOffset.UTC));
         eventPerson.setTimeInSeconds(durationSecond);
-        log.info("duration " + durationSecond);
         eventFightersGrid.getDataProvider().refreshAll();
         });
       });
       return personVechileSelect;
-    }).setHeader("reportView.reportForceTab.forceLayout.firefightersGrid.vechile");
+    }).setHeader(getTranslation("reportView.reportForceTab.forceLayout.firefightersGrid.vechile"));
     
     eventFightersGrid.addColumn(eventPerson -> {
      return generateDurationLabel(eventPerson.getTimeInSeconds());

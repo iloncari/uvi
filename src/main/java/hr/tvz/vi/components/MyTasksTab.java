@@ -5,6 +5,7 @@
 package hr.tvz.vi.components;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.vaadin.firitin.components.button.VButton;
@@ -14,6 +15,11 @@ import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.Location;
+import com.vaadin.flow.router.OptionalParameter;
+import com.vaadin.flow.router.QueryParameters;
 
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.event.ChangeBroadcaster;
@@ -51,10 +57,12 @@ public class MyTasksTab extends AbstractGridView<Task>{
    *
    * @param reportService the report service
    */
-  public  MyTasksTab(ReportService reportService) {
+  public  MyTasksTab(ReportService reportService, Map<String, List<String>> queryParams) {
+   super(true, true);
+   super.setQueryParams(queryParams);
    this.reportService = reportService;
   }
-
+  
   /**
    * Gets the grid items.
    *
@@ -170,6 +178,16 @@ public class MyTasksTab extends AbstractGridView<Task>{
       UI.getCurrent().navigate(ReportView.class, e.getItem().getReportId().toString());
     });
     
+  }
+
+  /**
+   * Gets the route.
+   *
+   * @return the route
+   */
+  @Override
+  public String getRoute() {
+    return Routes.TASKS;
   }
 
 }

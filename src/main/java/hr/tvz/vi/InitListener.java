@@ -15,9 +15,11 @@ import hr.tvz.vi.auth.AccessControlFactory;
 import hr.tvz.vi.auth.AccessControlImpl;
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.service.AuthentificationService;
+import hr.tvz.vi.service.NotificationService;
 import hr.tvz.vi.view.LoginView;
 import hr.tvz.vi.view.ResetPasswordView;
 import hr.tvz.vi.view.TestView;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Locale;
 
@@ -38,6 +40,7 @@ import de.codecamp.vaadin.serviceref.ServiceRef;
  * @see InitEvent
  */
 @Service
+@Slf4j
 public class InitListener implements VaadinServiceInitListener {
 
   /** The Constant serialVersionUID. */
@@ -46,7 +49,7 @@ public class InitListener implements VaadinServiceInitListener {
   /** The auth service ref. */
   @Autowired
   private ServiceRef<AuthentificationService> authServiceRef;
-
+ 
   /** The access control. */
   private AccessControl accessControl;
 
@@ -57,6 +60,7 @@ public class InitListener implements VaadinServiceInitListener {
    */
   @Override
   public void serviceInit(ServiceInitEvent event) {
+    
     accessControl = AccessControlFactory.of().getAccessControl(authServiceRef == null ? null : authServiceRef.get());
 
     event.getSource().addSessionInitListener(sessionInit -> {

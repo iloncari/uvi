@@ -17,10 +17,16 @@ import hr.tvz.vi.auth.AccessControlImpl;
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.orm.Person;
+import hr.tvz.vi.util.Constants.Searchable;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.UserRole;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+
+import javax.persistence.OneToMany;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -111,6 +117,18 @@ public final class Utils {
     notification.setText(notification.getTranslation(translationKey, translationParams));
     notification.addThemeName(StyleConstants.THEME_PRIMARY_SUCCESS.getName());
     notification.open();
+  }
+  
+  /**
+   * Gets the searchable fields.
+   *
+   * @param classType the class type
+   * @return the searchable fields
+   */
+  public static List<String> getSearchableFields(Object obj){
+    return Arrays.asList(obj.getClass().getDeclaredFields()).stream(). 
+      filter(field -> field.getAnnotation(Searchable.class)!=null).map(field -> field.getName())
+     .collect(Collectors.toList());
   }
 
 }

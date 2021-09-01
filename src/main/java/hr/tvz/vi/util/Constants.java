@@ -10,6 +10,8 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Arrays;
+import java.util.Optional;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,6 +24,10 @@ import lombok.RequiredArgsConstructor;
  *
  * @author Igor Lončarić (iloncari2@optimit.hr)
  * @since 2:12:27 PM Aug 7, 2021
+ */
+
+/**
+ * Instantiates a new constants.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Constants {
@@ -46,6 +52,12 @@ public final class Constants {
    *
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 10:05:34 PM Aug 27, 2021
+   */
+  
+  /**
+   * Instantiates a new group type.
+   *
+   * @param name the name
    */
   @RequiredArgsConstructor
   public enum GroupType{
@@ -79,9 +91,14 @@ public final class Constants {
    */
   public enum NotificationType{
     
+    /** The group. */
     GROUP,
     
-    TASK;
+    /** The task. */
+    TASK,
+    
+    /** The vechile. */
+    VECHILE;
   }
   
  
@@ -91,7 +108,7 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 6:35:28 PM Aug 29, 2021
    */
- 	@RequiredArgsConstructor
+	 @RequiredArgsConstructor
 	  public enum EventType {
 		 
 		 /** The building fire. */
@@ -159,14 +176,20 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 6:15:14 PM Aug 26, 2021
     */
- 	@RequiredArgsConstructor
+ 	
+	 /**
+    * Instantiates a new building type.
+    *
+    * @param name the name
+    */
+	 @RequiredArgsConstructor
   public enum BuildingType {
    
 	   /** The hall. */
    	HALL("hall"),
 	   
 	   /** The two four floors building. */
-   	TWO_FOUR_FLOORS_BUILDING("TwoFourFloorBuilding"),
+   	TWO_FOUR_FLOORS_BUILDING("twoFourFloorBuilding"),
 	   
 	   /** The wood building. */
    	WOOD_BUILDING("woodBuilding"),
@@ -205,7 +228,13 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 6:23:52 PM Aug 26, 2021
     */
- 	@RequiredArgsConstructor
+ 	
+	 /**
+    * Instantiates a new building status.
+    *
+    * @param name the name
+    */
+	 @RequiredArgsConstructor
 	 public enum BuildingStatus{
  	  
  	  /** The under construction. */
@@ -242,7 +271,13 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 6:51:31 PM Aug 26, 2021
     */
-	 @RequiredArgsConstructor
+	 
+ 	/**
+   * Instantiates a new traffic fire vechile type.
+   *
+   * @param name the name
+   */
+ 	@RequiredArgsConstructor
   public enum TrafficFireVechileType{
    
    /** The without vechile. */
@@ -288,6 +323,12 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 6:34:44 PM Aug 26, 2021
     */
+   
+   /**
+    * Instantiates a new industrial plant type.
+    *
+    * @param name the name
+    */
    @RequiredArgsConstructor
    public enum IndustrialPlantType{
     
@@ -298,7 +339,7 @@ public final class Constants {
     STORAGE_SPACE("storageSpace"),
     
     /** The administrative building. */
-    ADMINISTRATIVE_BUILDING("administrative building");
+    ADMINISTRATIVE_BUILDING("administrativeBuilding");
     
     /** The name. */
      private final String name;
@@ -320,6 +361,12 @@ public final class Constants {
     *
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 6:38:30 PM Aug 26, 2021
+    */
+   
+   /**
+    * Instantiates a new open space fire type.
+    *
+    * @param name the name
     */
    @RequiredArgsConstructor
    public enum OpenSpaceFireType{
@@ -356,6 +403,12 @@ public final class Constants {
    *
    * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
    * @since 6:20:37 PM Aug 26, 2021
+   */
+  
+  /**
+   * Instantiates a new event activity.
+   *
+   * @param name the name
    */
   @RequiredArgsConstructor
   public enum EventActivity {
@@ -400,6 +453,12 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 11:46:12 PM Aug 25, 2021
    */
+  
+  /**
+   * Instantiates a new fire size.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum FireSize {
     
@@ -432,6 +491,12 @@ public final class Constants {
    *
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 11:46:12 PM Aug 25, 2021
+   */
+  
+  /**
+   * Instantiates a new item on fire.
+   *
+   * @param name the name
    */
   @RequiredArgsConstructor
   public enum ItemOnFire {
@@ -480,6 +545,12 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 8:36:57 PM Aug 22, 2021
     */
+	
+	/**
+   * Instantiates a new event cause.
+   *
+   * @param name the name
+   */
 	@RequiredArgsConstructor
  	public enum EventCause{
  	  
@@ -514,7 +585,13 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 8:37:12 PM Aug 22, 2021
     */
- 	@RequiredArgsConstructor
+ 	
+	 /**
+    * Instantiates a new event cause person.
+    *
+    * @param name the name
+    */
+	 @RequiredArgsConstructor
   public enum EventCausePerson{
 	   
 	  /** The without person act. */
@@ -571,6 +648,12 @@ public final class Constants {
 	 * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
 	 * @since 1:38:32 PM Aug 22, 2021
 	 */
+  
+  /**
+   * Instantiates a new duty.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum Duty {
 
@@ -587,6 +670,12 @@ public final class Constants {
     NONE("none");
 
     /** The name. */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     @Getter
     private final String name;
     
@@ -637,6 +726,18 @@ public final class Constants {
      */
     public SubscriberScope scope() default SubscriberScope.SESSION;
   }
+  
+  /**
+   * The Interface Searchable.
+   *
+   * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
+   * @since 7:09:10 PM Sep 1, 2021
+   */
+  @Retention(RetentionPolicy.RUNTIME)
+  @Target(ElementType.FIELD)
+  public @interface Searchable {
+    
+  }
 
   /**
    * The Enum Gender.
@@ -644,7 +745,19 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 5:41:51 PM Aug 12, 2021
    */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
   @Getter
+  
+  /**
+   * Instantiates a new gender.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum Gender {
     
@@ -659,6 +772,26 @@ public final class Constants {
 
     /** The name. */
     private final String name;
+    
+    /**
+     * Gets the value.
+     *
+     * @param genderName the gender name
+     * @return the value
+     */
+    public static Gender getGender(String genderName) {
+      Optional<Gender> genderOpt = Arrays.asList(values()).stream().filter(gender -> gender.getName().equals(genderName)).findFirst();
+      return genderOpt.isPresent() ? genderOpt.get() : null;
+    }
+    
+    /**
+     * Gets the gender translation key.
+     *
+     * @return the gender translation key
+     */
+    public String getGenderTranslationKey() {
+      return "gender.".concat(name).concat(".label");
+    }
   }
 
   /**
@@ -709,19 +842,16 @@ public final class Constants {
   @RequiredArgsConstructor
   public enum OrganizationLevel {
 	  /** The country level. */
-  	COUNTRY_LEVEL("countryLevel"),
+  	COUNTRY_LEVEL,
 	  
 	  /** The regional level. */
-  	REGIONAL_LEVEL("regionalLevel"),
+  	REGIONAL_LEVEL,
 	  
 	  /** The city level. */
-  	CITY_LEVEL("cityLevel"),
+  	CITY_LEVEL,
 	  
   	/** The operational level. */
-	  OPERATIONAL_LEVEL("operationalLevel");
-	  
-	  /** The name. */
-  	private final String name;
+	  OPERATIONAL_LEVEL;
   }
   
   /**
@@ -775,6 +905,17 @@ public final class Constants {
     public String getProfessionTranslationKey() {
       return "profession.".concat(name).concat(".label");
     }
+    
+    /**
+     * Gets the professions.
+     *
+     * @param professionsName the professions name
+     * @return the professions
+     */
+    public static Professions getProfession(String professionsName) {
+      Optional<Professions> professionOpt = Arrays.asList(values()).stream().filter(profession -> profession.getName().equals(professionsName)).findFirst();
+      return professionOpt.isPresent() ? professionOpt.get() : null;
+    }
   }
 
   /**
@@ -783,7 +924,19 @@ public final class Constants {
     * @author Igor Lončarić (iloncari2@tvz.hr)
     * @since 11:49:01 AM Aug 9, 2021
     */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
   @Getter
+  
+  /**
+   * Instantiates a new report status.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum ReportStatus {
     
@@ -814,6 +967,10 @@ public final class Constants {
    *
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 5:17:38 PM Aug 7, 2021
+   */
+  
+  /**
+   * Instantiates a new routes.
    */
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   @Getter
@@ -885,7 +1042,19 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 2:12:30 PM Aug 7, 2021
    */
+  
+  /**
+   * Gets the name.
+   *
+   * @return the name
+   */
   @Getter
+  
+  /**
+   * Instantiates a new style constants.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum StyleConstants {
 
@@ -956,6 +1125,7 @@ public final class Constants {
     /** The notification title. */
     NOTIFICATION_TITLE("notification-title"),
     
+    /** The organization icon. */
     ORGANIZATION_ICON("organization-icon");
     
     
@@ -985,6 +1155,10 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@optimit.hr)
    * @since 4:18:17 PM Aug 7, 2021
    */
+  
+  /**
+   * Instantiates a new theme attribute.
+   */
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public final class ThemeAttribute {
 
@@ -1007,6 +1181,12 @@ public final class Constants {
 	 * @author Igor Lončarić (iloncari2@tvz.hr)
 	 * @since 1:38:32 PM Aug 22, 2021
 	 */
+  
+  /**
+   * Instantiates a new user role.
+   *
+   * @param name the name
+   */
   @RequiredArgsConstructor
   public enum UserRole {
 
@@ -1018,6 +1198,12 @@ public final class Constants {
 
   
     /** The name. */
+    
+    /**
+     * Gets the name.
+     *
+     * @return the name
+     */
     @Getter
     private final String name;
   }
@@ -1027,6 +1213,12 @@ public final class Constants {
    *
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 8:49:31 PM Aug 7, 2021
+   */
+  
+  /**
+   * Instantiates a new vechile condition.
+   *
+   * @param name the name
    */
   @RequiredArgsConstructor
   public enum VechileCondition {
@@ -1057,6 +1249,12 @@ public final class Constants {
    *
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 6:38:17 PM Aug 29, 2021
+   */
+  
+  /**
+   * Instantiates a new vechile type.
+   *
+   * @param name the name
    */
   @RequiredArgsConstructor
   public enum VechileType {

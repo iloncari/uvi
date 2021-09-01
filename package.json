@@ -6,6 +6,7 @@
     "@polymer/iron-list": "3.1.0",
     "@polymer/iron-overlay-behavior": "^3.0.3",
     "@polymer/paper-badge": "3.0.1",
+    "@polymer/paper-menu-button": "3.0.1",
     "@polymer/paper-ripple": "3.0.2",
     "@polymer/paper-tabs": "3.1.0",
     "@polymer/polymer": "3.2.0",
@@ -86,6 +87,7 @@
       "@polymer/iron-list": "3.1.0",
       "@polymer/iron-overlay-behavior": "^3.0.3",
       "@polymer/paper-badge": "3.0.1",
+      "@polymer/paper-menu-button": "3.0.1",
       "@polymer/paper-ripple": "3.0.2",
       "@polymer/paper-tabs": "3.1.0",
       "@polymer/polymer": "3.2.0",
@@ -156,6 +158,6 @@
       "webpack-dev-server": "3.11.0",
       "webpack-merge": "4.2.2"
     },
-    "hash": "bb3c3341708fe130867ebc4a956cf4b97dc54955b272e43177d082def5fc5bdb"
+    "hash": "6c44d88e7453e24310bc8e7902b7668d57d46d312a993e0cd65e8672483903b1"
   }
 }

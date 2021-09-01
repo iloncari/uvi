@@ -221,7 +221,6 @@ public class ReportAuthorizationTab extends VVerticalLayout{
   @SuppressWarnings("unchecked")
   @Subscribe
   public void taskChanged(TaskChangeEvent event) {
-    log.info("task cahnged ");
     if(report.getId().equals(event.getTask().getReportId())) {
       getUI().ifPresent(ui -> ui.access(() -> {
         if(EventAction.ADDED.equals(event.getAction())) {
@@ -261,7 +260,6 @@ public class ReportAuthorizationTab extends VVerticalLayout{
     
     authorizationTasksGrid.addComponentColumn(task -> {
       if(task.getExecutionDateTime()!=null) {
-        log.info("vec je executan " + task.getName());
         //task is inactive
         return VaadinIcon.CHECK.create();
       }else if(task.getAssignee() != null && task.getAssignee().getId().equals(currentUser.getPerson().getId())) {
@@ -289,7 +287,7 @@ public class ReportAuthorizationTab extends VVerticalLayout{
             notification.setOrganizationId(currentUser.getParentOrganization().getId());
             notification.setRecipientId(null);
             notification.setSourceId(report.getId());
-            notification.setTitle("Novi zadatak");
+            notification.setTitle(getTranslation("task.new.label"));
             notification.setType(NotificationType.TASK);
             notificationService.saveOrUpdateNotification(notification);
             organizationService.getOrganizationGroupMembers(GroupType.APPROVERS, currentUser.getParentOrganization().getId()).forEach(gm -> 
@@ -335,7 +333,7 @@ public class ReportAuthorizationTab extends VVerticalLayout{
                 notification.setOrganizationId(currentUser.getParentOrganization().getId());
                 notification.setRecipientId(null);
                 notification.setSourceId(report.getId());
-                notification.setTitle("Novi zadatak");
+                notification.setTitle(getTranslation("task.new.label"));
                 notification.setType(NotificationType.TASK);
                 notificationService.saveOrUpdateNotification(notification);
                 preparersIds.forEach(preparerId -> notificationService.mapNotificationToUser(notification.getId(),preparerId));
@@ -349,7 +347,6 @@ public class ReportAuthorizationTab extends VVerticalLayout{
         }
         return buttons;
       }else if((preparersIds.contains(currentUser.getPerson().getId()) && OrganizationLevel.OPERATIONAL_LEVEL.equals(currentUser.getActiveOrganizationObject().getLevel()) ) || (approversIds.contains(currentUser.getPerson().getId())  && OrganizationLevel.CITY_LEVEL.equals(currentUser.getActiveOrganizationObject().getLevel()) ) ) {
-        log.info("ASSIGNAN NA NEKOGA ILI na grupu " + task.getName());
         VButton assignToMe = new VButton(getTranslation("reportView.reportAuthorizationTab.button.assignToMe")).withClickListener(assignEvent -> {
           task.setAssignee(currentUser.getPerson());
           reportService.saveReportTask(task);
@@ -357,7 +354,6 @@ public class ReportAuthorizationTab extends VVerticalLayout{
         });
         return assignToMe;
       }
-      log.info("ni jedno " + task.getName());
       return new VSpan("");
     });
     

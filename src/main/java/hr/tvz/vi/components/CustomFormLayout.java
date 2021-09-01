@@ -210,6 +210,9 @@ public class CustomFormLayout<T> extends VVerticalLayout {
    */
   public <R, S> void processBinder(final HasValue<?, R> field, final Converter<R, S> converter, final Validator<? super R> validator, final boolean required,
     final String propertyPath) {
+    if(bean == null || binder == null) {
+      return;
+    }
     final BindingBuilder<T, R> bindingBuilder = binder.forField(field);
     
     if (required) {
@@ -232,6 +235,10 @@ public class CustomFormLayout<T> extends VVerticalLayout {
   
   public <R, S> void processBinder(final HasValue<?, R> field, final Converter<R, S> converter, final Validator<? super R> validator, final boolean required,
 		    final ValueProvider<T, R> getter, final Setter<T, R> setter) {
+      
+        if(bean == null || binder == null) {
+          return;
+        }
 		    final BindingBuilder<T, R> bindingBuilder = binder.forField(field);
 		    
 		    if (required) {
@@ -256,6 +263,9 @@ public class CustomFormLayout<T> extends VVerticalLayout {
    * Read bead.
    */
   public void readBean() {
+    if(bean == null || binder == null) {
+      return;
+    }
     binder.readBean(bean);
   }
 
@@ -263,6 +273,9 @@ public class CustomFormLayout<T> extends VVerticalLayout {
    * Sets the bean.
    */
   public void setBean() {
+    if(bean == null || binder == null) {
+      return;
+    }
     binder.setBean(bean);
   }
   
@@ -272,6 +285,9 @@ public class CustomFormLayout<T> extends VVerticalLayout {
    * @return true, if successful
    */
   public boolean validate() {
+    if(bean == null || binder == null) {
+      return false;
+    }
     return binder.validate().isOk();
   }
   /**
@@ -320,6 +336,9 @@ public class CustomFormLayout<T> extends VVerticalLayout {
    * @return true, if successful
    */
   public boolean writeBean() {
+    if(bean == null || binder == null) {
+      return false;
+    }
     try {
       binder.writeBean(bean);
       return true;

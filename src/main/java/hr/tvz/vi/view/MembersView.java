@@ -10,6 +10,10 @@ import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.HasDynamicTitle;
+import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.Location;
+import com.vaadin.flow.router.OptionalParameter;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouterLink;
 
@@ -48,8 +52,9 @@ import lombok.extern.slf4j.Slf4j;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 1:50:34 PM Aug 11, 2021
  */
+@Slf4j
 @Route(value = Routes.MEMBERS, layout = MainAppLayout.class)
-public class MembersView extends AbstractGridView<Person> implements HasDynamicTitle {
+public class MembersView extends AbstractGridView<Person> implements HasDynamicTitle{
 
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = -6684616711164368364L;
@@ -68,6 +73,16 @@ public class MembersView extends AbstractGridView<Person> implements HasDynamicT
   @Autowired
   private ServiceRef<PersonService> personServiceRef;
 
+  
+  /**
+   * Instantiates a new members view.
+   */
+  public MembersView() {
+   super(true, true);
+  }
+  
+ 
+  
   /**
    * Gets the grid items.
    *
@@ -75,9 +90,8 @@ public class MembersView extends AbstractGridView<Person> implements HasDynamicT
    */
   @Override
   public List<Person> getGridItems() {
-    return organizationServiceRef.get().getOrganizationMembers(activeOrganization);
+    return organizationServiceRef.get().getOrganizationMembers(activeOrganization, getQueryParams());
   }
-
   /**
    * Gets the page title.
    *
@@ -316,6 +330,16 @@ public class MembersView extends AbstractGridView<Person> implements HasDynamicT
   @Override
   protected VHorizontalLayout initAboveLayout() {
     return null;
+  }
+
+  /**
+   * Gets the route.
+   *
+   * @return the route
+   */
+  @Override
+  public String getRoute() {
+    return Routes.MEMBERS;
   }
 
 }

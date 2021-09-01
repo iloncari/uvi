@@ -22,6 +22,7 @@ import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.view.OrganizationView;
 import hr.tvz.vi.view.ReportView;
+import hr.tvz.vi.view.VechileView;
 import lombok.Getter;
 
 /**
@@ -70,8 +71,10 @@ public class NotificationItem extends VHorizontalLayout{
     clickRegistration = addClickListener(event -> {
       if(NotificationType.GROUP.equals(notification.getType())) {
         UI.getCurrent().navigate(OrganizationView.class);
-      }else {
+      }else if(NotificationType.TASK.equals(notification.getType())){
         UI.getCurrent().navigate(ReportView.class, notification.getSourceId().toString());
+      }else if(NotificationType.VECHILE.equals(notification.getType())){
+        UI.getCurrent().navigate(VechileView.class, notification.getSourceId().toString());
       }
     });
 

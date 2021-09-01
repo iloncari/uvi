@@ -16,18 +16,27 @@ import hr.tvz.vi.orm.PersonOrganizationRepository;
 import hr.tvz.vi.orm.PersonRepository;
 import hr.tvz.vi.util.Constants.Duty;
 import hr.tvz.vi.util.Constants.EventAction;
+import hr.tvz.vi.util.Constants.Gender;
 import hr.tvz.vi.util.Constants.GroupType;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
+import hr.tvz.vi.util.Constants.Professions;
 import hr.tvz.vi.util.Constants.UserRole;
+import lombok.extern.slf4j.Slf4j;
+import hr.tvz.vi.util.Utils;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +46,7 @@ import org.springframework.stereotype.Service;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 10:13:29 PM Aug 10, 2021
  */
+@Slf4j
 @Service
 public class OrganizationService extends AbstractService<Organization> {
 
@@ -129,7 +139,76 @@ public class OrganizationService extends AbstractService<Organization> {
       return new ArrayList<>();
     }
 
-    return personRepository.findByOrgList_ExitDateIsNullAndOrgList_OrganizationId(organization.getId());
+    List<Person> members = personRepository.findByOrgList_ExitDateIsNullAndOrgList_OrganizationId(organization.getId());
+    
+ 
+    
+    return members;
+  }
+  
+  
+  /**
+   * Gets the organization members.
+   *
+   * @param organization the organization
+   * @return the organization members
+   */
+  public List<Person> getOrganizationMembers(Organization organization, Map<String, List<String>> filter) {
+    if (organization == null) {
+      return new ArrayList<>();
+    }
+    
+    final List<Person> members = personRepository.findByOrgList_ExitDateIsNullAndOrgList_OrganizationId(organization.getId());
+    
+    
+    if(filter.containsKey("simpleSearch")) {
+      String searchValue = filter.get("simpleSearch").get(0);
+      List<Person> filtered = members.stream().filter(member -> {
+        AtomicBoolean passes = new AtomicBoolean(false);
+        Utils.getSearchableFields(member).forEach(fieldName -> {
+          try {
+            Object fieldValue =  Person.class.getDeclaredField(fieldName).get(member);
+            if(fieldValue instanceof String && !passes.get()) {
+              String value = (String)fieldValue;
+              passes.set(StringUtils.equalsIgnoreCase(value, searchValue));
+            }
+          } catch (IllegalAccessException | NoSuchFieldException e) {
+          }
+        });
+        return passes.get();
+      }).collect(Collectors.toList());
+      members.clear();
+      members.addAll(filtered);
+    }
+    filter.forEach((fieldKey, values) -> {
+      if(fieldKey.equals("simpleSearch") || values.isEmpty()){
+        return;
+      } 
+      List<Person> filtered = members.stream().filter(member -> {
+      try {
+         Object fieldValue =  Person.class.getDeclaredField(fieldKey).get(member);
+         if(fieldValue instanceof String) {
+           String value = (String)fieldValue;
+           return StringUtils.equalsIgnoreCase(value, values.get(0));
+         }else if(fieldValue instanceof Gender) {
+           return values.stream().map(value -> Gender.getGender(value)).filter(Objects::nonNull).anyMatch(gender -> gender.equals((Gender)fieldValue));
+         }else if(fieldValue instanceof Professions) {
+           return values.stream().map(value -> Professions.getProfession(value)).filter(Objects::nonNull).anyMatch(profession -> profession.equals((Professions)fieldValue));
+         }else if(fieldValue instanceof LocalDate && values.size()>1) {
+           LocalDate date = (LocalDate)fieldValue;
+           return date != null && NumberUtils.isParsable(values.get(0)) && NumberUtils.isParsable(values.get(1))
+             && date.getYear() >= NumberUtils.createDouble(values.get(0)) && date.getYear() <= NumberUtils.createDouble(values.get(1));
+         }
+      } catch (IllegalAccessException | NoSuchFieldException e) {
+      }
+       
+       return true;
+     }).collect(Collectors.toList());
+      members.clear();
+      members.addAll(filtered);
+    });
+    
+    return members;
   }
   
   /**

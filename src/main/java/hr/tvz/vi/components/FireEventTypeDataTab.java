@@ -156,13 +156,13 @@ public class FireEventTypeDataTab extends VVerticalLayout{
     CustomFormLayout<Report> reportLayoutTop = (CustomFormLayout<Report>)new CustomFormLayout<Report>(binder, report).withClassName(StyleConstants.WIDTH_50.getName());
     
     eventActions.setItems(Arrays.asList(EventActivity.values()));
-    eventActions.setReadOnly(!editRight);
+    eventActions.setEnabled(editRight);
     eventActions.setItemLabelGenerator(eventAction -> getTranslation(eventAction.getEventActivityTranslationKey()));
     reportLayoutTop.setLabel(eventActions, true, "reportView.fireEventTab.field.eventAction");
     reportLayoutTop.processBinder(eventActions, null, null, true, "eventActivities");
   
     itemsOnFire.setItemLabelGenerator(item -> getTranslation(item.getItemOnFireTranslationKey()));
-    itemsOnFire.setReadOnly(!editRight);
+    itemsOnFire.setEnabled(editRight);
     itemsOnFire.setItems(Arrays.asList(ItemOnFire.values()));
     reportLayoutTop.setLabel(itemsOnFire, true, "reportView.fireEventTab.field.itemsOnFire");
     reportLayoutTop.processBinder(itemsOnFire, null, null, true, "itemsOnFire");

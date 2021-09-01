@@ -49,6 +49,13 @@ import de.codecamp.vaadin.serviceref.ServiceRef;
 @EventSubscriber(scope = SubscriberScope.PUSH)
 public class VechilesView extends AbstractGridView<Vechile> implements HasDynamicTitle {
 
+  /**
+   * Instantiates a new vechiles view.
+   */
+  public VechilesView() {
+    super(true, true);
+  }
+
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = -1667920498041105820L;
 
@@ -232,6 +239,16 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
   @Override
   protected VHorizontalLayout initAboveLayout() {
     return null;
+  }
+
+  /**
+   * Gets the route.
+   *
+   * @return the route
+   */
+  @Override
+  public String getRoute() {
+    return Routes.VECHILES;
   }
 
 }

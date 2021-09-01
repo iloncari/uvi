@@ -14,6 +14,7 @@ import org.vaadin.firitin.components.button.DeleteButton;
 import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.grid.VGrid;
 import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
+import org.vaadin.firitin.components.textfield.VTextArea;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
@@ -57,6 +58,13 @@ public class ReportsView extends AbstractGridView<Report>{
 	@Autowired
 	private ServiceRef<ReportService> reportServiceRef;
 
+
+	/**
+   * Instantiates a new reports view.
+   */
+	public ReportsView() {
+   super(true, true);
+  }
 	/**
 	 * Gets the grid items.
 	 *
@@ -142,6 +150,7 @@ public class ReportsView extends AbstractGridView<Report>{
 	    
 	    getGrid().addItemClickListener(e -> {
 	    	if(e.getClickCount() > 1) {
+	    	  
 	    		UI.getCurrent().navigate(ReportView.class, e.getItem().getId().toString());
 	    	}
 	    });
@@ -155,6 +164,16 @@ public class ReportsView extends AbstractGridView<Report>{
   @Override
   protected VHorizontalLayout initAboveLayout() {
     return null;
+  }
+
+  /**
+   * Gets the route.
+   *
+   * @return the route
+   */
+  @Override
+  public String getRoute() {
+    return Routes.REPORTS;
   }
 
 

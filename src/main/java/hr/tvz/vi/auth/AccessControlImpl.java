@@ -71,6 +71,9 @@ public class AccessControlImpl implements AccessControl {
     log.info("User {} is successfully logged in from IP: {}.", currentUser.getUsername(), VaadinRequest.getCurrent().getHeader("X-Forwarded-For"));
   }
 
+  /**
+   * Delete current user.
+   */
   private void deleteCurrentUser() {
     final CurrentUser currentUser = getCurrentUser();
     if (null != currentUser) {

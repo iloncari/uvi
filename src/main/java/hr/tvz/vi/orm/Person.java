@@ -7,9 +7,13 @@ package hr.tvz.vi.orm;
 
 import hr.tvz.vi.util.Constants.Gender;
 import hr.tvz.vi.util.Constants.Professions;
+import hr.tvz.vi.util.Constants.Searchable;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -35,15 +39,19 @@ public class Person {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String name;
+  @Searchable
+  public String name;
 
-  private String lastname;
+  @Searchable
+  public String lastname;
 
-  private LocalDate birthDate;
+  @Searchable
+  public LocalDate birthDate;
 
-  private String identificationNumber;
+  @Searchable
+  public String identificationNumber;
 
-  private String email;
+  public String email;
 
   private String hashedPassword;
   
@@ -54,15 +62,16 @@ public class Person {
   private Long lastActiveOrganizationId;
 
   @Enumerated(EnumType.STRING)
-  private Gender gender;
+  public Gender gender;
 
-  private String phoneNumber;
+  @Searchable
+  public String phoneNumber;
 
   @OneToOne
   private Address residenceAddress;
 
   @Enumerated(EnumType.STRING)
-  private Professions profession;
+  public Professions profession;
 
   @ToString.Exclude
   @OneToMany(mappedBy = "person", fetch = FetchType.EAGER)
@@ -79,5 +88,7 @@ public class Person {
 	  }
 	  return residenceAddress;
   }
+  
+ 
 
 }

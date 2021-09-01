@@ -5,6 +5,7 @@
 
 package hr.tvz.vi.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.vaadin.firitin.components.html.VSpan;
 
 import hr.tvz.vi.orm.Address;
 import hr.tvz.vi.orm.AddressRepository;
@@ -24,6 +26,12 @@ import hr.tvz.vi.orm.Notification;
 import hr.tvz.vi.orm.NotificationRepository;
 import hr.tvz.vi.orm.NotificationUserMapping;
 import hr.tvz.vi.orm.NotificationUserMappingRepository;
+import hr.tvz.vi.orm.OrganizationRepository;
+import hr.tvz.vi.orm.PersonRepository;
+import hr.tvz.vi.orm.VechileRegistrationReminder;
+import hr.tvz.vi.orm.VechileReminderRepository;
+import hr.tvz.vi.orm.VechileRepository;
+import hr.tvz.vi.util.Constants.NotificationType;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -41,6 +49,18 @@ public class NotificationService extends AbstractService<Notification> {
   @Autowired
   NotificationUserMappingRepository notificationUserMappingRepository;
 	
+  /** The vechile reminder repository. */
+  @Autowired
+  VechileReminderRepository vechileReminderRepository;
+  
+  /** The organization repository. */
+  @Autowired
+  PersonRepository personRepository;
+  
+  /** The vechile repository. */
+  @Autowired
+  VechileRepository vechileRepository;
+  
 	/**
    * Find all active notifications.
    *
@@ -105,6 +125,43 @@ public class NotificationService extends AbstractService<Notification> {
 	    log.info("setting on read");
 	    mapping.setReadAt(LocalDateTime.now());
 	    notificationUserMappingRepository.save(mapping);
+	  }
+	}
+	
+	/**
+   * Send registration expiring notifications if needed.
+   *
+   * @param organizationId the organization id
+   */
+	public void sendRegistrationExpiringNotificationsIfNeeded(Long organizationId) {
+	  if(vechileReminderRepository.findByOrganizationIdAndCheckedDate(organizationId, LocalDate.now()) == null) {
+	    vechileRepository.findByOrganizationIdAndActiveTrue(organizationId).forEach(vechile -> {
+	      VSpan span = new VSpan();
+	      Notification notification = new Notification();
+	      notification.setCreationDateTime(LocalDateTime.now());
+	      notification.setOrganizationId(organizationId);
+	      notification.setSourceId(vechile.getId());
+	      notification.setType(NotificationType.VECHILE);
+	      notification.setTitle(span.getTranslation("notification.vechile.reminder"));
+	      if(vechile.getRegistrationValidUntil() != null && vechile.getRegistrationValidUntil().isBefore(LocalDate.now().plusDays(4))) {
+          notification.setMessage(span.getTranslation("notification.vechile.reminder.message", vechile.getVechileNumber(), 4));
+          saveOrUpdateNotification(notification);
+          personRepository.findByOrgList_ExitDateIsNullAndOrgList_OrganizationId(organizationId).forEach(member -> {
+            mapNotificationToUser(notification.getId(), member.getId());
+          });
+        }else if(vechile.getRegistrationValidUntil() != null && vechile.getRegistrationValidUntil().isBefore(LocalDate.now().plusDays(10))) {
+	        notification.setMessage(span.getTranslation("notification.vechile.reminder.message", vechile.getVechileNumber(), 10));
+	        saveOrUpdateNotification(notification);
+	        personRepository.findByOrgList_ExitDateIsNullAndOrgList_OrganizationId(organizationId).forEach(member -> {
+	          mapNotificationToUser(notification.getId(), member.getId());
+	        });
+	      }
+	      
+	    });
+	    VechileRegistrationReminder vechilesChecked = new VechileRegistrationReminder();
+	    vechilesChecked.setCheckedDate(LocalDate.now());
+	    vechilesChecked.setOrganizationId(organizationId);
+	    vechileReminderRepository.save(vechilesChecked);
 	  }
 	}
 

@@ -66,7 +66,7 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
    * @param organizationService the organization service
    */
   public GroupMembersTab(OrganizationService organizationService, NotificationService notificationService) {
-    super();
+    super(false, false);
     this.organizationService = organizationService;
     this.notificationService = notificationService;
   }
@@ -170,8 +170,8 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
   @Override
   protected void initGrid() {
       getGrid().removeAllColumns();
-      getGrid().addColumn(groupMember -> groupMember.getPerson().getIdentificationNumber()).setHeader("groupMembersTab.grid.personIdentificationNumber");
-      getGrid().addColumn(groupMember -> groupMember.getPerson().getName() +" " + groupMember.getPerson().getLastname()).setHeader("groupMembersTab.grid.perosonNameLastname");
+      getGrid().addColumn(groupMember -> groupMember.getPerson().getIdentificationNumber()).setHeader(getTranslation("groupMembersTab.grid.personIdentificationNumber"));
+      getGrid().addColumn(groupMember -> groupMember.getPerson().getName() +" " + groupMember.getPerson().getLastname()).setHeader(getTranslation("groupMembersTab.grid.perosonNameLastname"));
       getGrid().addComponentColumn(groupMember -> {
         DeleteButton delete = new DeleteButton().withText(getTranslation("button.delete"))
                                                 .withRejectText(getTranslation("button.cancel"))
@@ -213,6 +213,16 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
     });
 
     return new VHorizontalLayout(membersSelect);
+  }
+
+  /**
+   * Gets the route.
+   *
+   * @return the route
+   */
+  @Override
+  public String getRoute() {
+    return Routes.ORGANIZATION;
   }
   
   

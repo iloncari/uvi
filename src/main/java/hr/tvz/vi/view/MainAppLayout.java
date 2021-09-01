@@ -183,6 +183,7 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
     ChangeBroadcaster.registerToPushEvents(this);
     setActiveOrganizationMembersBadge();
     reportEventItem.setVisible(currentUser.hasManagerRole());
+    notificationServiceRef.get().sendRegistrationExpiringNotificationsIfNeeded(currentUser.getActiveOrganizationObject().getId());
     appHeader.setPersonService(personServiceRef);
     appHeader.setNotificationService(notificationServiceRef);
     appHeader.setActiveNotifications(notificationServiceRef.get().findAllActiveNotifications(currentUser.getActiveOrganizationObject().getId(), currentUser.getPerson().getId()));
