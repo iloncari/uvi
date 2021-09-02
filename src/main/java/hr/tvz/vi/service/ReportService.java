@@ -6,13 +6,22 @@
 package hr.tvz.vi.service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +41,11 @@ import hr.tvz.vi.orm.ReportRepository;
 import hr.tvz.vi.orm.Task;
 import hr.tvz.vi.orm.TaskRepository;
 import hr.tvz.vi.orm.Vechile;
+import hr.tvz.vi.util.Utils;
+import hr.tvz.vi.util.Constants.EventType;
 import hr.tvz.vi.util.Constants.ReportStatus;
+import hr.tvz.vi.util.Constants.VechileCondition;
+import hr.tvz.vi.util.Constants.VechileType;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -119,16 +132,21 @@ public class ReportService extends AbstractService<Report> {
 	  }
 	
 	/**
-	 * Gets the owning reports.
-	 *
-	 * @param owner the owner
-	 * @return the owning reports
-	 */
-	public List<Report> getOwningReports(Organization owner){
+   * Gets the owning reports.
+   *
+   * @param owner the owner
+   * @param filter the filter
+   * @return the owning reports
+   */
+	public List<Report> getOwningReports(Organization owner, Map<String, List<String>> filter){
 		if(owner==null) {
 			return new ArrayList<Report>();
 		}
-		return ((ReportRepository)repository).findByCreatorId(owner.getId().toString());
+		List<Report> reports =  ((ReportRepository)repository).findByCreatorId(owner.getId().toString());
+		
+		filterReports(filter, reports);
+    
+    return reports;
 		
 	}
 	
@@ -145,8 +163,97 @@ public class ReportService extends AbstractService<Report> {
 		}
 		return ((ReportRepository)repository).findByEventOrganizationList_Organization_Id(org.getId());
 	}
+	
+	
+	/**
+   * Gets the reports.
+   *
+   * @param org the org
+   * @param filter the filter
+   * @return the reports
+   */
+	public List<Report> getReports( Organization org, Map<String, List<String>> filter){
+    if(org==null) {
+      return new ArrayList<Report>();
+    }
+    List<Report> reports  = ((ReportRepository)repository).findByEventOrganizationList_Organization_Id(org.getId());
+  
+    filterReports(filter, reports);
+    
+    return reports;
+	}
 
 	/**
+   * Filter reports.
+   *
+   * @param filter the filter
+   * @param reports the reports
+   */
+	private void filterReports(Map<String, List<String>> filter, List<Report> reports) {
+	  if(filter.containsKey("simpleSearch")) {
+      String searchValue = filter.get("simpleSearch").get(0);
+      List<Report> filtered = reports.stream().filter(report -> {
+        AtomicBoolean passes = new AtomicBoolean(false);
+        Utils.getSearchableFields(report).forEach(fieldName -> {
+          try {
+            Object fieldValue =  Report.class.getDeclaredField(fieldName).get(report);
+            if(fieldValue instanceof String && !passes.get()) {
+              String value = (String)fieldValue;
+              passes.set(StringUtils.equalsIgnoreCase(value, searchValue));
+            }
+          } catch (IllegalAccessException | NoSuchFieldException e) {
+          }
+        });
+        return passes.get();
+      }).collect(Collectors.toList());
+      reports.clear();
+      reports.addAll(filtered);
+    }
+    
+    
+    filter.forEach((fieldKey, values) -> {
+      if(fieldKey.equals("simpleSearch") || values.isEmpty()){
+        return;
+      } 
+      List<Report> filtered = reports.stream().filter(report -> {
+      try {
+         Object fieldValue =  Report.class.getDeclaredField(fieldKey).get(report);
+         if(fieldValue instanceof String) {
+           String value = (String)fieldValue;
+           return StringUtils.equalsIgnoreCase(value, values.get(0));
+         }else if(fieldValue instanceof EventType) {
+           return values.stream().map(value -> EventType.getEventType(value)).filter(Objects::nonNull).anyMatch(type -> type.equals((EventType)fieldValue));
+         }else if(fieldValue instanceof ReportStatus) {
+           return values.stream().map(value -> ReportStatus.getReportStatus(value)).filter(Objects::nonNull).anyMatch(status -> status.equals((ReportStatus)fieldValue));
+         }
+      } catch (IllegalAccessException | NoSuchFieldException e) {
+        if("eventDate".equals(fieldKey)) {
+          DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+          LocalDate date;
+          try {
+            date = LocalDate.parse(values.get(0), formatter);
+          }catch (DateTimeParseException ex) {
+            return true;
+          }
+          return report.getEventDateTime() != null && report.getEventDateTime().getDayOfMonth() == date.getDayOfMonth() && 
+            report.getEventDateTime().getMonthValue() == date.getMonthValue() && report.getEventDateTime().getYear() == date.getYear();
+        }else if("eventCity".equals(fieldKey)) {
+          return report.getEventAddress() != null && report.getEventAddress().getCity() != null && report.getEventAddress().getCity().getId().toString().equals(values.get(0));
+        }else if("eventOrganization".equals(fieldKey)) {
+          return report.getEventOrganizationList() != null && report.getEventOrganizationList().stream().anyMatch(o -> values.contains(o.getId().toString()));
+        }
+      }
+       
+       return true;
+     }).collect(Collectors.toList());
+      reports.clear();
+      reports.addAll(filtered);
+    });
+    
+    
+  }
+
+  /**
 	 * Delete report.
 	 *
 	 * @param repotForDelete the repot for delete

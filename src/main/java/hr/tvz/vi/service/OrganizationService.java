@@ -16,6 +16,7 @@ import hr.tvz.vi.orm.PersonOrganizationRepository;
 import hr.tvz.vi.orm.PersonRepository;
 import hr.tvz.vi.util.Constants.Duty;
 import hr.tvz.vi.util.Constants.EventAction;
+import hr.tvz.vi.util.Constants.FieldType;
 import hr.tvz.vi.util.Constants.Gender;
 import hr.tvz.vi.util.Constants.GroupType;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
@@ -24,9 +25,11 @@ import hr.tvz.vi.util.Constants.UserRole;
 import lombok.extern.slf4j.Slf4j;
 import hr.tvz.vi.util.Utils;
 
+import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -46,6 +49,8 @@ import org.springframework.stereotype.Service;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 10:13:29 PM Aug 10, 2021
  */
+
+/** The Constant log. */
 @Slf4j
 @Service
 public class OrganizationService extends AbstractService<Organization> {
@@ -61,6 +66,9 @@ public class OrganizationService extends AbstractService<Organization> {
   /** The group member repository. */
   @Autowired
   private GroupMemberRepository groupMemberRepository;
+  
+  
+
 
   /**
    * Save or update organization for person.
@@ -127,6 +135,19 @@ public class OrganizationService extends AbstractService<Organization> {
     }
     return ((OrganizationRepository) repository).findByIdentificationNumber(organizationIdentificationNumber);
   }
+  
+  /**
+   * Gets the organizations by level.
+   *
+   * @param level the level
+   * @return the organizations by level
+   */
+  public List<Organization> getOrganizationsByLevel(OrganizationLevel level) {
+    if (level == null) {
+      return new ArrayList<Organization>();
+    }
+    return ((OrganizationRepository) repository).findByLevel(level);
+  }
 
   /**
    * Gets the organization members.
@@ -151,6 +172,7 @@ public class OrganizationService extends AbstractService<Organization> {
    * Gets the organization members.
    *
    * @param organization the organization
+   * @param filter the filter
    * @return the organization members
    */
   public List<Person> getOrganizationMembers(Organization organization, Map<String, List<String>> filter) {
@@ -194,12 +216,13 @@ public class OrganizationService extends AbstractService<Organization> {
            return values.stream().map(value -> Gender.getGender(value)).filter(Objects::nonNull).anyMatch(gender -> gender.equals((Gender)fieldValue));
          }else if(fieldValue instanceof Professions) {
            return values.stream().map(value -> Professions.getProfession(value)).filter(Objects::nonNull).anyMatch(profession -> profession.equals((Professions)fieldValue));
-         }else if(fieldValue instanceof LocalDate && values.size()>1) {
-           LocalDate date = (LocalDate)fieldValue;
-           return date != null && NumberUtils.isParsable(values.get(0)) && NumberUtils.isParsable(values.get(1))
-             && date.getYear() >= NumberUtils.createDouble(values.get(0)) && date.getYear() <= NumberUtils.createDouble(values.get(1));
          }
       } catch (IllegalAccessException | NoSuchFieldException e) {
+        if("minBirthYear".equals(fieldKey) && NumberUtils.isParsable(values.get(0))) {
+          return member.getBirthDate() != null && member.getBirthDate().getYear() >= NumberUtils.createDouble(values.get(0));
+        }else if("maxBirthYear".equals(fieldKey) && NumberUtils.isParsable(values.get(0))) {
+          return member.getBirthDate() != null && member.getBirthDate().getYear() <= NumberUtils.createDouble(values.get(0));
+        }
       }
        
        return true;
@@ -210,6 +233,7 @@ public class OrganizationService extends AbstractService<Organization> {
     
     return members;
   }
+  
   
   /**
    * Gets the organization members number.
@@ -355,7 +379,8 @@ public class OrganizationService extends AbstractService<Organization> {
   /**
    * Save group member.
    *
-   * @param newMember the new member
+   * @param member the member
+   * @return the group member
    */
   public GroupMember saveGroupMember(GroupMember member) {
     if(member == null) {

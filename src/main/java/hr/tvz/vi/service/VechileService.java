@@ -5,14 +5,26 @@
 package hr.tvz.vi.service;
 
 import hr.tvz.vi.orm.Organization;
+import hr.tvz.vi.orm.Person;
 import hr.tvz.vi.orm.ServiceRepository;
 import hr.tvz.vi.orm.Vechile;
 import hr.tvz.vi.orm.VechileRepository;
+import hr.tvz.vi.util.Utils;
+import hr.tvz.vi.util.Constants.Gender;
+import hr.tvz.vi.util.Constants.Professions;
+import hr.tvz.vi.util.Constants.VechileCondition;
+import hr.tvz.vi.util.Constants.VechileType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +79,69 @@ public class VechileService extends AbstractService<Vechile> {
     }
     
     return ((VechileRepository) repository).findByOrganizationIdAndActiveTrue(organizationId);
+  }
+  
+  /**
+   * Gets the active by organization.
+   *
+   * @param organizationId the organization id
+   * @param filter the filter
+   * @return the active by organization
+   */
+  public List<Vechile> getActiveByOrganization(Long organizationId, Map<String, List<String>> filter) {
+    if (organizationId == null) {
+      return new ArrayList<>();
+    }
+    
+    List<Vechile> vehicles = ((VechileRepository) repository).findByOrganizationIdAndActiveTrue(organizationId);
+    
+    if(filter.containsKey("simpleSearch")) {
+      String searchValue = filter.get("simpleSearch").get(0);
+      List<Vechile> filtered = vehicles.stream().filter(vehicle -> {
+        AtomicBoolean passes = new AtomicBoolean(false);
+        Utils.getSearchableFields(vehicle).forEach(fieldName -> {
+          try {
+            Object fieldValue =  Vechile.class.getDeclaredField(fieldName).get(vehicle);
+            if(fieldValue instanceof String && !passes.get()) {
+              String value = (String)fieldValue;
+              passes.set(StringUtils.equalsIgnoreCase(value, searchValue));
+            }
+          } catch (IllegalAccessException | NoSuchFieldException e) {
+          }
+        });
+        return passes.get();
+      }).collect(Collectors.toList());
+      vehicles.clear();
+      vehicles.addAll(filtered);
+    }
+    
+    
+    filter.forEach((fieldKey, values) -> {
+      if(fieldKey.equals("simpleSearch") || values.isEmpty()){
+        return;
+      } 
+      List<Vechile> filtered = vehicles.stream().filter(vehicle -> {
+      try {
+         Object fieldValue =  Vechile.class.getDeclaredField(fieldKey).get(vehicle);
+         if(fieldValue instanceof String) {
+           String value = (String)fieldValue;
+           return StringUtils.equalsIgnoreCase(value, values.get(0));
+         }else if(fieldValue instanceof VechileCondition) {
+           return values.stream().map(value -> VechileCondition.getVechileCondition(value)).filter(Objects::nonNull).anyMatch(gender -> gender.equals((VechileCondition)fieldValue));
+         }else if(fieldValue instanceof VechileType) {
+           return values.stream().map(value -> VechileType.getVechileType(value)).filter(Objects::nonNull).anyMatch(vechileType -> vechileType.equals((VechileType)fieldValue));
+         }
+      } catch (IllegalAccessException | NoSuchFieldException e) {
+      }
+       
+       return true;
+     }).collect(Collectors.toList());
+      vehicles.clear();
+      vehicles.addAll(filtered);
+    });
+    
+    
+    return vehicles;
   }
 
   /**

@@ -5,6 +5,7 @@
  */
 package hr.tvz.vi.orm;
 
+import hr.tvz.vi.util.Constants.Searchable;
 import hr.tvz.vi.util.Constants.VechileCondition;
 import hr.tvz.vi.util.Constants.VechileType;
 
@@ -26,10 +27,12 @@ import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.experimental.FieldNameConstants;
 
 @Data
 @Entity
 @Table
+@FieldNameConstants
 @EqualsAndHashCode(exclude = "services")
 public class Vechile {
 
@@ -37,28 +40,31 @@ public class Vechile {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  private String make;
-
-  private String model;
+  @Searchable
+  public String make;
+  
+  @Searchable
+  public String model;
 
   private int modelYear;
 
-  private String licencePlateNumber;
+  @Searchable
+  public String licencePlateNumber;
 
   private LocalDate registrationValidUntil;
 
-  private String vechileNumber;
+  @Searchable
+  public String vechileNumber;
 
   private LocalDate firstRegistrationDate;
 
   private String description;
-  
 
   @Enumerated(EnumType.STRING)
-  private VechileCondition condition;
+  public VechileCondition condition;
 
   @Enumerated(EnumType.STRING)
-  private VechileType type;
+  public VechileType type;
 
   @ManyToOne
   private Organization organization;

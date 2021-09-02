@@ -57,9 +57,8 @@ public class MyTasksTab extends AbstractGridView<Task>{
    *
    * @param reportService the report service
    */
-  public  MyTasksTab(ReportService reportService, Map<String, List<String>> queryParams) {
-   super(true, true);
-   super.setQueryParams(queryParams);
+  public  MyTasksTab(ReportService reportService) {
+   super(false, false);
    this.reportService = reportService;
   }
   

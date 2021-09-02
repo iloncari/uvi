@@ -17,6 +17,7 @@ import hr.tvz.vi.util.Constants.IndustrialPlantType;
 import hr.tvz.vi.util.Constants.ItemOnFire;
 import hr.tvz.vi.util.Constants.OpenSpaceFireType;
 import hr.tvz.vi.util.Constants.ReportStatus;
+import hr.tvz.vi.util.Constants.Searchable;
 import hr.tvz.vi.util.Constants.TrafficFireVechileType;
 
 import java.time.LocalDate;
@@ -46,10 +47,12 @@ import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.ToString;
+import lombok.experimental.FieldNameConstants;
 
 @Data
 @Entity
 @Table
+@FieldNameConstants
 public class Report {
 
   @Id
@@ -61,32 +64,31 @@ public class Report {
   @OneToOne
   private Person lockOwner;
   
-  private String identificationNumber;
+  @Searchable
+  public String identificationNumber;
   
-  private LocalDateTime eventDateTime;
+  public LocalDateTime eventDateTime;
   
   @Enumerated(EnumType.STRING)
-  EventType eventType;
+  public EventType eventType;
   
   @OneToOne
   private Address eventAddress;
   
-  private String reporter;
+  @Searchable
+  public String reporter;
   
   private String eventDescription;
   
   @ToString.Exclude
   @OneToMany(mappedBy = "report", fetch = FetchType.EAGER)
-  private Set<EventOrganization> eventOrganizationList;
+  public Set<EventOrganization> eventOrganizationList;
 
   private String title;
 
   @Enumerated(EnumType.STRING)
-  private ReportStatus status;
+  public ReportStatus status;
 
-  private LocalDate creationDate;
-
-  private LocalDate updateDate;
 
   private String creatorId;
   
@@ -107,7 +109,7 @@ public class Report {
   private Set<ItemOnFire> itemsOnFire;
   
   @Enumerated(EnumType.STRING)
-  private FireSize fireSize;
+  public FireSize fireSize;
   
   private Boolean explosion;
   

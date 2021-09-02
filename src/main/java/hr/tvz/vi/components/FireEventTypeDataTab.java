@@ -63,34 +63,31 @@ public class FireEventTypeDataTab extends VVerticalLayout{
   /** The items on fire. */
   private MultiselectComboBox<ItemOnFire> itemsOnFire = new MultiselectComboBox<ItemOnFire>();
   
-  VSelect<String> explosion = new VSelect<String>().withReadOnly(!editRight);
+  VSelect<String> explosion = new VSelect<String>();
   
-  VSelect<String> fireRepeated = new VSelect<String>().withReadOnly(!editRight);
+  VSelect<String> fireRepeated = new VSelect<String>();
   
-  VSelect<BuildingType> buildingType = new VSelect<BuildingType>().withReadOnly(!editRight);
+  VSelect<BuildingType> buildingType = new VSelect<BuildingType>();
   
-  VNumberField height = new VNumberField().withReadOnly(!editRight);
+  VNumberField height = new VNumberField();
   
-  VNumberField floor = new VNumberField().withReadOnly(!editRight);
+  VNumberField floor = new VNumberField();
   
-  VSelect<BuildingStatus> buildingStatus = new VSelect<BuildingStatus>().withReadOnly(!editRight);
+  VSelect<BuildingStatus> buildingStatus = new VSelect<BuildingStatus>();
   
-  VSelect<FireSize> fireSize = new VSelect<FireSize>().withReadOnly(!editRight);
+  VSelect<FireSize> fireSize = new VSelect<FireSize>();
   
-  VSelect<IndustrialPlantType> industrialPlantType = new VSelect<IndustrialPlantType>().withReadOnly(!editRight);
+  VSelect<IndustrialPlantType> industrialPlantType = new VSelect<IndustrialPlantType>();
   
-  VSelect<OpenSpaceFireType> openSpaceFireType = new VSelect<OpenSpaceFireType>().withReadOnly(!editRight);
+  VSelect<OpenSpaceFireType> openSpaceFireType = new VSelect<OpenSpaceFireType>();
   
-  VNumberField width = new VNumberField().withReadOnly(!editRight);
+  VNumberField width = new VNumberField();
 
-  VNumberField lenght = new VNumberField().withReadOnly(!editRight);
+  VNumberField lenght = new VNumberField();
   
-  VNumberField number = new VNumberField().withReadOnly(!editRight);
+  VNumberField number = new VNumberField();
   
-  VSelect<TrafficFireVechileType> trafficFireVechileType = new VSelect<TrafficFireVechileType>().withReadOnly(!editRight);
-  
-
-  
+  VSelect<TrafficFireVechileType> trafficFireVechileType = new VSelect<TrafficFireVechileType>();
   
   /** The binder. */
   private Binder<Report> binder;
@@ -109,6 +106,19 @@ public class FireEventTypeDataTab extends VVerticalLayout{
     this.tabComponentMap = tabComponentMap;
     explosion.setItems(Arrays.asList("true", "false"));
     fireRepeated.setItems(Arrays.asList("true", "false"));
+    explosion.setReadOnly(!editRight);
+    fireRepeated.setReadOnly(!editRight);
+    buildingType.setReadOnly(!editRight);
+    height.setReadOnly(!editRight);
+    floor.setReadOnly(!editRight);
+    buildingStatus.setReadOnly(!editRight);
+    fireSize.setReadOnly(!editRight);
+    industrialPlantType.setReadOnly(!editRight);
+    openSpaceFireType.setReadOnly(!editRight);
+    width.setReadOnly(!editRight);
+    lenght.setReadOnly(!editRight);
+    number.setReadOnly(!editRight);
+    trafficFireVechileType.setReadOnly(!editRight);
   }
 
   /**
@@ -179,12 +189,12 @@ public class FireEventTypeDataTab extends VVerticalLayout{
     
   
     
-    explosion.setItemLabelGenerator(value -> getTranslation("label".concat(value)));
+    explosion.setItemLabelGenerator(value -> getTranslation("label.".concat(value)));
     reportLayoutTop.processBinder(explosion, new StringToBooleanConverter(""), null, false, "explosion");
     reportLayoutTop.setLabel(explosion, false, "reportView.fireEventTab.field.explosion");
     
 
-    fireRepeated.setItemLabelGenerator(value -> getTranslation("label".concat(value)));
+    fireRepeated.setItemLabelGenerator(value -> getTranslation("label.".concat(value)));
     reportLayoutTop.processBinder(fireRepeated, new StringToBooleanConverter(""), null, false, "fireRepeated");
     reportLayoutTop.setLabel(fireRepeated, false, "reportView.fireEventTab.field.fireRepeated");
     reportLayoutTop.addThreeColumnItemsLayout(explosion, fireRepeated, null);

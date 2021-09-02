@@ -7,11 +7,13 @@ package hr.tvz.vi.view;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.layouts.VTabSheet;
 
 import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.HasUrlParameter;
@@ -34,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 12:41:26 AM Aug 28, 2021
  */
+@Slf4j
 @Route(value = Routes.TASKS, layout = MainAppLayout.class)
 public class TasksView extends VVerticalLayout implements HasDynamicTitle, HasUrlParameter<String>{
 
@@ -48,8 +51,8 @@ public class TasksView extends VVerticalLayout implements HasDynamicTitle, HasUr
   @Autowired
   private ServiceRef<OrganizationService> oganizationServiceRef;
   
-  /** The query params. */
-  private Map<String, List<String>> queryParams;
+  /** The selected tab id. */
+  private String selectedTabId;
   
   /**
    * Sets the parameter.
@@ -60,10 +63,7 @@ public class TasksView extends VVerticalLayout implements HasDynamicTitle, HasUr
   @Override
   public void setParameter(final BeforeEvent event, @OptionalParameter final String parameter) {
     final Location location = event.getLocation();
-    final QueryParameters queryParameters = location
-      .getQueryParameters();
-
-    queryParams = queryParameters.getParameters();
+    selectedTabId = location.getSegments().size() > 1 ? location.getSegments().get(1) : "";
   }
 
   /**
@@ -75,9 +75,13 @@ public class TasksView extends VVerticalLayout implements HasDynamicTitle, HasUr
   protected void onAttach(AttachEvent attachEvent) {
     super.onAttach(attachEvent);
     VTabSheet tabs = new VTabSheet();
-    tabs.addTab(getTranslation("tasksView.myTaskTab.label"), new MyTasksTab(reportServiceRef.get(), queryParams));
-    tabs.addTab(getTranslation("tasksView.groupTaskTab.label"), new GroupTasksTab(reportServiceRef.get(), oganizationServiceRef.get(), queryParams));
+    Tab myTasksTab = tabs.addTab(getTranslation("tasksView.myTaskTab.label"), new MyTasksTab(reportServiceRef.get()));
+    myTasksTab.setId("myTasks");
+    Tab groupTasksTab = tabs.addTab(getTranslation("tasksView.groupTaskTab.label"), new GroupTasksTab(reportServiceRef.get(), oganizationServiceRef.get()));
+    groupTasksTab.setId("groupTasks");
     add(tabs);
+    
+    tabs.setSelectedTab(StringUtils.equals(selectedTabId, "groupTasks") ? groupTasksTab : myTasksTab);
   }
 
   /**

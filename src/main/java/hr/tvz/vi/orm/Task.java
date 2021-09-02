@@ -23,8 +23,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import hr.tvz.vi.util.Constants.EventActivity;
+import hr.tvz.vi.util.Constants.Searchable;
 import hr.tvz.vi.util.Constants.TaskType;
 import lombok.Data;
+import lombok.experimental.FieldNameConstants;
 
 /**
  * Instantiates a new task.
@@ -40,11 +42,11 @@ public class Task {
   private Long id;
 
   /** The name. */
-  private String name;
+  public String name;
   
   /** The type. */
   @Enumerated(EnumType.STRING)
-  private TaskType type;
+  public TaskType type;
   
   /** The assignee. */
   @OneToOne

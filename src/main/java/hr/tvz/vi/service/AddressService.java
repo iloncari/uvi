@@ -44,6 +44,7 @@ public class AddressService extends AbstractService<Address> {
 		return countyRepository.findAll();
 	}
 	
+	
 	/**
 	 * Save or update address.
 	 *
@@ -68,5 +69,15 @@ public class AddressService extends AbstractService<Address> {
 		}
 		return cityRepository.findByCounty(county);
 	}
+	
+	/**
+   * Gets the all cities.
+   *
+   * @return the all cities
+   */
+	public List<City> getAllCities(){
+
+    return cityRepository.findAll();
+  }
 
 }

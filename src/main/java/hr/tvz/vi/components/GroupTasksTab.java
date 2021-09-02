@@ -65,9 +65,8 @@ public class GroupTasksTab extends AbstractGridView<Task>{
    * @param reportService the report service
    * @param organizationService the organization service
    */
-  public GroupTasksTab(ReportService reportService, OrganizationService organizationService, Map<String, List<String>> queryParams) {
-   super(true, true);
-   super.setQueryParams(queryParams);
+  public GroupTasksTab(ReportService reportService, OrganizationService organizationService) {
+   super(false, false);
    this.reportService = reportService;
    this.organizationService = organizationService;
   }

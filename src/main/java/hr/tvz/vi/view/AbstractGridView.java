@@ -15,20 +15,42 @@ import com.vaadin.flow.router.Location;
 import com.vaadin.flow.router.OptionalParameter;
 import com.vaadin.flow.router.QueryParameters;
 
+import de.codecamp.vaadin.serviceref.ServiceRef;
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.components.AdvancedSearch;
 import hr.tvz.vi.components.SimpleSearch;
 import hr.tvz.vi.event.ChangeBroadcaster;
+import hr.tvz.vi.orm.City;
+import hr.tvz.vi.orm.Organization;
+import hr.tvz.vi.orm.Person;
+import hr.tvz.vi.service.AddressService;
+import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.util.Constants.EventSubscriber;
+import hr.tvz.vi.util.Constants.EventType;
+import hr.tvz.vi.util.Constants.FieldType;
+import hr.tvz.vi.util.Constants.Gender;
+import hr.tvz.vi.util.Constants.OrganizationLevel;
+import hr.tvz.vi.util.Constants.Professions;
+import hr.tvz.vi.util.Constants.ReportStatus;
 import hr.tvz.vi.util.Constants.SubscriberScope;
+import hr.tvz.vi.util.Constants.VechileCondition;
+import hr.tvz.vi.util.Constants.VechileType;
 import hr.tvz.vi.util.Utils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.firitin.components.grid.VGrid;
 import org.vaadin.firitin.components.html.VH3;
 import org.vaadin.firitin.components.html.VSpan;
@@ -47,6 +69,7 @@ import lombok.extern.slf4j.Slf4j;
  * @since 6:10:55 PM Aug 14, 2021
  */
 @EventSubscriber(scope = SubscriberScope.PUSH)
+@Slf4j
 public abstract class AbstractGridView<T> extends VVerticalLayout implements HasDynamicTitle, HasUrlParameter<String> {
 
   /** The Constant serialVersionUID. */
@@ -69,6 +92,17 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
   /** The query params. */
   @Getter
   private Map<String, List<String>> queryParams;
+  
+  /** The tags layout. */
+  private VHorizontalLayout tagsLayout = new VHorizontalLayout();
+  
+  /** The address service. */
+  @Autowired
+  ServiceRef<AddressService> addressService;
+  
+  /** The organization service. */
+  @Autowired
+  ServiceRef<OrganizationService> organizationService;
 
   /**
    * Instantiates a new abstract grid view.
@@ -176,10 +210,14 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
         searchLayout.add(new SimpleSearch(queryParams, getRoute()));
       }
       if(advancedSearch) {
-        searchLayout.add(new AdvancedSearch<T>(queryParams, getRoute()));
+        AdvancedSearch<T> advancedSearch = new AdvancedSearch<T>(queryParams, getRoute());
+        advancedSearch.setAddressService(addressService.get());
+        advancedSearch.setOrganizationService(organizationService.get());
+        searchLayout.add(advancedSearch);
       }
       add(searchLayout);
-      add(buildTagsLayout());
+      buildTagsLayout();
+      add(tagsLayout);
     }
     
     VHorizontalLayout aboveGrid = initAboveLayout();
@@ -200,28 +238,73 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
    *
    * @return the v horizontal layout
    */
-  private VHorizontalLayout buildTagsLayout() {
-    VHorizontalLayout tagsLayout = new VHorizontalLayout();
+  private void buildTagsLayout() {
+    tagsLayout.removeAll();
     queryParams.forEach((key, values) -> {
-      values.forEach(value -> {
-        VSpan tag = new VSpan(key + ":" + value);
-        tag.addClickListener(e -> {
-          tagsLayout.remove(tag);
-          List<String> newValues = new ArrayList<>(queryParams.get(key));
-          newValues.remove(value);
-          queryParams.replace(key,  newValues);
-          if(newValues.isEmpty()) {
-            queryParams.remove(key);
-          }
-          UI.getCurrent().navigate(getRoute(), new QueryParameters(queryParams));
-          UI.getCurrent().getPage().reload();
+      if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.STRING)) {
+        values.forEach(value -> placeTag(key, value, value));
+      }else if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.NUMBER)) {
+        values.forEach(value -> placeTag(key, value, value.toString()));
+      }else if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.GENDER)) {
+        values.stream().map(g -> Gender.getGender(g)).filter(Objects::nonNull).collect(Collectors.toSet()).forEach(gender -> {
+          placeTag(key, gender.getName(),getTranslation(gender.getGenderTranslationKey()));
         });
-        tagsLayout.add(tag);
-      });
+      }else if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.PROFESSION)) {
+        values.stream().map(p -> Professions.getProfession(p)).filter(Objects::nonNull).collect(Collectors.toSet()).forEach(p -> {
+          placeTag(key,p.getName(), getTranslation(p.getProfessionTranslationKey()));
+        });
+      }else if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.VEHICLE_CONDITION)) {
+        values.stream().map(p -> VechileCondition.getVechileCondition(p)).filter(Objects::nonNull).collect(Collectors.toSet()).forEach(p -> {
+          placeTag(key,p.getName(), getTranslation(p.getLabelKey()));
+        });
+      }else if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.VEHICLE_TYPE)) {
+        values.stream().map(p -> VechileType.getVechileType(p)).filter(Objects::nonNull).collect(Collectors.toSet()).forEach(p -> {
+          placeTag(key,p.getName(), getTranslation(p.getLabelKey()));
+        });
+      }else if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.DATE)) {
+        values.forEach(value -> placeTag(key, value, value));
+      }else if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.EVENT_TYPE)) {
+        values.stream().map(p -> EventType.getEventType(p)).filter(Objects::nonNull).collect(Collectors.toSet()).forEach(p -> {
+          placeTag(key,p.getName(), getTranslation(p.getEventTypeTranslationKey()));
+        });
+      }else if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.CITY)) {
+        List<City> cities = addressService.get().getAllCities();
+        values.forEach(cityId ->cities.stream().filter(c -> c.getId().toString().equals(cityId)).findFirst().ifPresent(c -> placeTag(key, c.getName(), c.getName())));
+      }else if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.REPORT_STATUS)) {
+        values.stream().map(p -> ReportStatus.getReportStatus(p)).filter(Objects::nonNull).collect(Collectors.toSet()).forEach(p -> {
+          placeTag(key,p.getName(), getTranslation(p.getReportStatusTranslationKey()));
+        });
+      }else if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.ORGANIZATION)) {
+        List<Organization> organizations = organizationService.get().getOrganizationsByLevel(OrganizationLevel.OPERATIONAL_LEVEL);
+        values.forEach(orgId ->organizations.stream().filter(o -> o.getId().toString().equals(orgId)).findFirst().ifPresent(c -> placeTag(key, c.getName(), c.getName())));
+      }
+        
     });
-    return tagsLayout;
+    
   }
 
+
+  /**
+   * Place tag.
+   *
+   * @param key the key
+   * @param value the value
+   */
+  private void placeTag(String key, String value, String translatedValue) {
+    VSpan tag = new VSpan(getTranslation("tag.".concat(key).concat(".label")).concat(":").concat(translatedValue));
+    tag.addClickListener(e -> {
+      tagsLayout.remove(tag);
+      List<String> newValues = new ArrayList<>(queryParams.get(key));
+      newValues.remove(value);
+      queryParams.replace(key,  newValues);
+      if(newValues.isEmpty()) {
+        queryParams.remove(key);
+      }
+      UI.getCurrent().navigate(getRoute(), new QueryParameters(queryParams));
+      UI.getCurrent().getPage().reload();
+    });
+    tagsLayout.add(tag);
+  }
 
   /**
    * On detach.

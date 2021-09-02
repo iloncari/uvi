@@ -17,12 +17,17 @@ import hr.tvz.vi.auth.AccessControlImpl;
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.orm.Person;
+import hr.tvz.vi.orm.Report;
+import hr.tvz.vi.orm.Vechile;
+import hr.tvz.vi.util.Constants.FieldType;
 import hr.tvz.vi.util.Constants.Searchable;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.UserRole;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
@@ -37,6 +42,35 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE, staticName = "of")
 public final class Utils {
+  
+  /** The Constant FIELD_TYPE. */
+  public static final Map<String, FieldType> FIELD_TYPE = new  HashMap<String, FieldType>();
+  
+  static {
+    FIELD_TYPE.put(Person.Fields.name, FieldType.STRING);
+    FIELD_TYPE.put(Person.Fields.lastname, FieldType.STRING);
+    FIELD_TYPE.put(Person.Fields.identificationNumber, FieldType.STRING);
+    FIELD_TYPE.put(Person.Fields.email, FieldType.STRING);
+    FIELD_TYPE.put(Person.Fields.gender, FieldType.GENDER);
+    FIELD_TYPE.put(Person.Fields.profession, FieldType.PROFESSION);
+    FIELD_TYPE.put("minBirthYear", FieldType.NUMBER);
+    FIELD_TYPE.put("maxBirthYear", FieldType.NUMBER);
+    
+    FIELD_TYPE.put(Vechile.Fields.make, FieldType.STRING);
+    FIELD_TYPE.put(Vechile.Fields.model, FieldType.STRING);
+    FIELD_TYPE.put(Vechile.Fields.licencePlateNumber, FieldType.STRING);
+    FIELD_TYPE.put(Vechile.Fields.vechileNumber, FieldType.STRING);
+    FIELD_TYPE.put(Vechile.Fields.condition, FieldType.VEHICLE_CONDITION);
+    FIELD_TYPE.put(Vechile.Fields.type, FieldType.VEHICLE_TYPE);
+    
+    FIELD_TYPE.put(Report.Fields.identificationNumber, FieldType.STRING);
+    FIELD_TYPE.put("eventDate", FieldType.DATE);
+    FIELD_TYPE.put(Report.Fields.eventType, FieldType.EVENT_TYPE);
+    FIELD_TYPE.put("eventCity", FieldType.CITY);
+    FIELD_TYPE.put(Report.Fields.reporter, FieldType.STRING);
+    FIELD_TYPE.put("eventOrganization", FieldType.ORGANIZATION);
+    FIELD_TYPE.put(Report.Fields.status, FieldType.REPORT_STATUS);
+  }
 
   /**
    * Gets the current person.

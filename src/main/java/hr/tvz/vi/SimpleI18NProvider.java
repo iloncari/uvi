@@ -22,6 +22,12 @@ import java.util.ResourceBundle;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * The Class SimpleI18NProvider.
+ *
+ * @author Igor Lončarić (iloncari2@tvz.hr)
+ * @since 3:19:38 PM Sep 2, 2021
+ */
 @Component
 public class SimpleI18NProvider implements I18NProvider {
 
@@ -29,10 +35,8 @@ public class SimpleI18NProvider implements I18NProvider {
   private static final long serialVersionUID = 6792002677914177067L;
 
   public Locale getCurrentLocale() {
-    final UI currentUi = UI.getCurrent();
     return (Locale) Optional.ofNullable(UI.getCurrent().getSession().getAttribute(SimpleI18NProvider.class.getCanonicalName()))
       .orElse(getProvidedLocales().get(0));
-    // return Optional.ofNullable(currentUi).map(UI::getLocale).orElse(new Locale("ui"));
   }
 
   /**

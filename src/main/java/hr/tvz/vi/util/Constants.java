@@ -47,17 +47,53 @@ public final class Constants {
     PREPARATION_TASK;
   }
   
+ /**
+  * The Enum FieldType.
+  *
+  * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
+  * @since 9:20:15 AM Sep 2, 2021
+  */
+ public enum FieldType {
+    
+    /** The string. */
+    STRING,
+    
+    /** The gender. */
+    GENDER,
+    
+    /** The profession. */
+    PROFESSION,
+    
+    /** The number. */
+    NUMBER,
+    
+    /** The vehicle type. */
+    VEHICLE_TYPE,
+    
+    /** The vehicle condition. */
+    VEHICLE_CONDITION,
+    
+    /** The organization. */
+    ORGANIZATION,
+    
+    /** The report status. */
+    REPORT_STATUS,
+    
+    /** The city. */
+    CITY,
+    
+    /** The event type. */
+    EVENT_TYPE,
+    
+    /** The date. */
+    DATE;
+  }
+  
   /**
    * The Enum GroupType.
    *
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 10:05:34 PM Aug 27, 2021
-   */
-  
-  /**
-   * Instantiates a new group type.
-   *
-   * @param name the name
    */
   @RequiredArgsConstructor
   public enum GroupType{
@@ -148,6 +184,7 @@ public final class Constants {
  		OTHER("other");
 		 
    	    /** The name. */
+	    @Getter
   		private final String name;
 		  
 		  /**
@@ -167,6 +204,17 @@ public final class Constants {
 	  public boolean isInterventionFire() {
   	  return this.equals(BUILDING_FIRE) || this.equals(INDUSTRIAL_FIRE) || this.equals(OPEN_SPACE_FIRE) || this.equals(TRAFFIC_FIRE);
   	}
+	  
+	  /**
+     * Gets the event type.
+     *
+     * @param eventTypeName the event type name
+     * @return the event type
+     */
+  	public static EventType getEventType(String eventTypeName) {
+      Optional<EventType> eventTypeOpt = Arrays.asList(values()).stream().filter(eventType -> eventType.name.equals(eventTypeName)).findFirst();
+      return eventTypeOpt.isPresent() ? eventTypeOpt.get() : null;
+    }
 	  
 	 }
  	
@@ -960,6 +1008,17 @@ public final class Constants {
     public String getReportStatusTranslationKey() {
         return "reportStatus.".concat(name).concat(".label");
       }
+    
+    /**
+     * Gets the event type.
+     *
+     * @param reportStatusName the report status name
+     * @return the event type
+     */
+    public static ReportStatus getReportStatus(String reportStatusName) {
+      Optional<ReportStatus> reportStatusOpt = Arrays.asList(values()).stream().filter(reportStatus -> reportStatus.name.equals(reportStatusName)).findFirst();
+      return reportStatusOpt.isPresent() ? reportStatusOpt.get() : null;
+    }
   }
 
   /**
@@ -1230,6 +1289,7 @@ public final class Constants {
     USABLE("usable");
 
     /** The name. */
+    @Getter
     private final String name;
 
     /**
@@ -1240,6 +1300,17 @@ public final class Constants {
     public String getLabelKey() {
       return "vechileCondition.".concat(name).concat(".label");
     }
+    
+    /**
+     * Gets the vechile condition.
+     *
+     * @param vechileConditionName the vechile condition name
+     * @return the vechile condition
+     */
+    public static VechileCondition getVechileCondition(String vechileConditionName) {
+      Optional<VechileCondition> vechileConditionOpt = Arrays.asList(values()).stream().filter(vechileCondition -> vechileCondition.name.equals(vechileConditionName)).findFirst();
+      return vechileConditionOpt.isPresent() ? vechileConditionOpt.get() : null;
+    }
 
   }
   
@@ -1249,12 +1320,6 @@ public final class Constants {
    *
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 6:38:17 PM Aug 29, 2021
-   */
-  
-  /**
-   * Instantiates a new vechile type.
-   *
-   * @param name the name
    */
   @RequiredArgsConstructor
   public enum VechileType {
@@ -1293,6 +1358,7 @@ public final class Constants {
     VESSELS("vessels");
 
     /** The name. */
+    @Getter
     private final String name;
 
     /**
@@ -1302,6 +1368,17 @@ public final class Constants {
      */
     public String getLabelKey() {
       return "vechileType.".concat(name).concat(".label");
+    }
+    
+    /**
+     * Gets the vechile type.
+     *
+     * @param vechileTypeName the vechile type name
+     * @return the vechile type
+     */
+    public static VechileType getVechileType(String vechileTypeName) {
+      Optional<VechileType> vechileTypeOpt = Arrays.asList(values()).stream().filter(vechileType -> vechileType.name.equals(vechileTypeName)).findFirst();
+      return vechileTypeOpt.isPresent() ? vechileTypeOpt.get() : null;
     }
   }
 }

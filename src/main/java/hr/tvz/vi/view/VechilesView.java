@@ -80,7 +80,7 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
    */
   @Override
   public List<Vechile> getGridItems() {
-    return vechileServiceRef.get().getActiveByOrganization(getCurrentUser().getActiveOrganization().getOrganization().getId());
+    return vechileServiceRef.get().getActiveByOrganization(getCurrentUser().getActiveOrganization().getOrganization().getId(), getQueryParams());
   }
 
   /**

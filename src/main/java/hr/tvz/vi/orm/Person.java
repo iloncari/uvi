@@ -28,12 +28,14 @@ import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.ToString;
+import lombok.experimental.FieldNameConstants;
 import lombok.extern.slf4j.Slf4j;
 
 @Data
 @Slf4j
 @Entity
 @Table
+@FieldNameConstants
 public class Person {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

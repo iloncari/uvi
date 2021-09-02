@@ -271,7 +271,9 @@ public class ReportAuthorizationTab extends VVerticalLayout{
           reportService.saveReportTask(task);
           ChangeBroadcaster.firePushEvent(new TaskChangeEvent(this, task, EventAction.MODIFIED));
           
+          log.info("authorized " + task.getName());
           if(!tasksList.stream().anyMatch(t -> t.getExecutionDateTime()==null) && OrganizationLevel.OPERATIONAL_LEVEL.equals(currentUser.getActiveOrganization().getOrganization().getLevel())) {
+            log.info("authorize& stvaranje approva taskova " + task.getName());
             Task approveTask = new Task();
             approveTask.setCreationDateTime(LocalDateTime.now());
             approveTask.setName(getTranslation("task.approve.label", report.getIdentificationNumber()));
@@ -300,6 +302,7 @@ public class ReportAuthorizationTab extends VVerticalLayout{
           }
           
           if(!OrganizationLevel.OPERATIONAL_LEVEL.equals(currentUser.getActiveOrganization().getOrganization().getLevel())) {
+            log.info("authorized && nije operacijski lvel i postavi na aprove" + task.getName());
             report.setStatus(ReportStatus.APPROVED);
             reportService.updateReport(report);
           }
@@ -346,7 +349,8 @@ public class ReportAuthorizationTab extends VVerticalLayout{
           buttons.add(reject);
         }
         return buttons;
-      }else if((preparersIds.contains(currentUser.getPerson().getId()) && OrganizationLevel.OPERATIONAL_LEVEL.equals(currentUser.getActiveOrganizationObject().getLevel()) ) || (approversIds.contains(currentUser.getPerson().getId())  && OrganizationLevel.CITY_LEVEL.equals(currentUser.getActiveOrganizationObject().getLevel()) ) ) {
+      }else if((task.getType().equals(TaskType.PREPARATION_TASK) && preparersIds.contains(currentUser.getPerson().getId()) && OrganizationLevel.OPERATIONAL_LEVEL.equals(currentUser.getActiveOrganizationObject().getLevel()) ) ||
+        (task.getType().equals(TaskType.APPROVE_TASK) && approversIds.contains(currentUser.getPerson().getId())  && OrganizationLevel.CITY_LEVEL.equals(currentUser.getActiveOrganizationObject().getLevel()) ) ) {
         VButton assignToMe = new VButton(getTranslation("reportView.reportAuthorizationTab.button.assignToMe")).withClickListener(assignEvent -> {
           task.setAssignee(currentUser.getPerson());
           reportService.saveReportTask(task);
