@@ -32,6 +32,7 @@ import hr.tvz.vi.util.Constants.NotificationType;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.SubscriberScope;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.view.AbstractGridView;
 import lombok.extern.slf4j.Slf4j;
 
@@ -182,6 +183,7 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
                                                   organizationService.deleteGroupMember(groupMember);
                                                   ChangeBroadcaster.firePushEvent(new GroupChangeEvent(this, groupMember, EventAction.REMOVED));
                                                 });
+        delete.getElement().getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_RED);
         return delete;
       });
   }

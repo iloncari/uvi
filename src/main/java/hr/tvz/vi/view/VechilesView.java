@@ -23,6 +23,7 @@ import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.SubscriberScope;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 
 import java.util.List;
 import java.util.Optional;
@@ -130,11 +131,13 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
   protected VHorizontalLayout initBellowButtonLayout() {
     final VHorizontalLayout buttonsLayout = new VHorizontalLayout();
 
-    final VButton newMemberButton = new VButton(getTranslation("vechilesView.button.newVechile.label"));
-    newMemberButton.addClickListener(e -> UI.getCurrent().navigate(NewVechileView.class));
-    buttonsLayout.add(newMemberButton);
+    final VButton newVehcileButton = new VButton(getTranslation("vechilesView.button.newVechile.label"));
+    newVehcileButton.addClickListener(e -> UI.getCurrent().navigate(NewVechileView.class));
+    newVehcileButton.getThemeList().add(ThemeAttribute.BUTTON_BLUE);
+    buttonsLayout.add(newVehcileButton);
 
     deleteVechileButton = new DeleteButton().withEnabled(false);
+    deleteVechileButton.getElement().getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_RED);
 
     buttonsLayout.add(deleteVechileButton
       .withText(getTranslation("vechilesView.button.removeVechile.label"))
@@ -151,6 +154,7 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
 
     transferVechileButton = new VButton(getTranslation("vechilesView.button.transferVechile")).withEnabled(false)
       .withClickListener(e -> showTransferVechileDialog());
+    transferVechileButton.getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_GREEN);
     buttonsLayout.add(transferVechileButton);
 
     return buttonsLayout;

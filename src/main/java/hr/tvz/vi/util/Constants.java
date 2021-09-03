@@ -1063,13 +1063,13 @@ public final class Constants {
     public static final String NAVIGATION_ERROR = "navigationError";
 
     /** The Constant VECHILES. */
-    public static final String VECHILES = "vechiles";
+    public static final String VECHILES = "vehicles";
 
     /** The Constant NEW_VECHILE. */
-    public static final String NEW_VECHILE = "vechile/add";
+    public static final String NEW_VECHILE = "vehicle/add";
 
     /** The Constant VECHILE. */
-    public static final String VECHILE = "vechile";
+    public static final String VECHILE = "vehicle";
     
     /** The Constant REPORT_EVENT. */
     public static final String REPORT_EVENT= "reportEvent";
@@ -1101,19 +1101,7 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 2:12:30 PM Aug 7, 2021
    */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
   @Getter
-  
-  /**
-   * Instantiates a new style constants.
-   *
-   * @param name the name
-   */
   @RequiredArgsConstructor
   public enum StyleConstants {
 
@@ -1156,7 +1144,12 @@ public final class Constants {
     /** The color red. */
     COLOR_RED("red_text"),
     
+    /** The widget number. */
+    WIDGET_NUMBER("widget-number"),
 
+    /** The widget title. */
+    WIDGET_TITLE("widget-title"),
+    
     /** The new notification. */
     NEW_NOTIFICATION("new-notification"),
 
@@ -1185,7 +1178,13 @@ public final class Constants {
     NOTIFICATION_TITLE("notification-title"),
     
     /** The organization icon. */
-    ORGANIZATION_ICON("organization-icon");
+    ORGANIZATION_ICON("organization-icon"),
+    
+    /** The sidebar header. */
+    SIDEBAR_HEADER("sidebar-header"),
+    
+    /** The error page. */
+    ERROR_CONTENT("error-content");
     
     
 
@@ -1232,6 +1231,337 @@ public final class Constants {
     
     /** The Constant BUTTON_ICON. */
     public static final String BUTTON_ICON = "button-icon";
+    
+    /** The Constant CONTENT. */
+    public static final String CONTENT="content";
+    
+    /** The Constant PAGE_TITLE. */
+    public static final String PAGE_TITLE ="page-title";
+    
+    /** The Constant CARD. */
+    public static final String CARD ="card";
+    
+    /** The Constant CARD_SPACING. */
+    public static final String CARD_SPACING ="card-spacing";
+    
+    /** The Constant CARD_FULL_BLOCK. */
+    public static final String  CARD_FULL_BLOCK = "card-full-block";
+  
+    /** The Constant SPACING. */
+    public static final String  SPACING = "spacing";
+    
+    /** The Constant PADDING. */
+    public static final String  PADDING = "padding";
+    
+    /** The Constant WIDGET_CARD. */
+    public static final String  WIDGET_CARD = "widget-card";
+    
+    /** The Constant WIDGET_CARDS. */
+    public static final String  WIDGET_CARDS = "widget-cards";
+    
+    public static final String DROPDOWN_WHITE = "dropdown white";
+    
+    public static final String DROPDOWN_BLUE = "dropdown blue";
+    
+    /** The Constant LOCKED. */
+    public static final String LOCKED="locked";
+    
+    
+    /*inherit*/
+    
+    /** The Constant ABOVE_TABLE_BLOCK. */
+    public static final String ABOVE_TABLE_BLOCK = "above-table-block";
+
+    /** The Constant SEARCH_TABLE_BLOCK. */
+    public static final String SEARCH_TABLE_BLOCK = "search-table-block";
+
+    /** The Constant ATTACHMENT. */
+    public static final String ATTACHMENT = "attachment";
+
+    /** The Constant BACKGROUND_TITLE. */
+    public static final String BACKGROUND_TITLE = "background-title";
+
+    /** The Constant BLUE. */
+    public static final String BLUE = "blue";
+
+    /** The Constant BROADCAST_MODAL. */
+    public static final String BROADCAST_MODAL = "brodcast-modal";
+
+
+    /** The Constant BUTTON_ICON_BLUE. */
+    public static final String BUTTON_ICON_BLUE = "icon blue button-small-icon";
+
+    /** The Constant BUTTON_OUTLINE_BLUE. */
+    public static final String BUTTON_OUTLINE_BLUE = "button outline-blue";
+
+    /** The Constant BUTTON_OUTLINE_GREEN. */
+    public static final String BUTTON_OUTLINE_GREEN = "button outline-green";
+
+    /** The Constant BUTTON_OUTLINE_RED. */
+    public static final String BUTTON_OUTLINE_RED = "button outline-red";
+
+    /** The Constant BUTTON_OUTLINE_VIOLET. */
+    public static final String BUTTON_OUTLINE_VIOLET = "button outline-violet";
+
+    /** The Constant BUTTON_PLUS_BLUE. */
+    public static final String BUTTON_PLUS_BLUE = "button-plus blue";
+
+    /** The Constant BUTTON_RESET. */
+    public static final String BUTTON_RESET = "button-reset";
+
+    /** The Constant BUTTON_SMALL_EGG_BLUE. */
+    public static final String BUTTON_SMALL_EGG_BLUE = "button-small egg-blue";
+
+    /** The Constant BUTTON_SMALL_OUTLINE_EGG_BLUE. */
+    public static final String BUTTON_SMALL_OUTLINE_EGG_BLUE = "button-small outline-egg-blue";
+
+    /** The Constant BUTTON_ULTRA_SMALL. */
+    public static final String BUTTON_ULTRA_SMALL = "button-ultra-small";
+
+    /** The Constant BUTTONS. */
+    public static final String BUTTONS = "buttons";
+
+    /** The Constant BUTTONS_10. */
+    public static final String BUTTONS_10 = "buttons-10";
+
+    /** The Constant BUTTONS_15. */
+    public static final String BUTTONS_15 = "buttons-15";
+
+
+    /** The Constant CARD_CHARTS. */
+    public static final String CARD_CHARTS = "card-charts";
+
+
+
+    /** The Constant CARD_HEADING. */
+    public static final String CARD_HEADING = "card-heading";
+
+  
+
+    /** The Constant CODEBOOK_CONTENT. */
+    public static final String CODEBOOK_CONTENT = "codebook-content";
+
+    /** The Constant COMBO. */
+    public static final String COMBO = "combo";
+
+    /** The Constant COMPACT. */
+    public static final String COMPACT = "compact";
+
+    /** The Constant CONTAINER_PREVIEW. */
+    public static final String CONTAINER_PREVIEW = "container-preview";
+
+    /** The Constant CONTAINER_VERTICAL_TABS. */
+    public static final String CONTAINER_VERTICAL_TABS = "container-vertical-tabs";
+
+
+
+    /** The Constant CONTENT_VERTICAL_TABS. */
+    public static final String CONTENT_VERTICAL_TABS = "content-vertical-tabs";
+
+    /** The Constant DATE_PICKER. */
+    public static final String DATE_PICKER = "date-picker";
+
+    /** The Constant DISABLED. */
+    public static final String DISABLED = "disabled";
+
+    /** The Constant DOCUMENT_LIST. */
+    public static final String DOCUMENT_LIST = "document-list";
+
+
+
+    /** The Constant EMPTY_TABLE. */
+    public static final String EMPTY_TABLE = "empty-table";
+
+    /** The Constant ERROR. */
+    public static final String ERROR = "error";
+
+    /** The Constant ERROR_TEXT. */
+    public static final String ERROR_TEXT = "error-text";
+
+    /** The Constant FIXED_LABEL. */
+    public static final String FIXED_LABEL = "fixed-label";
+
+    /** The Constant FORM. */
+    public static final String FORM = "form";
+
+    /** The Constant FORM_600. */
+    public static final String FORM_600 = "form-600";
+
+    /** The Constant FORM_CENTER. */
+    public static final String FORM_CENTER = "form-center";
+
+    /** The Constant FORM_TABS. */
+    public static final String FORM_TABS = "form-tabs";
+
+    /** The Constant GREEN. */
+    public static final String GREEN = "green";
+
+    /** The Constant HALF. */
+    public static final String HALF_75 = "half-75";
+
+
+
+    /** The Constant HORIZONTAL_TABS. */
+    public static final String HORIZONTAL_TABS = "horizontal-tabs";
+
+
+    /** The Constant IMG_404. */
+    public static final String IMG_404 = "img-404";
+
+    /** The Constant IMG_MAINTENANCE. */
+    public static final String IMG_MAINTENANCE = "img-maintenance";
+
+    /** The Constant LIGHT_BLUE. */
+    public static final String LIGHT_BLUE = "light-blue";
+
+    /** The Constant LOGIN. */
+    public static final String LOGIN = "login";
+
+    /** The Constant LOGIN_FOOTER. */
+    public static final String LOGIN_FOOTER = "login-footer";
+
+    /** The Constant MESSAGE_ITEM. */
+    public static final String MESSAGE_ITEM = "message-item";
+
+    /** The Constant NO_BORDER. */
+    public static final String NO_BORDER = "no-border";
+
+    /** The Constant NO_SELECTED_VALUE. */
+    public static final String NO_SELECTED_VALUE = "no-selected-value";
+
+
+    /** The Constant PAGE_404. */
+    public static final String PAGE_404 = "page-404";
+
+    /** The Constant PAGE_MAINTENANCE. */
+    public static final String PAGE_MAINTENANCE = "page-maintenance";
+
+
+    /** The Constant POPUP_HEADER. */
+    public static final String POPUP_HEADER = "popup-header";
+
+    /** The Constant PURPLE. */
+    public static final String PURPLE = "purple";
+
+    /** The Constant REVERSE_CARD. */
+    public static final String REVERSE_CARD = "reverse-card";
+
+    /** The Constant RIGHT. */
+    public static final String RIGHT = "right";
+
+    /** The Constant ROW_STRIPES. */
+    public static final String ROW_STRIPES = "row-stripes";
+
+    /** The Constant SAVED_SEARCHES_ELEMENTS. */
+    public static final String SAVED_SEARCHES_ELEMENTS = "saved-searches-elements";
+
+    /** The Constant SAVED_SEARCHES_NAME. */
+    public static final String SAVED_SEARCHES_NAME = "saved-searches-name";
+
+    /** The Constant BUTTON_SAVE. */
+    public static final String BUTTON_SAVE = "button-save";
+
+    /** The Constant SEARCH_BLOCK. */
+    public static final String SEARCH_BLOCK = "search-block";
+
+    /** The Constant SEARCH_FIELD. */
+    public static final String SEARCH_FIELD = "search-field";
+
+    /** The Constant SEARCH_TAGS. */
+    public static final String SEARCH_TAGS = "search-tags";
+
+    /** The Constant SEARCH_TAGS_BLOCK. */
+    public static final String SEARCH_TAGS_BLOCK = "search-tags-block";
+
+    /** The Constant SIDEBAR_UPLOAD. */
+    public static final String SIDEBAR_UPLOAD = "sidebar-upload";
+
+    /** The Constant SMALL_TABS. */
+    public static final String SMALL_TABS = "small-tabs";
+
+    /** The Constant TAB_TABLE. */
+    public static final String TAB_TABLE = "tab-table";
+
+    /** The Constant TABLE. */
+    public static final String TABLE = "table";
+
+    /** The Constant TABLE_ICON. */
+    public static final String TABLE_ICON = "table-icon";
+
+    /** The Constant TAGS_BLOCK. */
+    public static final String TAGS_BLOCK = "tags-block";
+
+    /** The Constant TITLE_BLOCK. */
+    public static final String TITLE_BLOCK = "title-block";
+
+    /** The Constant TITLE_TAB. */
+    public static final String TITLE_TAB = "title-tab";
+
+    /** The Constant TITLE_TAB_BLUE. */
+    public static final String TITLE_TAB_BLUE = "title-tab-blue";
+
+    /** The Constant TITLE_TAB_VIOLET. */
+    public static final String TITLE_TAB_VIOLET = "title-tab-violet";
+
+    /** The Constant VERTICAL_VIOLET_TABS. */
+    public static final String VERTICAL_BLUE_TABS = "vertical-blue-tabs";
+
+    /** The Constant VERTICAL_ICONS_TABS. */
+    public static final String VERTICAL_ICONS_TABS = "vertical-icons-tabs";
+
+    /** The Constant VERTICAL_VIOLET_TABS. */
+    public static final String VERTICAL_VIOLET_TABS = "vertical-violet-tabs";
+
+    /** The Constant VIOLET_TABS. */
+    public static final String VIOLET_TABS = "violet-tabs";
+
+    /** The Constant WHITE. */
+    public static final String WHITE = "white";
+    
+    /** The Constant AQUA. */
+    public static final String AQUA = "aqua";
+
+    /** The Constant WIDGET_UPLOAD_ELEMENT. */
+    public static final String WIDGET_UPLOAD_ELEMENT = "widget-upload-element";
+
+    /** The Constant WIDTH_100. */
+    public static final String WIDTH_100 = "width-100";
+
+    /** The Constant WIDTH_50. */
+    public static final String WIDTH_50 = "width-50";
+
+    /** The Constant WIDTH_75. */
+    public static final String WIDTH_75 = "width-75";
+
+    /** The Constant WRAP_CELL_CONTENT. */
+    public static final String WRAP_CELL_CONTENT = "wrap-cell-content";
+
+    /** The Constant CARD_VIOLET. */
+    public static final String CARD_VIOLET = "card-violet";
+
+    /** The Constant FORM_ITEM_50. */
+    public static final String FORM_ITEM_50 = "form-item-50";
+
+    /** The Constant BUTTON_NAV. */
+    public static final String BUTTON_NAV = "button-nav";
+
+    /** The Constant BUTTON_PREVIOUS. */
+    public static final String BUTTON_PREVIOUS = "button-previous";
+
+    /** The Constant BUTTON_NEXT. */
+    public static final String BUTTON_NEXT = "button-next";
+
+    /** The Constant NO_VISIBILITY. */
+    public static final String NO_VISIBILITY = "no-visibility";
+
+    /** The Constant TYPE_DROPDOWN. */
+    public static final String TYPE_DROPDOWN = "type-dropdown";
+
+    
+    
+    
+    /*end*/
+
   }
 
   /**

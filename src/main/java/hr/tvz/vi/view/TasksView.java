@@ -23,6 +23,7 @@ import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 
 import de.codecamp.vaadin.serviceref.ServiceRef;
+import edu.emory.mathcs.backport.java.util.Arrays;
 import hr.tvz.vi.components.GroupTasksTab;
 import hr.tvz.vi.components.MyTasksTab;
 import hr.tvz.vi.service.OrganizationService;
@@ -63,7 +64,7 @@ public class TasksView extends VVerticalLayout implements HasDynamicTitle, HasUr
   @Override
   public void setParameter(final BeforeEvent event, @OptionalParameter final String parameter) {
     final Location location = event.getLocation();
-    selectedTabId = location.getSegments().size() > 1 ? location.getSegments().get(1) : "";
+    selectedTabId = location.getQueryParameters().getParameters().getOrDefault("tab", List.of("")).get(0);
   }
 
   /**

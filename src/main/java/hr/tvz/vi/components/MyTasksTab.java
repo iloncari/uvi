@@ -4,6 +4,8 @@
  */
 package hr.tvz.vi.components;
 
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +33,7 @@ import hr.tvz.vi.service.ReportService;
 import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.TaskType;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.view.AbstractGridView;
 import hr.tvz.vi.view.ReportView;
@@ -162,7 +165,9 @@ public class MyTasksTab extends AbstractGridView<Task>{
   @Override
   protected void initGrid() {
     getGrid().removeAllColumns();
-    getGrid().addColumn(task -> task.getCreationDateTime()).setHeader(getTranslation("myTasksTab.grid.creationDate"));
+    getGrid().addColumn(task ->  DateTimeFormatter
+      .ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)
+      .withLocale(getLocale()).format(task.getCreationDateTime())).setHeader(getTranslation("myTasksTab.grid.creationDate"));
     getGrid().addColumn(task -> task.getName()).setHeader(getTranslation("myTasksTab.grid.name"));
     getGrid().addComponentColumn(task -> {
         @SuppressWarnings("unchecked")
@@ -171,6 +176,7 @@ public class MyTasksTab extends AbstractGridView<Task>{
           reportService.saveReportTask(task);
           ChangeBroadcaster.firePushEvent(new TaskChangeEvent(this, task, EventAction.MODIFIED));
         });
+        toGroup.getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_BLUE);
         return toGroup;
     });
     getGrid().addItemClickListener(e -> {

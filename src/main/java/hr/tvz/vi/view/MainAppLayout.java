@@ -7,10 +7,12 @@ package hr.tvz.vi.view;
 
 import java.util.Optional;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.firitin.components.select.VSelect;
 
 import com.github.appreciated.app.layout.component.applayout.LeftLayouts;
+import com.github.appreciated.app.layout.component.applayout.LeftLayouts.LeftResponsiveHybrid;
 import com.github.appreciated.app.layout.component.builder.AppLayoutBuilder;
 import com.github.appreciated.app.layout.component.menu.left.builder.LeftAppMenuBuilder;
 import com.github.appreciated.app.layout.component.menu.left.items.LeftNavigationItem;
@@ -23,6 +25,7 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.page.Push;
 
@@ -32,15 +35,19 @@ import hr.tvz.vi.components.AppHeader;
 import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.event.NotificationEvent;
 import hr.tvz.vi.event.PersonOrganizationChangedEvent;
+import hr.tvz.vi.event.TaskChangeEvent;
 import hr.tvz.vi.orm.PersonOrganization;
 import hr.tvz.vi.service.NotificationService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.PersonService;
+import hr.tvz.vi.service.ReportService;
 import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.ImageConstants;
 import hr.tvz.vi.util.Constants.Routes;
+import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.SubscriberScope;
+import lombok.extern.slf4j.Slf4j;
 import hr.tvz.vi.util.Utils;
 
 /**
@@ -49,10 +56,16 @@ import hr.tvz.vi.util.Utils;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 12:24:01 PM Aug 7, 2021
  */
-@CssImport("./styles/custom-notification.css")
+@CssImport("./styles/custom-colors.css")
 @CssImport("./styles/shared-styles.css")
-@CssImport("./styles/style.css")
+@CssImport(value = "./styles/custom-text-field-styles.css", themeFor = "vaadin-text-field")
+@CssImport(value = "./styles/custom-text-area-styles.css", themeFor = "vaadin-text-area")
+@CssImport(value = "./styles/cusrom-multiselect-combo-box-styles.css", themeFor = "multiselect-combo-box")
+@CssImport(value = "./styles/custom-button-style.css", themeFor = "vaadin-button")
+@CssImport(value = "./styles/custom-vaadin-grid-styles.css", themeFor = "vaadin-grid")
+@CssImport(value = "./styles/custom-multiselect-combobox-input-styles.css", themeFor = "multiselect-combo-box-input")
 @Push
+@Slf4j
 @EventSubscriber(scope = SubscriberScope.ALL)
 public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftResponsiveHybrid> {
 
@@ -65,8 +78,10 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
   /** The members item badge. */
   private DefaultBadgeHolder membersItemBadge;
 
-  /** The vechiles item badge. */
-  private DefaultBadgeHolder vechilesItemBadge;
+  
+  /** The tasks item badge. */
+  private DefaultBadgeHolder tasksItemBadge;
+  
   
   /** The report event item. */
   private LeftNavigationItem reportEventItem;
@@ -92,6 +107,12 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
   /** The person service ref. */
   @Autowired
   private ServiceRef<PersonService> personServiceRef;
+  
+  /** The reports service ref. */
+  @Autowired
+  private ServiceRef<ReportService> reportServiceRef;
+  
+  LeftResponsiveHybrid leftMenu;
 
   /**
    * Instantiates a new main app layout.
@@ -99,11 +120,16 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
   public MainAppLayout() {
     appHeader = new AppHeader();
     currentUser = Utils.getCurrentUser(UI.getCurrent());
-    init(AppLayoutBuilder.get(LeftLayouts.LeftResponsiveHybrid.class)
+     leftMenu =AppLayoutBuilder.get(LeftLayouts.LeftResponsiveHybrid.class)
       .withIcon(ImageConstants.APP_LOGO.getPath())
       .withAppBar(appHeader)
       .withAppMenu(buildLeftMenu())
-      .build());
+      .build();
+    
+    leftMenu.getElement().removeAttribute("class");
+
+    init(leftMenu);
+
   }
   
   /**
@@ -129,27 +155,29 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
 
     final LeftNavigationItem homeItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.HOME)), VaadinIcon.HOME.create(), HomeView.class);
 
-    final LeftNavigationItem organizationItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.ORGANIZATION)), VaadinIcon.LIST.create(),
+    final LeftNavigationItem organizationItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.ORGANIZATION)), VaadinIcon.BUILDING.create(),
       OrganizationView.class);
+    
 
-    final LeftNavigationItem membersItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.MEMBERS)), VaadinIcon.LIST.create(),
+    final LeftNavigationItem membersItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.MEMBERS)), VaadinIcon.GROUP.create(),
       MembersView.class);
     membersItemBadge = new DefaultBadgeHolder();
     membersItemBadge.bind(membersItem.getBadge());
 
     final LeftNavigationItem vechilesItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.VECHILES)), VaadinIcon.CAR.create(),
       VechilesView.class);
-    vechilesItemBadge = new DefaultBadgeHolder();
-    vechilesItemBadge.bind(vechilesItem.getBadge());
     
-    reportEventItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.REPORT_EVENT)), VaadinIcon.PLUS.create(),
+    
+    reportEventItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.REPORT_EVENT)), VaadinIcon.PLUS_CIRCLE.create(),
     	      ReportEventView.class);
     
-    reportsItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.REPORTS)), VaadinIcon.LIST.create(),
+    reportsItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.REPORTS)), VaadinIcon.FILE.create(),
     	      ReportsView.class);
 
-    final LeftNavigationItem tasksItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.TASKS)), VaadinIcon.CAR.create(),
+    final LeftNavigationItem tasksItem = new LeftNavigationItem(getTranslation(Routes.getPageTitleKey(Routes.TASKS)), VaadinIcon.TASKS.create(),
       TasksView.class);
+    tasksItemBadge = new DefaultBadgeHolder();
+    tasksItemBadge.bind(tasksItem.getBadge());
     
     leftMenuBuilder.addToSection(Section.DEFAULT, homeItem, organizationItem, membersItem, vechilesItem, reportEventItem, reportsItem, tasksItem);
    
@@ -180,8 +208,17 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
   @Override
   protected void onAttach(AttachEvent attachEvent) {
     super.onAttach(attachEvent);
+    
+    leftMenu.getChildren().forEach(C -> {if("application-content".equals(C.getElement().getAttribute("slot"))) {
+      C.getElement().removeAttribute("style");
+    }});
+    leftMenu.addClassName(StyleConstants.SIDEBAR_HEADER.getName());
+    
+    
+   
     ChangeBroadcaster.registerToPushEvents(this);
     setActiveOrganizationMembersBadge();
+    setActiveOrganizationTasksBadge();
     reportEventItem.setVisible(currentUser.hasManagerRole());
     notificationServiceRef.get().sendRegistrationExpiringNotificationsIfNeeded(currentUser.getActiveOrganizationObject().getId());
     appHeader.setPersonService(personServiceRef);
@@ -228,6 +265,13 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
       getUI().ifPresent(ui -> ui.access(() -> setActiveOrganizationMembersBadge()));
     }
   }
+  
+  @Subscribe
+  public void tasksChanged(TaskChangeEvent event) {
+    if(event.getTask().getOrganizationAssignee().getId().equals(currentUser.getActiveOrganizationObject().getId())) {
+      getUI().ifPresent(ui -> ui.access(() -> setActiveOrganizationTasksBadge()));
+    }
+  }
 
   /**
    * Sets the active organization members badge.
@@ -235,6 +279,17 @@ public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftRespons
   private void setActiveOrganizationMembersBadge() {
     final int membersCount = organizationServiceRef.get().getOrganizationMembers(currentUser.getActiveOrganization().getOrganization()).size();
     membersItemBadge.setCount(membersCount);
+  }
+  
+
+  /**
+   * Sets the active organization tasks badge.
+   */
+  private void setActiveOrganizationTasksBadge() {
+    final Long myTasksCount = reportServiceRef.get().getUserTaskNumber(currentUser.getActiveOrganization().getOrganization().getId(),
+      currentUser.getPerson().getId());
+    final Long groupTasksCount = reportServiceRef.get().getGroupTaskNumber(currentUser.getActiveOrganization().getOrganization().getId());
+    tasksItemBadge.setCount(NumberUtils.toInt(myTasksCount.toString()) + NumberUtils.toInt(groupTasksCount.toString()));
   }
 
 }

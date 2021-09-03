@@ -4,9 +4,9 @@
  */
 package hr.tvz.vi.components;
 
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,27 +16,19 @@ import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.Location;
-import com.vaadin.flow.router.OptionalParameter;
-import com.vaadin.flow.router.QueryParameters;
 
-import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.event.GroupChangeEvent;
 import hr.tvz.vi.event.TaskChangeEvent;
-import hr.tvz.vi.orm.GroupMember;
 import hr.tvz.vi.orm.Task;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.ReportService;
-import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.GroupType;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.TaskType;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.view.AbstractGridView;
 import hr.tvz.vi.view.ReportView;
 import lombok.extern.slf4j.Slf4j;
@@ -168,10 +160,13 @@ public class GroupTasksTab extends AbstractGridView<Task>{
    */
   @Override
   protected void initGrid() {
+    
     List<Long> preparers = organizationService.getOrganizationGroupMembers(GroupType.PREPARERS, getCurrentUser().getActiveOrganization().getOrganization().getId()).stream().map(groupMember -> groupMember.getPerson().getId()).collect(Collectors.toList());
     List<Long> approvers =  organizationService.getOrganizationGroupMembers(GroupType.APPROVERS, getCurrentUser().getActiveOrganization().getOrganization().getId()).stream().map(groupMember -> groupMember.getPerson().getId()).collect(Collectors.toList());
     getGrid().removeAllColumns();
-    getGrid().addColumn(task -> task.getCreationDateTime()).setHeader(getTranslation("myTasksTab.grid.creationDate"));
+    getGrid().addColumn(task -> DateTimeFormatter
+      .ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)
+      .withLocale(getLocale()).format(task.getCreationDateTime())).setHeader(getTranslation("myTasksTab.grid.creationDate"));
     getGrid().addColumn(task -> task.getName()).setHeader(getTranslation("myTasksTab.grid.name"));
     getGrid().addColumn(task -> {
       return TaskType.PREPARATION_TASK.equals(task.getType()) ? getTranslation(GroupType.PREPARERS.getGroupTypeLocalizationKey())  : getTranslation(GroupType.APPROVERS.getGroupTypeLocalizationKey());
@@ -185,6 +180,7 @@ public class GroupTasksTab extends AbstractGridView<Task>{
           reportService.saveReportTask(task);
           ChangeBroadcaster.firePushEvent(new TaskChangeEvent(this, task, EventAction.MODIFIED));
         });
+        assign.getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_BLUE);
         return assign;
       }
       return new VSpan();

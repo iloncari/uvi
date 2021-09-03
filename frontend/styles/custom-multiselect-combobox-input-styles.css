@@ -1,0 +1,25 @@
+:host([theme~="blue"]) [part="toggle-button"] {
+	color: #fff;
+	font-weight: normal;
+}
+
+:host([theme~="white"]) [part="toggle-button"] {
+	color: var(--docdocc-select-dropdown-icon-color-dove-gray);
+	font-weight: normal;
+}
+
+:host([theme~="blue"]:hover) [part="toggle-button"] {
+	color: #fff;
+}
+
+:host([theme~="dropdown"]) [part="token"] {
+	display: none;
+}
+
+:host(:hover:not([readonly]):not([focused]):not([disabled])) [part="input-field"]::after {
+    opacity: 0;
+}
+
+[part="input-field"]::after {
+    opacity: 0;
+}

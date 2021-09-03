@@ -142,7 +142,6 @@ public class ReportsView extends AbstractGridView<Report>{
   @Override
 	protected VHorizontalLayout initBellowButtonLayout() {
 		final VHorizontalLayout buttonsLayout = new VHorizontalLayout();
-	    //moze brisati samo kreator
 	    deleteButton = new VButton(getTranslation("reportsView.button.delete.label")).withVisible(!OrganizationLevel.OPERATIONAL_LEVEL.equals(getCurrentUser().getActiveOrganization().getOrganization().getLevel())).withEnabled(false);
 	    deleteButton.addClickListener(e -> getGrid().getSelectedItems().forEach(repotForDelete -> {
 	    	reportServiceRef.get().deleteReport(repotForDelete);
@@ -150,15 +149,17 @@ public class ReportsView extends AbstractGridView<Report>{
 	    	getGrid().getDataProvider().refreshAll();
 	    	//event
 	    }));
+	    deleteButton.getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_RED);
 	    buttonsLayout.add(deleteButton);
 	    
-	    final VButton exportButton = new VButton(getTranslation("task.form.exportAsPdf.button"));
-	    exportButton.addThemeName(ThemeAttribute.BUTTON_BLUE);
+	    final VButton exportButton = new VButton(getTranslation("reportsView.button.exportAsPdf"));
+	    exportButton.addThemeName(ThemeAttribute.BUTTON_OUTLINE_BLUE);
+	   
 
 	    exportAnchor = new VAnchor();
 	    exportAnchor.setTarget("_blank");
 	    exportAnchor.add(exportButton);
-	    
+	    exportAnchor.setEnabled(false);
 
 	    final Registration buttonListener = exportButton.addClickListener(e -> setPdfResource(exportAnchor, exportButton));
 

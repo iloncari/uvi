@@ -1,0 +1,23 @@
+:host([theme~="dropdown"]) {
+	padding: 0;
+	width: 40%;
+}
+
+[part="label"] {
+    font-weight: var(--docdoc-font-weight-semibold);
+    color: var(--docdocc-label-color-ship-gray);
+    font-size: 14px;
+    cursor: auto;
+}
+
+:host([has-label]) {
+    margin-top: 0 !important;
+    margin-bottom: 25px !important;
+    padding: 0 !important;
+}
+
+:host(:hover:not([readonly]):not([focused]):not([disabled])) [part="input-field"]::after {
+    opacity: 0;
+}
+
+

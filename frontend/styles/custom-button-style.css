@@ -1,0 +1,126 @@
+/*buttons*/
+
+:host([theme~="button"]) [part="label"] {
+	padding: 0;
+	white-space: normal;
+    overflow: visible;
+    text-overflow: initial;
+}
+
+:host([theme~="button"]) {
+	width: auto;
+	min-width: auto;
+	height: auto;
+	padding: 7px 20px;
+	margin: 0;
+	font-weight: var(--docdoc-font-weight-semibold);
+	font-size: 16px;
+	line-height: 1.25;
+	cursor: pointer;
+	transition: color .3s, background-color .3s;
+}
+
+
+:host([theme~="button"][disabled]) {
+	opacity: .4;
+}
+
+:host([theme~="blue"]) {
+	background-color: var(--docdocc-color-lochmara);
+	color: var(--docdocc-color-white);
+}
+
+:host([theme~="blue"][disabled]) {
+	background-color: var(--docdocc-color-lochmara);
+	color: var(--docdocc-color-white);
+}
+
+:host([theme~="blue"]:hover) {
+	background-color: var(--docdocc-color-san-marino);
+}
+
+:host([theme~="outline-blue"]) {
+	border: 1px solid var(--docdocc-color-cerulean-blue);
+	color: var(--docdocc-color-cerulean-blue);
+	background-color: transparent;
+}
+
+:host([theme~="outline-blue"][disabled]) {
+	border: 1px solid var(--docdocc-color-cerulean-blue);
+	color: var(--docdocc-color-cerulean-blue);
+	background-color: transparent;
+}
+
+:host([theme~="outline-blue"]:hover) {
+	background-color: var(--docdocc-color-pattens-blue);
+}
+
+:host([theme~="outline-red"]) {
+	border: 1px solid var(--docdocc-color-monza);
+	color: var(--docdocc-color-monza);
+	background-color: transparent;
+}
+
+:host([theme~="outline-red"][disabled]) {
+	border: 1px solid var(--docdocc-color-monza);
+	color: var(--docdocc-color-monza);
+	background-color: transparent;
+}
+
+:host([theme~="outline-red"]:hover) {
+	background-color: var(--docdocc-color-pastel-pink);
+}
+
+:host([theme~="outline-green"]) {
+	border: 1px solid var(--docdocc-color-jade);
+	color: var(--docdocc-color-jade);
+	background-color: transparent;
+}
+
+:host([theme~="outline-green"][disabled]) {
+	border: 1px solid var(--docdocc-color-jade);
+	color: var(--docdocc-color-jade);
+	background-color: transparent;
+}
+
+:host([theme~="outline-green"]:hover) {
+	background-color: rgba(0, 192, 109, .1);
+}
+
+
+/*Table icon - EDIT U TABLICI*/
+:host([theme="table-icon"]) {
+	width: auto;
+	min-width: auto;
+	height: auto;
+	padding: 0;
+	margin: 0;
+	border-radius: 0;
+	border: none;
+	background-color: transparent;
+	cursor: pointer;
+}
+
+:host([theme="table-icon"])::after,
+:host([theme="table-icon"])::before {
+	content: none;
+}
+
+/*Tags*/
+:host([theme="search-tags"]) {
+	width: auto;
+	min-width: auto;
+	height: auto;
+	padding: 2px 0px 2px 8px;
+	margin: 0 5px 25px 0;
+	font-weight: var(--docdoc-font-weight-semibold);
+	font-size: 12px;
+	line-height: 1.25;
+	cursor: pointer;
+	transition: color .3s, background-color .3s;
+	color: var(--docdocc-color-white);
+	background-color: var(--docdocc-color-egg-blue);
+}
+
+
+

@@ -21,6 +21,7 @@ import hr.tvz.vi.orm.Organization;
 import hr.tvz.vi.service.AddressService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.util.Constants.StyleConstants;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.util.Utils;
 
 /**
@@ -159,7 +160,7 @@ public class OrganizationDetailTab extends VVerticalLayout{
         organizationService.saveOrUpdateOrganization(activeOrganization);
         Utils.showSuccessNotification(2000, Position.TOP_CENTER, "organizationView.notification.saveSuccess");
       }
-    });
+    }).getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_BLUE);
 
     add(organizationFormLayout);
     if(activeOrganization.getAddress() != null ) {

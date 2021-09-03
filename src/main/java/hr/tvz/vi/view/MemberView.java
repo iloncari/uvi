@@ -29,6 +29,7 @@ import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.SubscriberScope;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.util.Constants.UserRole;
 import hr.tvz.vi.util.Utils;
 
@@ -101,6 +102,9 @@ public class MemberView extends VVerticalLayout implements HasDynamicTitle, HasU
     layout.add(organizationLayoutTitle);
 
     organizationsGrid = new VGrid<>();
+    organizationsGrid.addThemeNames(ThemeAttribute.WRAP_CELL_CONTENT, ThemeAttribute.COMPACT, ThemeAttribute.TABLE);
+    organizationsGrid.getElement().setAttribute("style", "touch-action: none; border: none;");
+    organizationsGrid.setHeightByRows(true);
     organizationsGrid.setItems(member.getOrgList());
     organizationsGrid.addColumn(po -> po.getOrganization().getName()).setHeader(getTranslation("memberView.organizationsGrid.name"));
     organizationsGrid.addColumn(po -> po.getJoinDate()).setHeader(getTranslation("memberView.organizationsGrid.joinDate"));

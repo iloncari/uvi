@@ -37,6 +37,7 @@ import hr.tvz.vi.util.Constants.IndustrialPlantType;
 import hr.tvz.vi.util.Constants.ItemOnFire;
 import hr.tvz.vi.util.Constants.OpenSpaceFireType;
 import hr.tvz.vi.util.Constants.StyleConstants;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.util.Constants.TrafficFireVechileType;
 import lombok.extern.slf4j.Slf4j;
 
@@ -167,12 +168,18 @@ public class FireEventTypeDataTab extends VVerticalLayout{
     
     eventActions.setItems(Arrays.asList(EventActivity.values()));
     eventActions.setEnabled(editRight);
+    eventActions.getElement().getThemeList().add(ThemeAttribute.DROPDOWN_WHITE);
     eventActions.setItemLabelGenerator(eventAction -> getTranslation(eventAction.getEventActivityTranslationKey()));
+    eventActions.setPlaceholder(getTranslation("placeholder.combobox.selected", eventActions.getValue().size()));
+    eventActions.addValueChangeListener(e ->  eventActions.setPlaceholder(getTranslation("placeholder.combobox.selected", eventActions.getValue().size())));
     reportLayoutTop.setLabel(eventActions, true, "reportView.fireEventTab.field.eventAction");
     reportLayoutTop.processBinder(eventActions, null, null, true, "eventActivities");
   
     itemsOnFire.setItemLabelGenerator(item -> getTranslation(item.getItemOnFireTranslationKey()));
     itemsOnFire.setEnabled(editRight);
+    itemsOnFire.getElement().getThemeList().add(ThemeAttribute.DROPDOWN_WHITE);
+    itemsOnFire.setPlaceholder(getTranslation("placeholder.combobox.selected", eventActions.getValue().size()));
+    itemsOnFire.addValueChangeListener(e ->  itemsOnFire.setPlaceholder(getTranslation("placeholder.combobox.selected", itemsOnFire.getValue().size())));
     itemsOnFire.setItems(Arrays.asList(ItemOnFire.values()));
     reportLayoutTop.setLabel(itemsOnFire, true, "reportView.fireEventTab.field.itemsOnFire");
     reportLayoutTop.processBinder(itemsOnFire, null, null, true, "itemsOnFire");

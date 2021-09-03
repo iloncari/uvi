@@ -111,22 +111,6 @@ public class AppHeader  extends VFlexLayout {
   
 
   /**
-   * On attach.
-   *
-   * @param attachEvent the attach event
-   */
-  @Override
-  protected void onAttach(final AttachEvent attachEvent) {
-    final VHorizontalLayout siteMenuLayout = new VHorizontalLayout();
-    siteMenuLayout.getThemeList().set("spacing", false);
-  
-    createOrganizationsMenu(siteMenuLayout);
-    
-    createLogout();
-    menuLayout.add(menuBar);
-  }
-  
-  /**
    * Creates the logout.
    */
   private void createLogout() {
@@ -159,6 +143,23 @@ public class AppHeader  extends VFlexLayout {
       menuBar.addItem(siteMenuLayout);
     }
   }
+
+  /**
+   * On attach.
+   *
+   * @param attachEvent the attach event
+   */
+  @Override
+  protected void onAttach(final AttachEvent attachEvent) {
+    final VHorizontalLayout siteMenuLayout = new VHorizontalLayout();
+    siteMenuLayout.getThemeList().set("spacing", false);
+  
+    createOrganizationsMenu(siteMenuLayout);
+    
+    createLogout();
+    menuLayout.add(menuBar);
+  }
+
 
   /**
    * Adds the notification card.

@@ -6,10 +6,12 @@
 package hr.tvz.vi.util;
 
 import com.google.common.eventbus.AsyncEventBus;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
+import com.vaadin.flow.dom.Element;
 import com.vaadin.flow.server.VaadinRequest;
 import com.vaadin.flow.server.VaadinService;
 
@@ -88,6 +90,24 @@ public final class Utils {
         .getAttribute(AccessControlImpl.CURRENT_USER_SESSION_ATTRIBUTE_KEY);
     }
     return null;
+  }
+  
+  /**
+   * Removes the all themes.
+   *
+   * @param component the component
+   */
+  public static void removeAllThemes(final Component component) {
+    removeAllThemes(component.getElement());
+  }
+
+  /**
+   * Removes the all themes.
+   *
+   * @param element the element
+   */
+  public static void removeAllThemes(final Element element) {
+    element.getThemeList().removeAll(element.getThemeList());
   }
 
   /**

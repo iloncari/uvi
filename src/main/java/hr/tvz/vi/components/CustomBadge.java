@@ -8,6 +8,8 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import com.vaadin.flow.component.html.Span;
 
+import hr.tvz.vi.util.Constants.StyleConstants;
+
 /**
  * The Class CustomBadge.
  *
@@ -25,7 +27,7 @@ public class CustomBadge extends Span {
    */
   public CustomBadge() {
     super(String.valueOf(NumberUtils.INTEGER_ZERO));
-    //addClassName(StyleConstants.NOTIFICATION_NUMBER.getName());
+    addClassName(StyleConstants.NOTIFICATION_NUMBER.getName());
   }
 
   /**

@@ -38,6 +38,7 @@ import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.SubscriberScope;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 
 import java.time.LocalDate;
 
@@ -138,6 +139,9 @@ public class VechileView extends VVerticalLayout implements HasDynamicTitle, Has
     layout.add(serviceLayoutTitle);
 
     servicesGrid = new VGrid<>();
+    servicesGrid.addThemeNames(ThemeAttribute.WRAP_CELL_CONTENT, ThemeAttribute.COMPACT, ThemeAttribute.TABLE);
+    servicesGrid.getElement().setAttribute("style", "touch-action: none; border: none;");
+    servicesGrid.setHeightByRows(true);
     servicesGrid.setItems(vechile.getServices());
     servicesGrid.addColumn(service -> service.getServiceDate()).setHeader(getTranslation("vechileView.servicesGrid.date"));
     servicesGrid.addColumn(service -> service.getServiceName()).setHeader(getTranslation("vechileView.servicesGrid.name"));

@@ -26,6 +26,7 @@ import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.PersonService;
 import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.Routes;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.util.Utils;
 
 import java.util.List;
@@ -118,15 +119,18 @@ public class MembersView extends AbstractGridView<Person> implements HasDynamicT
 
     final VButton newMemberButton = new VButton(getTranslation("membersView.button.newMember.label")).withEnabled(getCurrentUser().hasManagerRole());
     newMemberButton.addClickListener(e -> showNewMemberDialog());
+    newMemberButton.getThemeList().add(ThemeAttribute.BUTTON_BLUE);
     buttonsLayout.add(newMemberButton);
 
     if (!activeOrganization.getChilds().isEmpty()) {
       final VButton addMemberFromChildButton = new VButton(getTranslation("membersView.button.addFromChilds.label")).withEnabled(getCurrentUser().hasManagerRole());
       addMemberFromChildButton.addClickListener(e -> showAddMemberDialog());
+      addMemberFromChildButton.getThemeList().add(ThemeAttribute.BUTTON_BLUE);
       buttonsLayout.add(addMemberFromChildButton);
     }
 
     removeMemberButton = new DeleteButton().withEnabled(false);
+    removeMemberButton.getElement().getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_RED);
     buttonsLayout.add(removeMemberButton
       .withText(getTranslation("membersView.removeMemberDialog.button.label"))
       .withConfirmText(getTranslation("yes.label"))

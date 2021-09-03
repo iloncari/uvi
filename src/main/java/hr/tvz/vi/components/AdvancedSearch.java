@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.datepicker.VDatePicker;
+import org.vaadin.firitin.components.html.VDiv;
 import org.vaadin.firitin.components.html.VSpan;
 import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import org.vaadin.firitin.components.select.VSelect;
@@ -58,6 +59,7 @@ import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.util.Constants.VechileCondition;
 import hr.tvz.vi.util.Constants.VechileType;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -69,7 +71,7 @@ import lombok.extern.slf4j.Slf4j;
  * @since 8:20:36 PM Sep 1, 2021
  */
 @Slf4j
-public class AdvancedSearch<T> extends VHorizontalLayout {
+public class AdvancedSearch<T> extends VDiv {
 
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = 6993798999382592250L;
@@ -78,6 +80,9 @@ public class AdvancedSearch<T> extends VHorizontalLayout {
 
   /** The parent view route. */
   private final String parentViewRoute;
+  
+  /** The filter popup. */
+  private PaperMenuButton filterPopup;
   
   /** The address service. */
   @Setter
@@ -97,25 +102,22 @@ public class AdvancedSearch<T> extends VHorizontalLayout {
     this.queryParams = new HashMap<String, List<String>>(queryParams);
     this.parentViewRoute = parentViewRoute;
   }
-
+  
   /**
-   * On attach.
+   * Builds the advanced search.
    *
-   * @param attachEvent the attach event
+   * @return the paper menu button
    */
-  @Override
-  protected void onAttach(AttachEvent attachEvent) {
-    super.onAttach(attachEvent);
-    
+  public PaperMenuButton 9() {
     final VButton triggerButton = new VButton(getTranslation("button.advancedSearch"));
     triggerButton.addThemeName(ThemeAttribute.BUTTON_BLUE);
-
-    PaperMenuButton filterPopup = new PaperMenuButton(triggerButton, buildFilterForm());
+    filterPopup = new PaperMenuButton(triggerButton, buildFilterForm());
     filterPopup.setVerticalAlignment(VerticalAlignment.TOP);
     filterPopup.setVerticalOffset(50);
     filterPopup.setDynamicAlign(true);
-    add(filterPopup);
+    return filterPopup;
   }
+  
 
   /**
    * Builds the filter form.

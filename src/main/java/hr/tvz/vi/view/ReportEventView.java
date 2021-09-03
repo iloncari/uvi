@@ -51,6 +51,7 @@ import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.TaskType;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -153,7 +154,9 @@ public class ReportEventView extends VVerticalLayout implements HasDynamicTitle{
 		
 		eventOrganizations = new MultiselectComboBox<Organization>();
 		eventOrganizations.setItemLabelGenerator(org -> org.getName());
-		
+		eventOrganizations.getElement().getThemeList().add(ThemeAttribute.DROPDOWN_WHITE);
+		eventOrganizations.setPlaceholder(getTranslation("placeholder.combobox.selected", eventOrganizations.getValue().size()));
+		eventOrganizations.addValueChangeListener(e -> eventOrganizations.setPlaceholder(getTranslation("placeholder.combobox.selected", e.getValue().size())) );
 		reportEventLayout.setLabel(eventOrganizations, "reportEventView.form.eventOrganizationList");
 		reportEventLayout.processBinder(eventOrganizations, null, null, true, report -> {
 			if(report.getEventOrganizationList()==null) {
@@ -202,7 +205,7 @@ public class ReportEventView extends VVerticalLayout implements HasDynamicTitle{
 			});
 			UI.getCurrent().navigate(HomeView.class);
 			}
-		});
+		}).getElement().getThemeList().add(ThemeAttribute.BUTTON_BLUE);
 		
 		add(reportEventLayout);
 	}

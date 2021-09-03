@@ -7,11 +7,14 @@ package hr.tvz.vi.view;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.theme.ThemeChangeInterceptor;
 import org.vaadin.firitin.components.html.VDiv;
+import org.vaadin.firitin.components.html.VH2;
 import org.vaadin.firitin.components.html.VH3;
 import org.vaadin.firitin.components.html.VH4;
 import org.vaadin.firitin.components.html.VH5;
@@ -37,6 +40,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.HasDynamicTitle;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 
 import de.codecamp.vaadin.serviceref.ServiceRef;
@@ -53,6 +57,7 @@ import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.SubscriberScope;
 import hr.tvz.vi.util.Constants.TaskType;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 
 /**
  * The Class HomeView.
@@ -62,7 +67,6 @@ import hr.tvz.vi.util.Constants.TaskType;
  */
 @EventSubscriber(scope = SubscriberScope.PUSH)
 @Route(value = Routes.HOME, layout = MainAppLayout.class)
-@CssImport("./styles/shared-styles.css")
 public class HomeView extends VVerticalLayout implements HasDynamicTitle {
 
   /** The Constant serialVersionUID. */
@@ -92,13 +96,25 @@ public class HomeView extends VVerticalLayout implements HasDynamicTitle {
   @Autowired
   private ServiceRef<OrganizationService> organizationServiceRef;
   
+  private VHorizontalLayout boxes = new VHorizontalLayout();
+  
+  private VVerticalLayout graphLayout = new VVerticalLayout();
+  
   /**
    * Instantiates a new home view.
    */
   public HomeView() {
     this.currentUser = Utils.getCurrentUser(UI.getCurrent());
-    VH3 viewTitle = new VH3(getPageTitle());
-    add(viewTitle);
+    Utils.removeAllThemes(this);
+    
+    
+    final VHorizontalLayout titleLayout = new VHorizontalLayout();
+    Utils.removeAllThemes(titleLayout);
+    titleLayout.getThemeList().set(ThemeAttribute.PAGE_TITLE, true);
+    titleLayout.add(new VH2(getPageTitle()));
+    
+    add(titleLayout);
+    
   }
   
   /**
@@ -110,18 +126,24 @@ public class HomeView extends VVerticalLayout implements HasDynamicTitle {
   protected void onAttach(AttachEvent attachEvent) {
     super.onAttach(attachEvent);
   
-    removeAll();
-  
-    VHorizontalLayout boxes = new VHorizontalLayout();
+    boxes.removeAll();
     boxes.add(initBox(myTasksCount, "tasksView.myTaskTab.label", reportServiceRef.get().getUserTaskNumber(currentUser.getActiveOrganization().getOrganization().getId(),
-     currentUser.getPerson().getId()), TasksView.class));
-    boxes.add(initBox(groupTasksCount, "tasksView.groupTaskTab.label", reportServiceRef.get().getGroupTaskNumber(currentUser.getActiveOrganization().getOrganization().getId()), TasksView.class));
-    boxes.add(initBox(reportsCount, "page.reports.title", reportServiceRef.get().getReportsNumber(currentUser.getActiveOrganization().getOrganization().getId()), ReportsView.class));
-    boxes.add(initBox(membersCount, "page.members.title", organizationServiceRef.get().getOrganizationMembersNumber(currentUser.getActiveOrganization().getOrganization()), MembersView.class));
+     currentUser.getPerson().getId()), Routes.TASKS, ThemeAttribute.GREEN, Map.of("tab", List.of("myTasks"))));
+    boxes.add(initBox(groupTasksCount, "tasksView.groupTaskTab.label", reportServiceRef.get().getGroupTaskNumber(currentUser.getActiveOrganization().getOrganization().getId()), Routes.TASKS, ThemeAttribute.LIGHT_BLUE, Map.of("tab", List.of("groupTasks"))));
+    boxes.add(initBox(reportsCount, "page.reports.title", reportServiceRef.get().getReportsNumber(currentUser.getActiveOrganization().getOrganization().getId()), Routes.REPORTS, ThemeAttribute.PURPLE, Map.of()));
+    boxes.add(initBox(membersCount, "page.members.title", organizationServiceRef.get().getOrganizationMembersNumber(currentUser.getActiveOrganization().getOrganization()),Routes.MEMBERS, ThemeAttribute.AQUA, Map.of()));
     add(boxes);
+    boxes.getThemeList().set(ThemeAttribute.WIDGET_CARDS, true);
     
-    VVerticalLayout graphLayout = new VVerticalLayout();
-    VH5 chartTitle = new VH5(getTranslation("homeView.chart.label"));
+    
+    graphLayout.removeAll();
+    graphLayout.getThemeList().set(ThemeAttribute.CARD, true);
+    graphLayout.getThemeList().set(ThemeAttribute.CARD_FULL_BLOCK, true);
+    graphLayout.getThemeList().set(ThemeAttribute.CARD_SPACING, true);
+
+    graphLayout.getThemeList().remove(ThemeAttribute.PADDING);
+    graphLayout.getThemeList().remove(ThemeAttribute.SPACING);
+    VH3 chartTitle = new VH3(getTranslation("homeView.chart.label"));
     graphLayout.add(chartTitle);
     Map<ReportStatus, Double> reportsCountMap = new HashMap<>();
     reportServiceRef.get().getReports(currentUser.getActiveOrganizationObject()).forEach(report -> {
@@ -134,8 +156,8 @@ public class HomeView extends VVerticalLayout implements HasDynamicTitle {
 
     String[] colors = {"#D26600", "#0078c0", "#95d76e"};
     final ApexCharts chart = ApexChartsBuilder.get()
-      .withChart(ChartBuilder.get().withType(Type.donut).withBackground("#262d37").withFontFamily("Open Sans, sans-serif").withForeColor("#ffffff")
-        .withHeight("320px").build())
+      .withChart(ChartBuilder.get().withType(Type.donut).withBackground("#ffffff").withFontFamily("Open Sans, sans-serif").withForeColor("#707070")
+        .withHeight("300px").build())
       .withLegend(LegendBuilder.get().withPosition(Position.left).build())
       .withTitle(TitleSubtitleBuilder.get().withText(getTranslation("homeView.chart.reports")).build())
       .withResponsive(ResponsiveBuilder.get().withBreakpoint(991.0)
@@ -158,12 +180,16 @@ public class HomeView extends VVerticalLayout implements HasDynamicTitle {
    * @param view the view
    * @return the v div
    */
-  private VDiv initBox(VSpan countSpan, String titleKey, Long count, Class view) {
-      VDiv box = new VDiv();
-      box.add(new VH4(getTranslation(titleKey)));
+  @SuppressWarnings({"rawtypes", "unchecked"})
+  private VVerticalLayout initBox(VSpan countSpan, String titleKey, Long count, String route, String boxTheme, Map<String, List<String>> queryParams) {
+    VVerticalLayout box = new VVerticalLayout();
+      box.add(new VH4(getTranslation(titleKey)).withClassName(StyleConstants.WIDGET_TITLE.getName()));
       countSpan.setText(count.toString());
+      countSpan.setClassName(StyleConstants.WIDGET_NUMBER.getName());
       box.add(countSpan);
-      box.addClickListener(e -> UI.getCurrent().navigate(view));
+      box.addClickListener(e ->UI.getCurrent().navigate(route, new QueryParameters(queryParams)));
+      box.getElement().getThemeList().set(ThemeAttribute.WIDGET_CARD, true);
+      box.getElement().getThemeList().set(boxTheme, true);
       return box;
   }
   

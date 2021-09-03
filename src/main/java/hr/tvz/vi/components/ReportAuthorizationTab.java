@@ -4,9 +4,7 @@
  */
 package hr.tvz.vi.components;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +21,6 @@ import org.vaadin.firitin.components.textfield.VTextArea;
 import org.vaadin.firitin.layouts.VTabSheet;
 
 import com.google.common.eventbus.Subscribe;
-import com.sun.source.util.TaskListener;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -50,7 +47,6 @@ import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.ReportStatus;
 import hr.tvz.vi.util.Constants.SubscriberScope;
 import hr.tvz.vi.util.Constants.TaskType;
-import hr.tvz.vi.view.ReportsView;
 import hr.tvz.vi.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 

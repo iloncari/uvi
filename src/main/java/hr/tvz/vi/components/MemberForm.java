@@ -23,6 +23,7 @@ import hr.tvz.vi.service.PersonService;
 import hr.tvz.vi.util.Constants.Gender;
 import hr.tvz.vi.util.Constants.Professions;
 import hr.tvz.vi.util.Constants.StyleConstants;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.util.Constants.UserRole;
 import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.view.MembersView;
@@ -133,7 +134,7 @@ public class MemberForm extends AbstractForm<Person> {
     VSelect<City> city = new VSelect<City>();
 	city.setItemLabelGenerator(c -> c.getName());
 	county.addValueChangeListener(e -> city.setItems(addressService.getCities(e.getValue())));
-	contactLayout.setLabel(city, "reportEventView.form.residenceAddress.city");
+	contactLayout.setLabel(city, "memberForm.field.residenceCounty");
 	contactLayout.processBinder(city, null, null, false, "residenceAddress.city");
 	contactLayout.addTwoColumnItemsLayout(county, city);
    
@@ -163,6 +164,8 @@ public class MemberForm extends AbstractForm<Person> {
     	accessRight.setValue(currentPO.get().isAppRights());
     }
     }
+    //TO DO - implement this
+    accessRight.setVisible(false);
     appDataLayout.addTwoColumnItemsLayout(usernameField, accessRight);
 
    
@@ -209,6 +212,7 @@ public class MemberForm extends AbstractForm<Person> {
         }
       }
     });
+    saveButton.getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_BLUE);
 
     if (changePasswordEnabled) {
       passwordField.setValueChangeMode(ValueChangeMode.EAGER);

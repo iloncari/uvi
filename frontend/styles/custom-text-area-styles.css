@@ -1,0 +1,13 @@
+[part="input-field"] {
+  background-color: var(--docdocc-input-background-color);
+  border: 1px solid var( --docdocc-input-border-color);
+  box-shadow: var( --docdocc-input-box-shadow);
+  color: var(--docdocc-input-color-ship-gray);
+  font-weight: var(--docdoc-font-weight-semibold);
+  min-height: 90px;
+  transition: all .3s;
+}
+
+
+
+

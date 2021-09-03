@@ -33,6 +33,7 @@ import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Professions;
 import hr.tvz.vi.util.Constants.ReportStatus;
 import hr.tvz.vi.util.Constants.SubscriberScope;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.util.Constants.VechileCondition;
 import hr.tvz.vi.util.Constants.VechileType;
 import hr.tvz.vi.util.Utils;
@@ -115,6 +116,9 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
     this.simpleSearch = simpleSearch;
     this.advancedSearch = advancedSearch;
     add(new VH3(getViewTitle()));
+    getGrid().addThemeNames(ThemeAttribute.WRAP_CELL_CONTENT, ThemeAttribute.COMPACT, ThemeAttribute.TABLE);
+    getGrid().getElement().setAttribute("style", "touch-action: none; border: none;");
+    getGrid().setHeightByRows(true);
   }
   
   /**
@@ -213,7 +217,7 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
         AdvancedSearch<T> advancedSearch = new AdvancedSearch<T>(queryParams, getRoute());
         advancedSearch.setAddressService(addressService.get());
         advancedSearch.setOrganizationService(organizationService.get());
-        searchLayout.add(advancedSearch);
+        searchLayout.add(advancedSearch.buildAdvancedSearch());
       }
       add(searchLayout);
       buildTagsLayout();

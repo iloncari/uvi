@@ -57,6 +57,7 @@ import hr.tvz.vi.util.Constants.ReportStatus;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.SubscriberScope;
 import hr.tvz.vi.util.Constants.TaskType;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 import lombok.extern.slf4j.Slf4j;
 import hr.tvz.vi.util.Utils;
 
@@ -189,7 +190,9 @@ public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasU
   private VHorizontalLayout initLockInformationLayout() {
     VHorizontalLayout layout = new VHorizontalLayout();
     if(report.isLocked()) {
-      layout.add("Izvješće je zaključano od strane korisnika " + report.getLockOwner().getName()  +  " " +report.getLockOwner().getLastname());
+      Utils.removeAllThemes(layout);
+      layout.getThemeList().add(ThemeAttribute.LOCKED);
+      layout.add(getTranslation("reportView.reportLocked.label", report.getLockOwner().getName()  +  " " +report.getLockOwner().getLastname()));
     }
     return layout;
   }
