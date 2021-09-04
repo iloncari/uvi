@@ -231,6 +231,7 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
       transferButton.setEnabled(true);
     });
     dialogLayout.add(dialogTitle, idField, transferButton);
+    transferButton.getElement().getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_GREEN);
     transferDialog.add(dialogLayout);
     transferDialog.open();
   }

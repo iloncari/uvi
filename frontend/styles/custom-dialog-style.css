@@ -1,0 +1,7 @@
+[part="overlay"] {
+	background-color: var(--docdocc-color-overlay);
+}
+
+[part="backdrop"] {
+	background-color: var(--docdocc-shape-backdrop);
+}

@@ -71,14 +71,12 @@ public class NotificationService extends AbstractService<Notification> {
 	public List<Notification> findAllActiveNotifications(Long organizationId, Long userId){
 	  List<Notification> notifications = new ArrayList<Notification>();
 	  
-	  notifications.addAll(((NotificationRepository)repository).findByRecipientIdAndOrganizationIdAndReadDateTimeIsNull(userId, organizationId));
-	  
-	  notifications.addAll(((NotificationRepository)repository).findByRecipientIdAndOrganizationIdAndReadDateTimeIsNull(null, organizationId));
-	  
-	  List<NotificationUserMapping> mapping = notificationUserMappingRepository.findAll();
-	  
-	 return  notifications.stream().filter(n -> mapping.stream().anyMatch(m -> m.getNotificationId().equals(n.getId()) && m.getReadAt()==null)).collect(Collectors.toList());
+	  notifications.addAll(((NotificationRepository)repository).findByRecipientIdAndOrganizationId(userId, organizationId));
+	  notifications.addAll(((NotificationRepository)repository).findByRecipientIdIsNullAndOrganizationId(organizationId));
 	 
+	  List<NotificationUserMapping> mapping = notificationUserMappingRepository.findAll();
+
+	  return notifications.stream().filter(n -> mapping.stream().anyMatch(m -> m.getNotificationId().equals(n.getId()) && m.getUserId().equals(userId) && m.getReadAt()==null)).collect(Collectors.toList());
 	  
 	}
 	

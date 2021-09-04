@@ -52,6 +52,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.grid.VGrid;
 import org.vaadin.firitin.components.html.VH3;
 import org.vaadin.firitin.components.html.VSpan;
@@ -210,8 +211,11 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
     removeAll();
     if(simpleSearch || advancedSearch) {
       VHorizontalLayout searchLayout = new VHorizontalLayout();
+      searchLayout.getThemeList().add(ThemeAttribute.SEARCH_BLOCK);
       if(simpleSearch) {
-        searchLayout.add(new SimpleSearch(queryParams, getRoute()));
+        SimpleSearch simpleSearch = new SimpleSearch(queryParams, getRoute());
+        simpleSearch.getElement().getThemeList().add(ThemeAttribute.SEARCH_FIELD);
+        searchLayout.add(simpleSearch);
       }
       if(advancedSearch) {
         AdvancedSearch<T> advancedSearch = new AdvancedSearch<T>(queryParams, getRoute());
@@ -221,7 +225,10 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
       }
       add(searchLayout);
       buildTagsLayout();
-      add(tagsLayout);
+      
+      if(tagsLayout.getChildren().count() != 0) {
+        add(tagsLayout);
+      }
     }
     
     VHorizontalLayout aboveGrid = initAboveLayout();
@@ -244,6 +251,8 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
    */
   private void buildTagsLayout() {
     tagsLayout.removeAll();
+    Utils.removeAllThemes(tagsLayout);
+    tagsLayout.getThemeList().add(ThemeAttribute.SEARCH_TAGS_BLOCK);
     queryParams.forEach((key, values) -> {
       if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.STRING)) {
         values.forEach(value -> placeTag(key, value, value));
@@ -266,7 +275,7 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
           placeTag(key,p.getName(), getTranslation(p.getLabelKey()));
         });
       }else if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.DATE)) {
-        values.forEach(value -> placeTag(key, value, value));
+       values.forEach(value -> placeTag(key, value, value));
       }else if(Utils.FIELD_TYPE.getOrDefault(key, FieldType.STRING).equals(FieldType.EVENT_TYPE)) {
         values.stream().map(p -> EventType.getEventType(p)).filter(Objects::nonNull).collect(Collectors.toSet()).forEach(p -> {
           placeTag(key,p.getName(), getTranslation(p.getEventTypeTranslationKey()));
@@ -295,7 +304,7 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
    * @param value the value
    */
   private void placeTag(String key, String value, String translatedValue) {
-    VSpan tag = new VSpan(getTranslation("tag.".concat(key).concat(".label")).concat(":").concat(translatedValue));
+    VButton tag = new VButton(getTranslation("tag.".concat(key).concat(".label")).concat(": ").concat(translatedValue));
     tag.addClickListener(e -> {
       tagsLayout.remove(tag);
       List<String> newValues = new ArrayList<>(queryParams.get(key));
@@ -307,6 +316,7 @@ public abstract class AbstractGridView<T> extends VVerticalLayout implements Has
       UI.getCurrent().navigate(getRoute(), new QueryParameters(queryParams));
       UI.getCurrent().getPage().reload();
     });
+    tag.getElement().getThemeList().add(ThemeAttribute.SEARCH_TAGS);
     tagsLayout.add(tag);
   }
 

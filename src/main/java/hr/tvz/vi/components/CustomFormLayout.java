@@ -21,6 +21,7 @@ import com.vaadin.flow.data.converter.Converter;
 import com.vaadin.flow.function.ValueProvider;
 
 import hr.tvz.vi.util.Constants.StyleConstants;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.util.Utils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -61,6 +62,8 @@ public class CustomFormLayout<T> extends VVerticalLayout {
   public CustomFormLayout(final Binder<T> topSectionBinder, T bean) {
     this.binder = topSectionBinder;
     this.bean = bean;
+    Utils.removeAllThemes(this);
+    getThemeList().add(ThemeAttribute.SPACING);
     setWidthFull();
     add(formTitle);
   }
@@ -323,7 +326,7 @@ public class CustomFormLayout<T> extends VVerticalLayout {
    * @param labelParams the label params
    */
   public void setLabel(final Component component, boolean requiredTag, final String translationKey, Object... labelParams) {
-     String label = getTranslation(translationKey, labelParams);
+     String label = StringUtils.isNotEmpty(translationKey) ? getTranslation(translationKey, labelParams) : "";
     if(requiredTag) {
       label = label + "*";
     }
@@ -343,7 +346,7 @@ public class CustomFormLayout<T> extends VVerticalLayout {
       binder.writeBean(bean);
       return true;
     } catch (final ValidationException e) {
-      Utils.showErrorNotification(3000, Position.TOP_CENTER, "beanNESTO NE VALJA");
+      Utils.showErrorNotification(3000, Position.TOP_CENTER, getTranslation("notification.writeBean.fail"));
       return false;
     }
   }

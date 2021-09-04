@@ -26,5 +26,13 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
    * @param orgId the org id
    * @return the list
    */
-  List<Notification> findByRecipientIdAndOrganizationIdAndReadDateTimeIsNull(Long receipientId, Long orgId);
+  List<Notification> findByRecipientIdAndOrganizationId(Long receipientId, Long orgId);
+  
+  /**
+   * Find by recipient id is null and organization id.
+   *
+   * @param orgId the org id
+   * @return the list
+   */
+  List<Notification> findByRecipientIdIsNullAndOrganizationId(Long orgId);
 }

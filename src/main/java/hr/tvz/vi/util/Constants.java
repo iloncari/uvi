@@ -1184,7 +1184,10 @@ public final class Constants {
     SIDEBAR_HEADER("sidebar-header"),
     
     /** The error page. */
-    ERROR_CONTENT("error-content");
+    ERROR_CONTENT("error-content"),
+    
+    /** The popup form. */
+    POPUP_FORM("popup-form");
     
     
 

@@ -27,6 +27,11 @@ html {
 	--docdoc-font-weight-semibold: 600;
 	--docdocc-table-white-to-black: #fff;
 	--docdocc-color-jade: #00C06D;
+	--docdocc-color-egg-blue: #00bfc0;
+	--docdocc-color-overlay: #fcfcfc;
+	--docdocc-shape-backdrop: rgba(20, 78, 153, 0.2);
+	--docdocc-notification-background-color-vivid-violet: #953b96;
+	--docdocc-notification-color-white: #fff;
 }
 
 /*

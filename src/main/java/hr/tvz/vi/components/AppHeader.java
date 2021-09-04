@@ -100,8 +100,8 @@ public class AppHeader  extends VFlexLayout {
     notificationContent = new VSpan(notificationIcon, badgeIndicator);
     notificationContent.addClassName(StyleConstants.NOTIFICATION_CONTENT.getName());
     notificationContent.addClickListener(event -> notificationContent.removeClassName(StyleConstants.NEW_NOTIFICATION.getName()));
-    notificationsMenu = menuBar.addItem(notificationContent)
-      .getSubMenu();
+    MenuItem notificationMenuItem= menuBar.addItem(notificationContent);
+    notificationsMenu = notificationMenuItem.getSubMenu();
     notificationItems = new VDiv();
     notificationItems.setClassName(StyleConstants.NOTIFICATION_ITEMS.getName());
     
@@ -114,7 +114,7 @@ public class AppHeader  extends VFlexLayout {
    * Creates the logout.
    */
   private void createLogout() {
-    menuBar.addItem(new VDiv(new Image(ImageConstants.ICON_LOG_OUT.getPath(), ""), new VSpan("Logout")), e -> { AccessControlFactory.of().getAccessControl(null).signOut();
+    menuBar.addItem(new VDiv(new Image(ImageConstants.ICON_LOG_OUT.getPath(), ""), new VSpan("Logout")).withClassName("logout-icon"), e -> { AccessControlFactory.of().getAccessControl(null).signOut();
     UI.getCurrent().navigate(LoginView.class);});
   }
   
@@ -170,6 +170,7 @@ public class AppHeader  extends VFlexLayout {
     final NotificationItem notificationCard = new NotificationItem(notification);
     notificationItems.addComponentAtIndex(NumberUtils.INTEGER_ZERO, notificationCard);
     notificationCard.addClickListener(event -> {
+      log.info("click " + notification.getId());
       badgeIndicator.decrease();
       notificationService.get().markNotificationAsRead(notificationCard.getNotification().getId(), currentUser.getPerson().getId());
       if (badgeIndicator.getCount() == NumberUtils.INTEGER_ZERO) {

@@ -16,6 +16,7 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.shared.Registration;
 
 import hr.tvz.vi.orm.Notification;
+import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.util.Constants.ImageConstants;
 import hr.tvz.vi.util.Constants.NotificationType;
 import hr.tvz.vi.util.Constants.StyleConstants;
@@ -53,6 +54,7 @@ public class NotificationItem extends VHorizontalLayout{
    */
   public NotificationItem(final Notification notification) {
     //remove all therme
+    Utils.removeAllThemes(this);
     addClassName(StyleConstants.NOTIFICATION_ITEM.getName());
 
     setId("NOTIFICATION_" + notification.getId());
@@ -61,9 +63,6 @@ public class NotificationItem extends VHorizontalLayout{
 
     final VDiv notificationCardContent = new VDiv();
     notificationCardContent.addClassName(StyleConstants.NOTIFICATION_ITEM_CONTENT.getName());
-
-
-
 
     notificationCardContent.add(new Paragraph(notification.getTitle()), new Span(notification.getMessage()), new Paragraph(notification.getCreationDateTime().toString()));
     add(notificationCardContent, closeButton);

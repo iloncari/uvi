@@ -63,6 +63,8 @@ import hr.tvz.vi.util.Utils;
 @CssImport(value = "./styles/cusrom-multiselect-combo-box-styles.css", themeFor = "multiselect-combo-box")
 @CssImport(value = "./styles/custom-button-style.css", themeFor = "vaadin-button")
 @CssImport(value = "./styles/custom-vaadin-grid-styles.css", themeFor = "vaadin-grid")
+@CssImport(value = "./styles/custom-dialog-style.css", themeFor = "vaadin-dialog-overlay")
+@CssImport(value = "./styles/custom-menu-bar-styles.css", themeFor = "vaadin-menu-bar")
 @CssImport(value = "./styles/custom-multiselect-combobox-input-styles.css", themeFor = "multiselect-combo-box-input")
 @Push
 @Slf4j

@@ -53,7 +53,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 1:50:34 PM Aug 11, 2021
  */
-@Slf4j
 @Route(value = Routes.MEMBERS, layout = MainAppLayout.class)
 public class MembersView extends AbstractGridView<Person> implements HasDynamicTitle{
 
@@ -257,9 +256,11 @@ public class MembersView extends AbstractGridView<Person> implements HasDynamicT
       checkButton.setEnabled(true);
     });
     final VButton closeButton = new VButton(getTranslation("button.close")).withClickListener(e -> dialog.close());
+    closeButton.getElement().getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_RED);
+    checkButton.getElement().getThemeList().add(ThemeAttribute.BUTTON_BLUE);
     final VHorizontalLayout buttonsLayout = new VHorizontalLayout(checkButton, closeButton);
     dialogLayout.add(idField, buttonsLayout);
-
+    
     dialog.add(dialogLayout);
     dialog.open();
   }
@@ -319,6 +320,8 @@ public class MembersView extends AbstractGridView<Person> implements HasDynamicT
     });
 
     final VButton closeButton = new VButton(getTranslation("button.close")).withClickListener(e -> dialog.close());
+    closeButton.getElement().getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_RED);
+    checkButton.getElement().getThemeList().add(ThemeAttribute.BUTTON_BLUE);
     final VHorizontalLayout buttonsLayout = new VHorizontalLayout(checkButton, closeButton);
     dialogLayout.add(idField, buttonsLayout);
 

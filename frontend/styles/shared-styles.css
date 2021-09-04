@@ -153,6 +153,8 @@
 	margin-left: 15px;
 }
 
+
+/*buttons*/
 [theme~="purple"]:hover {
 	background-color: #e1e1f7;
 }
@@ -212,7 +214,7 @@
 	color:red;
 }
 
-
+/*error*/
 .error-content {
 	align-items:center;
 	width:50%;
@@ -232,6 +234,169 @@
 .error-content vaadin-button{
 	margin-top:15px;
 }
+/*search*/
+[theme~="search-table-block"] {
+	flex-direction: column-reverse;
+}
+
+[theme~="search-block"] {
+	justify-content: initial;
+	margin-bottom: 25px;
+}
 
 
+
+[theme~="search-block"] {
+	width: 100%;
+}
+
+[theme~="search-block"] paper-menu-button {
+	padding: 0;
+}
+
+[theme~="search-block"] paper-menu-button > vaadin-button {
+	min-height: 24px;
+	height: 100%;
+	margin-left: 10px;
+}
+
+[theme~="search-field"] {
+	max-width: 380px;
+	width: 100%;
+	margin-left: 15px;
+	padding: 0;
+}
+
+.popup-form{
+	margin:0;
+}
+
+.popup-form vaadin-vertical-layout{
+	paddng-left:10px;
+}
+
+[theme="popup-header"] {
+	background-color: #0078c0;
+	padding: 20px 15px;
+	width:100%;
+}
+
+[theme="popup-header"] span {
+	color: var(--docdocc-color-white);
+	font-weight: var(--docdoc-font-weight-semibold);
+}
+
+[theme="search-tags-block"]{
+	width:100%;
+	flex-wrap:wrap;
+	justify-content:start;
+}
 /*app menu top*/
+
+/*notificaion*/
+.notification-title {
+	background-color: #0078c0;
+    padding: 20px 15px;
+}
+
+.notification-title p {
+	margin: 0;
+    color: var(--docdocc-color-white);
+    font-weight: var(--docdoc-font-weight-semibold);
+}
+
+
+
+.notification-item {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  transition: background-color .3s;
+}
+
+.notification-item:hover {
+  background-color: var(--docdocc-color-pattens-blue);
+}
+
+.notification-item-content {
+	width: 100%;
+	margin-right: 10px;	
+	cursor: pointer;
+}
+
+.notification-item-content p:first-child {
+	color: #4c4c4c;
+	font-weight: var(--docdoc-font-weight-semibold);
+	margin: 0;
+	line-height: 1;
+}
+
+.notification-item-content span {
+	color: #707070;
+	font-size: 14px;
+	line-height: 1;
+}
+
+.notification-item-content p:last-child {
+	color: #707070;
+	font-size: 12px;
+	margin: 0;
+	line-height: 1;
+}
+
+.notification-item vaadin-button {
+	align-self: center;
+	opacity: 0;
+	transition: opacity .3s;
+}
+
+.notification-item:hover vaadin-button {
+	opacity: .3;
+}
+
+.notification-item vaadin-button:hover {
+	opacity: 1;
+}
+
+.notification-items {
+	max-height: 500px;
+	overflow-y: scroll;
+}
+
+.notification-item::before {
+	content: "";
+	display: block;
+	background-image: url("/img/icon-tasks.svg");
+	background-position: center;
+	background-repeat: no-repeat;
+	width: 24px;
+	height: 24px;
+	margin-right: 10px;
+    margin-top: 0px;
+}
+
+.vaadin-menu-list-box > vaadin-button {
+	margin-top: 20px;
+    margin-left: 15px;
+    margin-right: 15px;
+    width: 250px;
+    margin-bottom: 20px;
+}
+
+/*Header*/
+
+.sidebar-header vaadin-menu-bar {
+	padding-right: 10px;
+}
+
+vaadin-context-menu-item[theme="header-items"] img {
+	width: 24px;
+	height: 24px;
+	vertical-align: middle;
+}
+
+[theme="button-icon"] img {
+	width: 24px;
+	height: 24px;
+}
+
+

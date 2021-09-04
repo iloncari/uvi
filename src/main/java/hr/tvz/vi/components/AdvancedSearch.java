@@ -28,6 +28,7 @@ import org.vaadin.firitin.components.datepicker.VDatePicker;
 import org.vaadin.firitin.components.html.VDiv;
 import org.vaadin.firitin.components.html.VSpan;
 import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
+import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.components.select.VSelect;
 import org.vaadin.firitin.components.textfield.VNumberField;
 import org.vaadin.firitin.components.textfield.VTextField;
@@ -38,6 +39,7 @@ import com.github.appreciated.papermenubutton.VerticalAlignment;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.router.QueryParameters;
 
@@ -49,6 +51,7 @@ import hr.tvz.vi.orm.Report;
 import hr.tvz.vi.orm.Vechile;
 import hr.tvz.vi.service.AddressService;
 import hr.tvz.vi.service.OrganizationService;
+import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.util.Constants.EventActivity;
 import hr.tvz.vi.util.Constants.EventType;
 import hr.tvz.vi.util.Constants.Gender;
@@ -56,6 +59,7 @@ import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Professions;
 import hr.tvz.vi.util.Constants.ReportStatus;
 import hr.tvz.vi.util.Constants.Routes;
+import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.util.Constants.VechileCondition;
 import hr.tvz.vi.util.Constants.VechileType;
@@ -108,7 +112,7 @@ public class AdvancedSearch<T> extends VDiv {
    *
    * @return the paper menu button
    */
-  public PaperMenuButton 9() {
+  public PaperMenuButton buildAdvancedSearch() {
     final VButton triggerButton = new VButton(getTranslation("button.advancedSearch"));
     triggerButton.addThemeName(ThemeAttribute.BUTTON_BLUE);
     filterPopup = new PaperMenuButton(triggerButton, buildFilterForm());
@@ -125,8 +129,16 @@ public class AdvancedSearch<T> extends VDiv {
    * @return the component
    */
   private Component buildFilterForm() {
+    VVerticalLayout layout = new VVerticalLayout();
+    Utils.removeAllThemes(layout);
+    layout.getThemeList().add(ThemeAttribute.PADDING);
     CustomFormLayout<T> formLayout = new CustomFormLayout<T>(null, null);
-    formLayout.setFormTitle("advancedSearch.title");
+    layout.addClassName(StyleConstants.POPUP_FORM.getName());
+   layout.setWidth("470px");
+    VDiv headerDiv = new VDiv();
+    headerDiv.add(new VSpan(getTranslation("advancedSearch.title")));
+    headerDiv.getElement().getThemeList().add(ThemeAttribute.POPUP_HEADER);
+    layout.add(headerDiv);
     if(StringUtils.equals(parentViewRoute, Routes.MEMBERS)) {
       initMembersFormFields(formLayout);
     }else if(StringUtils.equals(parentViewRoute, Routes.VECHILES)) {
@@ -134,7 +146,8 @@ public class AdvancedSearch<T> extends VDiv {
     }else if(StringUtils.equals(parentViewRoute, Routes.REPORTS)) {
       initReportFormFields(formLayout);
     }
-    return formLayout;
+    layout.add(formLayout);
+    return layout;
   }
 
   /**
@@ -153,7 +166,6 @@ public class AdvancedSearch<T> extends VDiv {
       LocalDate date = LocalDate.parse(queryParams.getOrDefault("eventDate", Arrays.asList(StringUtils.EMPTY)).get(0), formatter);
       eventDate.setValue(date);
     }catch (DateTimeParseException e) {
-      log.info("parse e" + e);
       eventDate.setValue(null);
     }
     formLayout.addFormItem(eventDate, "reportsView.reportsGrid.eventDateTime");
@@ -161,10 +173,16 @@ public class AdvancedSearch<T> extends VDiv {
     MultiselectComboBox<EventType> eventType = new MultiselectComboBox<EventType>();
     eventType.setItemLabelGenerator(c -> getTranslation(c.getEventTypeTranslationKey()));
     eventType.setItems(Arrays.asList(EventType.values()));
+    eventType.getElement().getThemeList().add(ThemeAttribute.DROPDOWN_WHITE);
+    eventType.setPlaceholder(getTranslation("placeholder.combobox.selected", 0));
+    eventType.addValueChangeListener(e -> e.getSource().setPlaceholder(getTranslation("placeholder.combobox.selected", e.getValue().size())));
     eventType.setValue(queryParams.getOrDefault(Report.Fields.eventType, Arrays.asList(StringUtils.EMPTY)).stream().map(c -> EventType.getEventType(c)).filter(Objects::nonNull).collect(Collectors.toSet()));
     formLayout.addFormItem(eventType, "vechileForm.field.condition");
     
     MultiselectComboBox<ReportStatus> status = new MultiselectComboBox<ReportStatus>();
+    status.getElement().getThemeList().add(ThemeAttribute.DROPDOWN_WHITE);
+    status.setPlaceholder(getTranslation("placeholder.combobox.selected", 0));
+    status.addValueChangeListener(e -> e.getSource().setPlaceholder(getTranslation("placeholder.combobox.selected", e.getValue().size())));
     status.setItemLabelGenerator(c -> getTranslation(c.getReportStatusTranslationKey()));
     status.setItems(Arrays.asList(ReportStatus.values()));
     status.setValue(queryParams.getOrDefault(Report.Fields.status, Arrays.asList(StringUtils.EMPTY)).stream().map(c -> ReportStatus.getReportStatus(c)).filter(Objects::nonNull).collect(Collectors.toSet()));
@@ -182,7 +200,7 @@ public class AdvancedSearch<T> extends VDiv {
     formLayout.addFormItem(city, "reportEventView.form.city");
     String cityName = queryParams.getOrDefault("eventCity", Arrays.asList(StringUtils.EMPTY)).get(0);
     if(StringUtils.isNotBlank(cityName)) {
-      Optional<City> cityOpt = addressService.getAllCities().stream().filter(c -> c.getName().equals(cityName)).findFirst();
+      Optional<City> cityOpt = addressService.getAllCities().stream().filter(c -> cityName.equals(c.getName())).findFirst();
       if(cityOpt.isPresent()) {
         county.setValue(cityOpt.get().getCounty());
         city.setValue(cityOpt.get());
@@ -190,6 +208,9 @@ public class AdvancedSearch<T> extends VDiv {
     }
     
     MultiselectComboBox<Organization> eventOrganizations = new MultiselectComboBox<Organization>();
+    eventOrganizations.getElement().getThemeList().add(ThemeAttribute.DROPDOWN_WHITE);
+    eventOrganizations.setPlaceholder(getTranslation("placeholder.combobox.selected", 0));
+    eventOrganizations.addValueChangeListener(e -> e.getSource().setPlaceholder(getTranslation("placeholder.combobox.selected", e.getValue().size())));
     eventOrganizations.setItemLabelGenerator(o -> o.getName());
     List<Organization> organizations = organizationService.getOrganizationsByLevel(OrganizationLevel.OPERATIONAL_LEVEL);
     eventOrganizations.setItems(organizations);
@@ -206,7 +227,7 @@ public class AdvancedSearch<T> extends VDiv {
     
 
     
-    formLayout.addButton("advancedSearch.button.filter", e -> {
+    VButton filterButton = formLayout.addButton("advancedSearch.button.filter", e -> {
       setStringParamValue(Report.Fields.identificationNumber, identificationNumber.getValue());
       setStringParamValue("eventDate", eventDate.getValue() != null ? eventDate.getValue().format(formatter) : null);
       setStringParamValue(Report.Fields.reporter, reporter.getValue());
@@ -233,7 +254,7 @@ public class AdvancedSearch<T> extends VDiv {
       
       applyFilter();
     });
-    
+    filterButton.getElement().getThemeList().add(ThemeAttribute.BUTTON_BLUE);
   }
 
   /**
@@ -259,6 +280,9 @@ public class AdvancedSearch<T> extends VDiv {
     formLayout.addFormItem(licencePlateNumber, "vechileForm.field.licencePlateNumber");
     
     MultiselectComboBox<VechileCondition> condition = new MultiselectComboBox<VechileCondition>();
+    condition.getElement().getThemeList().add(ThemeAttribute.DROPDOWN_WHITE);
+    condition.setPlaceholder(getTranslation("placeholder.combobox.selected", 0));
+    condition.addValueChangeListener(e -> e.getSource().setPlaceholder(getTranslation("placeholder.combobox.selected", e.getValue().size())));
     condition.setItemLabelGenerator(c -> getTranslation(c.getLabelKey()));
     condition.setItems(Arrays.asList(VechileCondition.values()));
     condition.setValue(queryParams.getOrDefault(Vechile.Fields.condition, Arrays.asList(StringUtils.EMPTY)).stream().map(c -> VechileCondition.getVechileCondition(c)).filter(Objects::nonNull).collect(Collectors.toSet()));
@@ -266,12 +290,15 @@ public class AdvancedSearch<T> extends VDiv {
 
     
     MultiselectComboBox<VechileType> vechileType = new MultiselectComboBox<VechileType>();
+    vechileType.getElement().getThemeList().add(ThemeAttribute.DROPDOWN_WHITE);
+    vechileType.setPlaceholder(getTranslation("placeholder.combobox.selected", 0));
+    vechileType.addValueChangeListener(e -> e.getSource().setPlaceholder(getTranslation("placeholder.combobox.selected", e.getValue().size())));
     vechileType.setItemLabelGenerator(c -> getTranslation(c.getLabelKey()));
     vechileType.setItems(Arrays.asList(VechileType.values()));
     vechileType.setValue(queryParams.getOrDefault(Vechile.Fields.type, Arrays.asList(StringUtils.EMPTY)).stream().map(c -> VechileType.getVechileType(c)).filter(Objects::nonNull).collect(Collectors.toSet()));
     formLayout.addFormItem(vechileType, "vechileForm.field.type");
     
-    formLayout.addButton("advancedSearch.button.filter", e -> {
+    VButton filterButton = formLayout.addButton("advancedSearch.button.filter", e -> {
       setStringParamValue(Vechile.Fields.make, make.getValue());
       setStringParamValue(Vechile.Fields.model, model.getValue());
       setStringParamValue(Vechile.Fields.vechileNumber,vechileNumber.getValue());
@@ -289,6 +316,7 @@ public class AdvancedSearch<T> extends VDiv {
       }
       applyFilter();
     });
+    filterButton.getElement().getThemeList().add(ThemeAttribute.BUTTON_BLUE);
   }
 
   /**
@@ -330,6 +358,9 @@ public class AdvancedSearch<T> extends VDiv {
     formLayout.addTwoColumnItemsLayout(minbirthYear, maxBirthYear);
     
     MultiselectComboBox<Gender> gender = new MultiselectComboBox<Gender>();
+    gender.getElement().getThemeList().add(ThemeAttribute.DROPDOWN_WHITE);
+    gender.setPlaceholder(getTranslation("placeholder.combobox.selected", 0));
+    gender.addValueChangeListener(e -> e.getSource().setPlaceholder(getTranslation("placeholder.combobox.selected", e.getValue().size())));
     gender.setItemLabelGenerator(g -> getTranslation(g.getGenderTranslationKey()));
     gender.setItems(Arrays.asList(Gender.values()));
     gender.setValue(queryParams.getOrDefault(Person.Fields.gender, Arrays.asList(StringUtils.EMPTY)).stream().map(g -> Gender.getGender(g)).filter(Objects::nonNull).collect(Collectors.toSet()));
@@ -337,12 +368,15 @@ public class AdvancedSearch<T> extends VDiv {
 
     
     MultiselectComboBox<Professions> profession = new MultiselectComboBox<Professions>();
+    profession.getElement().getThemeList().add(ThemeAttribute.DROPDOWN_WHITE);
+    profession.setPlaceholder(getTranslation("placeholder.combobox.selected", 0));
+    profession.addValueChangeListener(e -> e.getSource().setPlaceholder(getTranslation("placeholder.combobox.selected", e.getValue().size())));
     profession.setItemLabelGenerator(p -> getTranslation(p.getProfessionTranslationKey()));
     profession.setItems(Arrays.asList(Professions.values()));
     profession.setValue(queryParams.getOrDefault(Person.Fields.profession, Arrays.asList(StringUtils.EMPTY)).stream().map(p -> Professions.getProfession(p)).filter(Objects::nonNull).collect(Collectors.toSet()));
     formLayout.addFormItem(profession, "memberForm.field.profession");
     
-    formLayout.addButton("advancedSearch.button.filter", e -> {
+    VButton filterButton = formLayout.addButton("advancedSearch.button.filter", e -> {
       setStringParamValue(Person.Fields.name, name.getValue());
       setStringParamValue(Person.Fields.lastname, lastname.getValue());
       setStringParamValue(Person.Fields.identificationNumber, identificationNumber.getValue());
@@ -362,6 +396,7 @@ public class AdvancedSearch<T> extends VDiv {
       }
       applyFilter();
     });
+    filterButton.getElement().getThemeList().add(ThemeAttribute.BUTTON_BLUE);
   }
 
   /**

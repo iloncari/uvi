@@ -17,6 +17,7 @@ import hr.tvz.vi.service.AbstractService;
 import hr.tvz.vi.service.VechileService;
 import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.StyleConstants;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.util.Constants.VechileCondition;
 import hr.tvz.vi.util.Constants.VechileType;
 import hr.tvz.vi.util.Utils;
@@ -112,12 +113,13 @@ public class VechileForm extends AbstractForm<Vechile> {
     formLayout.addTwoColumnItemsLayout(licencePlateNumberField, registrationValidUntil);
 
     final VButton saveButton = new VButton(getTranslation("button.save"));
+    saveButton.getElement().getThemeList().add(ThemeAttribute.BUTTON_BLUE);
     saveButton.addClickListener(e -> {
       if (formLayout.writeBean()) {
         formEntity.setOrganization(currentUser.getActiveOrganization().getOrganization());
         formEntity.setActive(true);
         ((VechileService) entityService).saveOrUpdateVechile(formEntity);
-        Utils.showSuccessNotification(2000, Position.TOP_CENTER, "memberForm.notification.memberSaved");
+        Utils.showSuccessNotification(2000, Position.TOP_CENTER, "vechileForm.notification.saved");
         ChangeBroadcaster.firePushEvent(new VechileChangedChangedEvent(this, formEntity, navigateToParentsView ? EventAction.ADDED : EventAction.MODIFIED));
         if (navigateToParentsView) {
           UI.getCurrent().navigate(VechilesView.class);

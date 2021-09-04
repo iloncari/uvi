@@ -106,13 +106,30 @@
 	content: none;
 }
 
+:host([theme="button-icon"]) {
+	width: auto;
+	min-width: auto;
+	height: auto;
+	padding: 0;
+	margin: 0;
+	border-radius: 0;
+	border: none;
+	background-color: transparent;
+	cursor: pointer;
+}
+
+:host([theme="button-icon"])::after,
+:host([theme="button-icon"])::before {
+	content: none;
+}
+
 /*Tags*/
 :host([theme="search-tags"]) {
 	width: auto;
 	min-width: auto;
 	height: auto;
-	padding: 2px 0px 2px 8px;
-	margin: 0 5px 25px 0;
+	padding: 2px 8px 2px 8px;
+	margin: 0 5px 5px 0;
 	font-weight: var(--docdoc-font-weight-semibold);
 	font-size: 12px;
 	line-height: 1.25;

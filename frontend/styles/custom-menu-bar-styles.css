@@ -1,0 +1,106 @@
+[part="menu-bar-button"] .notification-number {
+  background-color: var(--docdocc-notification-background-color-vivid-violet);
+  color: var(--docdocc-notification-color-white) !important;
+  line-height: 24px;
+  display: inline-block;
+  border-radius: 24px;
+  padding: 0 8px;
+  height: 24px;
+  position: absolute;
+  top: 0;
+  right: 10px;
+  font-size: 14px;
+  font-weight: 800;
+  margin: 0;
+}
+
+
+:host([theme="header-items"]) [part="container"] {
+	height: 100%;
+	align-items: center;
+}
+
+/*BEZ*/
+:host([theme="header-items"]) [part="overflow-button"] {
+	display: none;
+}
+
+:host([theme="header-items"]) [part="menu-bar-button"] {
+	margin: 0;
+    padding: 0 20px;
+    width: auto;
+    min-width: auto;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+
+:host([theme="header-items"]) [part="menu-bar-button"]:hover:before {
+    content: none;
+}
+
+/*BEZ*/
+:host([theme="header-items"]) [part="menu-bar-button"] img {
+    transition: opacity .3s;
+}
+:host([theme="header-items"]) [part="menu-bar-button"] span {
+    transition: color .3s, opacity .3s;
+}
+
+:host([theme="header-items"]) [part="menu-bar-button"]:hover span.notification-content img.notification-icon {
+    opacity: .6;
+}
+
+:host([theme="header-items"]) [part="menu-bar-button"]:hover img:not(.notification-icon) {
+    opacity: .6;
+}
+
+:host([theme="header-items"]) [part="menu-bar-button"]:hover span:not(.notification-content) .notification-number {
+    color: var(--docdocc-color-san-marino);
+    opacity: .6;
+}
+
+:host([theme="header-items"]) [part="menu-bar-button"]:hover span:not(.notification-content):not(.notification-number) {
+    color: var(--docdocc-color-san-marino);
+    opacity: .6;
+}
+
+.notification-content {
+	width: 70px;
+	margin: 0;
+}
+
+
+.notification-icon {
+	width: 30px;
+	height: 30px;
+	margin: 0 20px 0 0;
+}
+
+.organization-icon {
+	width: 30px;
+	height: 30px;
+	margin: 0;
+}
+
+.logout-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  margin: 0;
+}
+
+vaadin-context-menu-item {
+	margin: 0;
+	padding: 0;
+}
+
+vaadin-context-menu-item span {
+	margin-left: 10px;
+	font-weight: 600;
+}
+
+vaadin-context-menu-item vaadin-horizontal-layout {
+	display: flex;
+	align-items: center;
+}
