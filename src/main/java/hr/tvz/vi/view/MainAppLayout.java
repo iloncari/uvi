@@ -25,7 +25,6 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.page.Push;
 
@@ -47,7 +46,6 @@ import hr.tvz.vi.util.Constants.ImageConstants;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.SubscriberScope;
-import lombok.extern.slf4j.Slf4j;
 import hr.tvz.vi.util.Utils;
 
 /**
@@ -67,7 +65,6 @@ import hr.tvz.vi.util.Utils;
 @CssImport(value = "./styles/custom-menu-bar-styles.css", themeFor = "vaadin-menu-bar")
 @CssImport(value = "./styles/custom-multiselect-combobox-input-styles.css", themeFor = "multiselect-combo-box-input")
 @Push
-@Slf4j
 @EventSubscriber(scope = SubscriberScope.ALL)
 public class MainAppLayout extends AppLayoutRouterLayout<LeftLayouts.LeftResponsiveHybrid> {
 

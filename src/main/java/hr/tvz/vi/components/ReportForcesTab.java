@@ -4,36 +4,23 @@
  */
 package hr.tvz.vi.components;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.FormatStyle;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import javax.swing.Renderer;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.format.datetime.DateFormatter;
 import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.datetimepicker.VDateTimePicker;
 import org.vaadin.firitin.components.dialog.VDialog;
 import org.vaadin.firitin.components.grid.VGrid;
-import org.vaadin.firitin.components.html.VDiv;
 import org.vaadin.firitin.components.html.VH3;
 import org.vaadin.firitin.components.html.VH5;
 import org.vaadin.firitin.components.html.VParagaph;
@@ -41,22 +28,15 @@ import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.components.select.VSelect;
 import org.vaadin.firitin.components.textfield.VNumberField;
-import org.vaadin.firitin.components.textfield.VTextField;
 
 import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.router.BeforeLeaveEvent;
-import com.vaadin.flow.router.BeforeLeaveObserver;
 
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.converter.DoubleToIntegerConverter;
@@ -69,9 +49,8 @@ import hr.tvz.vi.orm.Vechile;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.ReportService;
 import hr.tvz.vi.service.VechileService;
-import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
-import lombok.extern.slf4j.Slf4j;
+import hr.tvz.vi.util.Utils;
 
 /**
  * The Class ReportForcesTab.
@@ -79,9 +58,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 9:56:06 PM Aug 22, 2021
  */
-
-/** The Constant log. */
-@Slf4j
 public class ReportForcesTab extends VVerticalLayout{
   
   /** The report. */
@@ -334,6 +310,7 @@ public class ReportForcesTab extends VVerticalLayout{
       VSelect<Vechile> personVechileSelect = new VSelect<Vechile>().withReadOnly(!editRight);
       personVechileSelect.setItems(eventVechiles.stream().filter(eventVec -> ObjectUtils.allNotNull(eventVec.getBaseDepartureDateTime(), eventVec.getFieldArrivedDateTime(), eventVec.getFieldDepartureDateTime(), eventVec.getBaseArrivedDateTime())).map(EventOrganizationVechile::getVechile).collect(Collectors.toList()));
       personVechileSelect.setValue(eventPerson.getVechile());
+      personVechileSelect.setItemLabelGenerator(v -> v.getMake() + " "  + v.getModel());
       personVechileSelect.addValueChangeListener(vechileSelected ->{ 
         eventPerson.setVechile(vechileSelected.getValue());
         eventVechiles.stream().filter(eventVechile -> eventVechile.getVechile().getId().equals(eventPerson.getVechile().getId())).findFirst().ifPresent(eventVechile -> {

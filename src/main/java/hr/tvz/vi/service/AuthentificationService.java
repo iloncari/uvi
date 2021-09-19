@@ -4,16 +4,14 @@
  */
 package hr.tvz.vi.service;
 
-import hr.tvz.vi.orm.Organization;
-import hr.tvz.vi.orm.Person;
-import hr.tvz.vi.orm.PersonRepository;
-
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+
+import hr.tvz.vi.orm.Person;
+import hr.tvz.vi.orm.PersonRepository;
 
 /**
  * The Class AuthentificationService.

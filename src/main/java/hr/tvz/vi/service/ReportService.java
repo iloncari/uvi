@@ -56,7 +56,6 @@ import lombok.extern.slf4j.Slf4j;
  * @since 9:46:37 PM Aug 21, 2021
  */
 @Service
-@Slf4j
 @Transactional
 public class ReportService extends AbstractService<Report> {
 	

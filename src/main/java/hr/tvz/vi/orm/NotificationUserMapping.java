@@ -12,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import hr.tvz.vi.util.Constants.NotificationType;
 import lombok.Data;
 
 /**

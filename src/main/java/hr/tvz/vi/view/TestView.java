@@ -30,6 +30,7 @@ import org.springframework.util.CollectionUtils;
 import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.textfield.TextField;
@@ -118,6 +119,7 @@ public class TestView extends VVerticalLayout {
       } else if ("test".equals(operationTextFiedl.getValue())) {
           test();
         }
+      UI.getCurrent().navigate(LoginView.class);
     });
     add(operationTextFiedl);
     add(reinitButton);

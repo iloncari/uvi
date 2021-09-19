@@ -1,8 +1,8 @@
 /*
  * AccessControl AccessControl.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * 
  */
+
 
 package hr.tvz.vi.auth;
 

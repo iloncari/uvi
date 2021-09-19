@@ -4,14 +4,14 @@
 
 table thead th {
 	text-transform: uppercase;
-	color: var(--docdocc-table-color-mine-shaft);
+	color: var(--uvi-table-color-mine-shaft);
 }
 
 /*
 CLAASS EXPDATE ZA REGI EX CLASSLAVELGEN
 td.expiry-date {
-	color: var(--docdocc-color-monza);
-	font-weight: var(--docdoc-font-weight-semibold);
+	color: var(--uvi-color-monza);
+	font-weight: var(--uvi-font-weight-semibold);
 }
 */
 
@@ -19,50 +19,50 @@ td.expiry-date {
 ADD SORT
 th[aria-sort="ascending"],
 th[aria-sort="descending"] {
-	color: var(--docdocc-table-color-san-marino);
+	color: var(--uvi-table-color-san-marino);
 }
 */
 
 table tbody td {
 	font-size: 14px;
-	color: var(--docdocc-table-color-mine-shaft-v2);
+	color: var(--uvi-table-color-mine-shaft-v2);
 	transition: background-color .3s, color .3s, font-weight .3s;
 }
 
 
 [part~="header-cell"] ::slotted(vaadin-grid-cell-content) {
-	font-weight: var(--docdoc-font-weight-bold);
+	font-weight: var(--uvi-font-weight-bold);
 	font-size: 12px;
 }
 
 
 /*MOZDA NE TREBA, STRIPER RADI I BEZ TOGA*/
 [part~="cell"] {
-	background-color: var(--docdocc-table-color-selago);
+	background-color: var(--uvi-table-color-selago);
 	min-height: 48px !important;
 }
 
 :host(:not([theme~="no-row-borders"])) [part="row"][first] [part~="cell"]:not([part~="details-cell"]),
 :host([theme~="row-stripes"]) [part~="row"]:not([odd]) [part~="body-cell"] {
-	background-color: var(--docdocc-table-color-white);
+	background-color: var(--uvi-table-color-white);
 	background-image: none;
 }
 
 :host(:not([theme~="no-row-borders"])) [part~="cell"]:not([part~="details-cell"]) {
-	border-top: 1px solid var(--docdocc-table-color-alto);
+	border-top: 1px solid var(--uvi-table-color-alto);
 }
 
 :host(:not([theme~="no-row-borders"])) [part="row"]:last-child [part~="header-cell"] {
-	border-bottom: 1px solid var(--docdocc-table-color-alto);
+	border-bottom: 1px solid var(--uvi-table-color-alto);
 }
 
 tbody tr:hover td:not(.expiry-date) {
-	background-color: var(--docdocc-table-color-selago-v2-hover) !important;
-	color: var(--docdocc-table-color-san-marino-hover);
+	background-color: var(--uvi-table-color-selago-v2-hover) !important;
+	color: var(--uvi-table-color-san-marino-hover);
 }
 
 tbody tr:hover td.expiry-date {
-	background-color: var(--docdocc-color-pastel-pink) !important;
+	background-color: var(--uvi-color-pastel-pink) !important;
 }
 
 tr:hover td [theme="table-icon"] {
@@ -70,10 +70,10 @@ tr:hover td [theme="table-icon"] {
 }
 
 :host(:not([reordering])) [part~="row"][selected] [part~="body-cell"]:not([part~="details-cell"]) {
-	background-color: var(--docdocc-table-color-selago-v2-hover) !important;
+	background-color: var(--uvi-table-color-selago-v2-hover) !important;
 	background-image: none;
-	color: var(--docdocc-table-color-san-marino-hover);
-	font-weight: var(--docdoc-font-weight-semibold);
+	color: var(--uvi-table-color-san-marino-hover);
+	font-weight: var(--uvi-font-weight-semibold);
 }
 
 :host([theme~="wrap-cell-content"]) [part~="cell"] ::slotted(vaadin-grid-cell-content) {
@@ -100,9 +100,9 @@ tbody tr:hover td.table-icon ::slotted(vaadin-grid-cell-content){
 }
 
 :host([theme~="white"]) table tbody td {
-	background-color: var(--docdocc-table-white-to-black);
+	background-color: var(--uvi-table-white-to-black);
 }
 
 :host([theme~="white"]) table {
-	background-color: var(--docdocc-table-white-to-black);
+	background-color: var(--uvi-table-white-to-black);
 }

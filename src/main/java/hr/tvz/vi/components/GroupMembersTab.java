@@ -7,14 +7,12 @@ package hr.tvz.vi.components;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.vaadin.firitin.components.button.DeleteButton;
+import org.vaadin.firitin.components.html.VH3;
 import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import org.vaadin.firitin.components.select.VSelect;
 
 import com.google.common.eventbus.Subscribe;
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.data.provider.ListDataProvider;
 
 import hr.tvz.vi.event.ChangeBroadcaster;
@@ -26,15 +24,12 @@ import hr.tvz.vi.orm.Person;
 import hr.tvz.vi.service.NotificationService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.util.Constants.EventAction;
-import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.GroupType;
 import hr.tvz.vi.util.Constants.NotificationType;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Routes;
-import hr.tvz.vi.util.Constants.SubscriberScope;
 import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.view.AbstractGridView;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * The Class GroupMembersTab.
@@ -42,7 +37,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 11:29:55 PM Aug 27, 2021
  */
-@Slf4j
 public class GroupMembersTab extends AbstractGridView<GroupMember>{
 
   /** The Constant serialVersionUID. */
@@ -170,6 +164,7 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
    */
   @Override
   protected void initGrid() {
+      add(new VH3(getViewTitle()));
       getGrid().removeAllColumns();
       getGrid().addColumn(groupMember -> groupMember.getPerson().getIdentificationNumber()).setHeader(getTranslation("groupMembersTab.grid.personIdentificationNumber"));
       getGrid().addColumn(groupMember -> groupMember.getPerson().getName() +" " + groupMember.getPerson().getLastname()).setHeader(getTranslation("groupMembersTab.grid.perosonNameLastname"));

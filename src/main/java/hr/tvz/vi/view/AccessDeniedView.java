@@ -13,7 +13,6 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.ErrorParameter;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.HasErrorParameter;
-import com.vaadin.flow.router.Route;
 
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.StyleConstants;
@@ -25,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
 import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.html.VH3;
-import org.vaadin.firitin.components.html.VParagaph;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 
 /**

@@ -191,7 +191,7 @@
 }
 
 [theme~="light-blue"]:hover {
-	background-color: var(--docdocc-color-pattens-blue);
+	background-color: var(--uvi-color-pattens-blue);
 }
 
 [theme~="light-blue"]:hover .widget-title{
@@ -282,8 +282,8 @@
 }
 
 [theme="popup-header"] span {
-	color: var(--docdocc-color-white);
-	font-weight: var(--docdoc-font-weight-semibold);
+	color: var(--uvi-color-white);
+	font-weight: var(--uvi-font-weight-semibold);
 }
 
 [theme="search-tags-block"]{
@@ -301,8 +301,8 @@
 
 .notification-title p {
 	margin: 0;
-    color: var(--docdocc-color-white);
-    font-weight: var(--docdoc-font-weight-semibold);
+    color: var(--uvi-color-white);
+    font-weight: var(--uvi-font-weight-semibold);
 }
 
 
@@ -314,7 +314,7 @@
 }
 
 .notification-item:hover {
-  background-color: var(--docdocc-color-pattens-blue);
+  background-color: var(--uvi-color-pattens-blue);
 }
 
 .notification-item-content {
@@ -325,7 +325,7 @@
 
 .notification-item-content p:first-child {
 	color: #4c4c4c;
-	font-weight: var(--docdoc-font-weight-semibold);
+	font-weight: var(--uvi-font-weight-semibold);
 	margin: 0;
 	line-height: 1;
 }

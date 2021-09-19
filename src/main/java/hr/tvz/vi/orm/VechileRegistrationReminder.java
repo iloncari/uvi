@@ -25,11 +25,14 @@ import lombok.Data;
 @Data
 public class VechileRegistrationReminder {
 
+  /** The id. */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   
+  /** The checked date. */
   private LocalDate checkedDate;
   
+  /** The organization id. */
   private Long organizationId;
 }

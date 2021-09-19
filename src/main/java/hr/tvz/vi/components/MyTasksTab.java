@@ -7,37 +7,25 @@ package hr.tvz.vi.components;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.vaadin.firitin.components.button.VButton;
-import org.vaadin.firitin.components.html.VSpan;
 import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.Location;
-import com.vaadin.flow.router.OptionalParameter;
-import com.vaadin.flow.router.QueryParameters;
 
-import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.event.GroupChangeEvent;
 import hr.tvz.vi.event.TaskChangeEvent;
-import hr.tvz.vi.orm.GroupMember;
 import hr.tvz.vi.orm.Task;
 import hr.tvz.vi.service.ReportService;
 import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.Routes;
-import hr.tvz.vi.util.Constants.TaskType;
 import hr.tvz.vi.util.Constants.ThemeAttribute;
-import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.view.AbstractGridView;
 import hr.tvz.vi.view.ReportView;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * The Class MyTasksTab.
@@ -45,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 12:45:31 AM Aug 28, 2021
  */
-@Slf4j
 public class MyTasksTab extends AbstractGridView<Task>{
 
   /** The Constant serialVersionUID. */
@@ -170,7 +157,6 @@ public class MyTasksTab extends AbstractGridView<Task>{
       .withLocale(getLocale()).format(task.getCreationDateTime())).setHeader(getTranslation("myTasksTab.grid.creationDate"));
     getGrid().addColumn(task -> task.getName()).setHeader(getTranslation("myTasksTab.grid.name"));
     getGrid().addComponentColumn(task -> {
-        @SuppressWarnings("unchecked")
         VButton toGroup = new VButton(getTranslation("myTasksTab.grid.button.returnToGrup")).withClickListener(e -> {
           task.setAssignee(null);
           reportService.saveReportTask(task);

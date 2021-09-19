@@ -1,16 +1,20 @@
 /*
- * VechileRepository VechileRepository.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * ReportRepository ReportRepository.java.
+ * 
  */
+
 package hr.tvz.vi.orm;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import hr.tvz.vi.util.Constants.ReportStatus;
-
+/**
+ * The Interface ReportRepository.
+ *
+ * @author Igor Lončarić (iloncari2@tvz.hr)
+ * @since 6:43:48 PM Sep 19, 2021
+ */
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
 	/**

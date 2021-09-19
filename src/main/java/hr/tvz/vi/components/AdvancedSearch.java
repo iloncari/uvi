@@ -74,12 +74,12 @@ import lombok.extern.slf4j.Slf4j;
  * @param <T> the generic type
  * @since 8:20:36 PM Sep 1, 2021
  */
-@Slf4j
 public class AdvancedSearch<T> extends VDiv {
 
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = 6993798999382592250L;
   
+  /** The query params. */
   private Map<String, List<String>> queryParams;
 
   /** The parent view route. */
@@ -92,6 +92,7 @@ public class AdvancedSearch<T> extends VDiv {
   @Setter
   private AddressService addressService;
   
+  /** The organization service. */
   @Setter
   private OrganizationService organizationService;
   
@@ -134,7 +135,7 @@ public class AdvancedSearch<T> extends VDiv {
     layout.getThemeList().add(ThemeAttribute.PADDING);
     CustomFormLayout<T> formLayout = new CustomFormLayout<T>(null, null);
     layout.addClassName(StyleConstants.POPUP_FORM.getName());
-   layout.setWidth("470px");
+    layout.setWidth("470px");
     VDiv headerDiv = new VDiv();
     headerDiv.add(new VSpan(getTranslation("advancedSearch.title")));
     headerDiv.getElement().getThemeList().add(ThemeAttribute.POPUP_HEADER);

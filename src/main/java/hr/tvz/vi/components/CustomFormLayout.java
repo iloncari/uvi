@@ -40,7 +40,6 @@ import lombok.extern.slf4j.Slf4j;
  * @param <T> the generic type
  * @since 8:20:09 PM Aug 11, 2021
  */
-@Slf4j
 public class CustomFormLayout<T> extends VVerticalLayout {
 
   /** The Constant serialVersionUID. */

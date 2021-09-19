@@ -4,7 +4,6 @@
  */
 package hr.tvz.vi.components;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.math.NumberUtils;
@@ -15,22 +14,17 @@ import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.contextmenu.MenuItem;
 import com.vaadin.flow.component.contextmenu.SubMenu;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.menubar.MenuBar;
 
 import de.codecamp.vaadin.serviceref.ServiceRef;
 import hr.tvz.vi.auth.AccessControlFactory;
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.orm.Notification;
-import hr.tvz.vi.orm.Person;
-import hr.tvz.vi.orm.PersonOrganization;
 import hr.tvz.vi.service.NotificationService;
 import hr.tvz.vi.service.PersonService;
 import hr.tvz.vi.util.Constants.EventSubscriber;
@@ -38,9 +32,8 @@ import hr.tvz.vi.util.Constants.ImageConstants;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.SubscriberScope;
 import hr.tvz.vi.util.Constants.ThemeAttribute;
-import hr.tvz.vi.view.HomeView;
-import hr.tvz.vi.view.LoginView;
 import hr.tvz.vi.util.Utils;
+import hr.tvz.vi.view.LoginView;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -74,7 +67,6 @@ public class AppHeader  extends VFlexLayout {
 
   /** The notification items. */
   private VDiv notificationItems;
-
 
   /** The current user. */
   private final transient CurrentUser currentUser;
@@ -170,7 +162,6 @@ public class AppHeader  extends VFlexLayout {
     final NotificationItem notificationCard = new NotificationItem(notification);
     notificationItems.addComponentAtIndex(NumberUtils.INTEGER_ZERO, notificationCard);
     notificationCard.addClickListener(event -> {
-      log.info("click " + notification.getId());
       badgeIndicator.decrease();
       notificationService.get().markNotificationAsRead(notificationCard.getNotification().getId(), currentUser.getPerson().getId());
       if (badgeIndicator.getCount() == NumberUtils.INTEGER_ZERO) {

@@ -2,12 +2,10 @@
  * TaskChangeEvent TaskChangeEvent.java.
  * 
  */
-
 package hr.tvz.vi.event;
 
 import java.util.EventObject;
 
-import hr.tvz.vi.orm.GroupMember;
 import hr.tvz.vi.orm.Task;
 import hr.tvz.vi.util.Constants.EventAction;
 import lombok.Getter;

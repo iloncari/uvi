@@ -1,8 +1,8 @@
 /*
- * OrganizationRepository OrganizationRepository.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * PersonRepository PersonRepository.java.
+ * 
  */
+
 package hr.tvz.vi.orm;
 
 import java.util.List;
@@ -10,6 +10,12 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+/**
+ * The Interface PersonRepository.
+ *
+ * @author Igor Lončarić (iloncari2@tvz.hr)
+ * @since 6:41:32 PM Sep 19, 2021
+ */
 public interface PersonRepository extends JpaRepository<Person, Long> {
 
   /**

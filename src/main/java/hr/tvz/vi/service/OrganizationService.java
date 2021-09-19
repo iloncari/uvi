@@ -4,6 +4,21 @@
  */
 package hr.tvz.vi.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.event.PersonOrganizationChangedEvent;
 import hr.tvz.vi.orm.GroupMember;
@@ -16,32 +31,12 @@ import hr.tvz.vi.orm.PersonOrganizationRepository;
 import hr.tvz.vi.orm.PersonRepository;
 import hr.tvz.vi.util.Constants.Duty;
 import hr.tvz.vi.util.Constants.EventAction;
-import hr.tvz.vi.util.Constants.FieldType;
 import hr.tvz.vi.util.Constants.Gender;
 import hr.tvz.vi.util.Constants.GroupType;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Professions;
 import hr.tvz.vi.util.Constants.UserRole;
-import lombok.extern.slf4j.Slf4j;
 import hr.tvz.vi.util.Utils;
-
-import java.lang.reflect.Type;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * The Class OrganizationService.
@@ -49,9 +44,6 @@ import org.springframework.stereotype.Service;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 10:13:29 PM Aug 10, 2021
  */
-
-/** The Constant log. */
-@Slf4j
 @Service
 public class OrganizationService extends AbstractService<Organization> {
 

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.vaadin.firitin.components.html.VDiv;
 import org.vaadin.firitin.components.textfield.VTextField;
 
 import com.vaadin.flow.component.AttachEvent;
@@ -19,24 +18,24 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.QueryParameters;
 
-import hr.tvz.vi.util.Constants.Routes;
-import hr.tvz.vi.view.MembersView;
-import hr.tvz.vi.view.VechilesView;
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
+/**
+ * The Class SimpleSearch.
+ *
+ * @author Igor Lončarić (iloncari2@tvz.hr)
+ * @since 6:28:52 PM Sep 19, 2021
+ */
 public class SimpleSearch extends VTextField {
 
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = -3093881432813564048L;
   
+  /** The query params. */
   private Map<String, List<String>> queryParams;
 
   /** The parent view route. */
   private final String parentViewRoute;
   
-  
-
+ 
   /**
    * Instantiates a new simple search.
    *

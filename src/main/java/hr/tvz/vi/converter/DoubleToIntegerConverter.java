@@ -8,16 +8,16 @@ import com.vaadin.flow.data.binder.Result;
 import com.vaadin.flow.data.binder.ValueContext;
 import com.vaadin.flow.data.converter.Converter;
 
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * The Class DoubleToIntegerConverter.
  *
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 2:20:22 PM Aug 18, 2021
  */
-@Slf4j
 public class DoubleToIntegerConverter implements Converter<Double, Integer> {
+
+  /** The Constant serialVersionUID. */
+  private static final long serialVersionUID = 6424745157283920971L;
 
   /**
    * Convert to model.

@@ -4,31 +4,6 @@
  */
 package hr.tvz.vi.view;
 
-import com.google.common.eventbus.Subscribe;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.grid.Grid.SelectionMode;
-import com.vaadin.flow.component.notification.Notification.Position;
-import com.vaadin.flow.data.value.ValueChangeMode;
-import com.vaadin.flow.router.HasDynamicTitle;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.Location;
-import com.vaadin.flow.router.OptionalParameter;
-import com.vaadin.flow.router.QueryParameters;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLink;
-
-import hr.tvz.vi.event.ChangeBroadcaster;
-import hr.tvz.vi.event.PersonOrganizationChangedEvent;
-import hr.tvz.vi.orm.Organization;
-import hr.tvz.vi.orm.Person;
-import hr.tvz.vi.orm.PersonOrganization;
-import hr.tvz.vi.service.OrganizationService;
-import hr.tvz.vi.service.PersonService;
-import hr.tvz.vi.util.Constants.EventAction;
-import hr.tvz.vi.util.Constants.Routes;
-import hr.tvz.vi.util.Constants.ThemeAttribute;
-import hr.tvz.vi.util.Utils;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,8 +19,27 @@ import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.components.textfield.VTextField;
 
+import com.google.common.eventbus.Subscribe;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.grid.Grid.SelectionMode;
+import com.vaadin.flow.component.notification.Notification.Position;
+import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.HasDynamicTitle;
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
+
 import de.codecamp.vaadin.serviceref.ServiceRef;
-import lombok.extern.slf4j.Slf4j;
+import hr.tvz.vi.event.ChangeBroadcaster;
+import hr.tvz.vi.event.PersonOrganizationChangedEvent;
+import hr.tvz.vi.orm.Organization;
+import hr.tvz.vi.orm.Person;
+import hr.tvz.vi.orm.PersonOrganization;
+import hr.tvz.vi.service.OrganizationService;
+import hr.tvz.vi.service.PersonService;
+import hr.tvz.vi.util.Constants.EventAction;
+import hr.tvz.vi.util.Constants.Routes;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
+import hr.tvz.vi.util.Utils;
 
 /**
  * The Class MembersView.

@@ -45,7 +45,6 @@ import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.components.select.VSelect;
 
 import de.codecamp.vaadin.serviceref.ServiceRef;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * The Class MemberView.

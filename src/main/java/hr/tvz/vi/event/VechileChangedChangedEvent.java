@@ -12,7 +12,6 @@ import java.util.EventObject;
 
 import lombok.Getter;
 
-
 /**
  * The Class VechileChangedChangedEvent.
  *

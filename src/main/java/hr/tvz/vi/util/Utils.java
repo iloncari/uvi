@@ -1,9 +1,18 @@
 /*
  * Utils Utils.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * 
  */
+
 package hr.tvz.vi.util;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.vaadin.flow.component.Component;
@@ -25,23 +34,16 @@ import hr.tvz.vi.util.Constants.FieldType;
 import hr.tvz.vi.util.Constants.Searchable;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.UserRole;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
-
-import javax.persistence.OneToMany;
-
-import org.apache.commons.lang3.StringUtils;
-
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
+
+/**
+ * The Class Utils.
+ *
+ * @author Igor Lončarić (iloncari2@tvz.hr)
+ * @since 6:51:06 PM Sep 19, 2021
+ */
 @NoArgsConstructor(access = AccessLevel.PRIVATE, staticName = "of")
 public final class Utils {
   

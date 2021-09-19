@@ -24,6 +24,7 @@ import lombok.Data;
 @Table
 public class EventDescription {
   
+  /** The id. */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

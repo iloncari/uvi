@@ -31,7 +31,6 @@ import hr.tvz.vi.util.Constants.TaskType;
 import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.view.AbstractGridView;
 import hr.tvz.vi.view.ReportView;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * The Class GroupTasksTab.
@@ -39,7 +38,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 1:11:00 AM Aug 28, 2021
  */
-@Slf4j
 public class GroupTasksTab extends AbstractGridView<Task>{
   
   /** The Constant serialVersionUID. */
@@ -174,7 +172,6 @@ public class GroupTasksTab extends AbstractGridView<Task>{
     getGrid().addComponentColumn(task -> {
       if( (TaskType.PREPARATION_TASK.equals(task.getType()) && preparers.stream().anyMatch(prep -> prep.equals(getCurrentUser().getPerson().getId()))) 
         || (TaskType.APPROVE_TASK.equals(task.getType()) && approvers.stream().anyMatch(app -> app.equals(getCurrentUser().getPerson().getId())))   ) {
-        @SuppressWarnings("unchecked")
         VButton assign = new VButton(getTranslation("groupTasksTab.grid.button.assign")).withClickListener(e -> {
           task.setAssignee(getCurrentUser().getPerson());
           reportService.saveReportTask(task);

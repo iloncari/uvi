@@ -4,6 +4,20 @@
  */
 package hr.tvz.vi.components;
 
+import java.util.Arrays;
+import java.util.Optional;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.vaadin.firitin.components.button.VButton;
+import org.vaadin.firitin.components.checkbox.VCheckBox;
+import org.vaadin.firitin.components.datepicker.VDatePicker;
+import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
+import org.vaadin.firitin.components.select.VSelect;
+import org.vaadin.firitin.components.textfield.VEmailField;
+import org.vaadin.firitin.components.textfield.VPasswordField;
+import org.vaadin.firitin.components.textfield.VTextField;
+
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification.Position;
@@ -24,23 +38,8 @@ import hr.tvz.vi.util.Constants.Gender;
 import hr.tvz.vi.util.Constants.Professions;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.ThemeAttribute;
-import hr.tvz.vi.util.Constants.UserRole;
 import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.view.MembersView;
-
-import java.util.Arrays;
-import java.util.Optional;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.vaadin.firitin.components.button.VButton;
-import org.vaadin.firitin.components.checkbox.VCheckBox;
-import org.vaadin.firitin.components.datepicker.VDatePicker;
-import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
-import org.vaadin.firitin.components.select.VSelect;
-import org.vaadin.firitin.components.textfield.VEmailField;
-import org.vaadin.firitin.components.textfield.VPasswordField;
-import org.vaadin.firitin.components.textfield.VTextField;
 
 /**
  * The Class MemberForm.
@@ -57,7 +56,7 @@ public class MemberForm extends AbstractForm<Person> {
   private VSelect<County> county;
 
    /** The contact layout. */
-   CustomFormLayout<Person> contactLayout;
+  private CustomFormLayout<Person> contactLayout;
    
   /** The organization service. */
   private final OrganizationService organizationService;
@@ -164,7 +163,6 @@ public class MemberForm extends AbstractForm<Person> {
     	accessRight.setValue(currentPO.get().isAppRights());
     }
     }
-    //TO DO - implement this
     accessRight.setVisible(false);
     appDataLayout.addTwoColumnItemsLayout(usernameField, accessRight);
 

@@ -5,47 +5,11 @@
 
 package hr.tvz.vi.view;
 
-import com.google.common.eventbus.Subscribe;
-import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification.Position;
-import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.converter.StringToDoubleConverter;
-import com.vaadin.flow.data.provider.ListDataProvider;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
-import com.vaadin.flow.router.BeforeEvent;
-import com.vaadin.flow.router.HasDynamicTitle;
-import com.vaadin.flow.router.HasUrlParameter;
-import com.vaadin.flow.router.NotFoundException;
-import com.vaadin.flow.router.Route;
-
-import hr.tvz.vi.auth.CurrentUser;
-import hr.tvz.vi.components.CustomFormLayout;
-import hr.tvz.vi.components.VechileForm;
-import hr.tvz.vi.event.ChangeBroadcaster;
-import hr.tvz.vi.event.VechileChangedChangedEvent;
-import hr.tvz.vi.event.VechileServiceChangedChangedEvent;
-import hr.tvz.vi.orm.EventOrganizationVechile;
-import hr.tvz.vi.orm.Service;
-import hr.tvz.vi.orm.Vechile;
-import hr.tvz.vi.service.VechileService;
-import hr.tvz.vi.util.Utils;
-import hr.tvz.vi.util.Constants.EventAction;
-import hr.tvz.vi.util.Constants.EventSubscriber;
-import hr.tvz.vi.util.Constants.Routes;
-import hr.tvz.vi.util.Constants.StyleConstants;
-import hr.tvz.vi.util.Constants.SubscriberScope;
-import hr.tvz.vi.util.Constants.ThemeAttribute;
-
 import java.time.LocalDate;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.hibernate.dialect.identity.GetGeneratedKeysDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.vaadin.firitin.components.button.VButton;
@@ -58,8 +22,39 @@ import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.components.textfield.VTextArea;
 import org.vaadin.firitin.components.textfield.VTextField;
 
+import com.google.common.eventbus.Subscribe;
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.converter.StringToDoubleConverter;
+import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.router.BeforeEvent;
+import com.vaadin.flow.router.HasDynamicTitle;
+import com.vaadin.flow.router.HasUrlParameter;
+import com.vaadin.flow.router.NotFoundException;
+import com.vaadin.flow.router.Route;
+
 import de.codecamp.vaadin.serviceref.ServiceRef;
-import lombok.extern.slf4j.Slf4j;
+import hr.tvz.vi.auth.CurrentUser;
+import hr.tvz.vi.components.CustomFormLayout;
+import hr.tvz.vi.components.VechileForm;
+import hr.tvz.vi.event.ChangeBroadcaster;
+import hr.tvz.vi.event.VechileChangedChangedEvent;
+import hr.tvz.vi.event.VechileServiceChangedChangedEvent;
+import hr.tvz.vi.orm.Service;
+import hr.tvz.vi.orm.Vechile;
+import hr.tvz.vi.service.VechileService;
+import hr.tvz.vi.util.Constants.EventAction;
+import hr.tvz.vi.util.Constants.EventSubscriber;
+import hr.tvz.vi.util.Constants.Routes;
+import hr.tvz.vi.util.Constants.StyleConstants;
+import hr.tvz.vi.util.Constants.SubscriberScope;
+import hr.tvz.vi.util.Constants.ThemeAttribute;
+import hr.tvz.vi.util.Utils;
 
 /**
  * The Class VechileView.
@@ -67,7 +62,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 6:44:50 PM Aug 18, 2021
  */
-@Slf4j
 @Route(value = Routes.VECHILE, layout = MainAppLayout.class)
 @EventSubscriber(scope = SubscriberScope.PUSH)
 public class VechileView extends VVerticalLayout implements HasDynamicTitle, HasUrlParameter<String> {

@@ -27,7 +27,6 @@ import com.vaadin.flow.router.Route;
 import de.codecamp.vaadin.serviceref.ServiceRef;
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.components.CustomFormLayout;
-import hr.tvz.vi.components.GroupTasksTab;
 import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.event.NotificationEvent;
 import hr.tvz.vi.event.TaskChangeEvent;
@@ -42,17 +41,15 @@ import hr.tvz.vi.service.AddressService;
 import hr.tvz.vi.service.NotificationService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.ReportService;
-import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.EventType;
 import hr.tvz.vi.util.Constants.GroupType;
 import hr.tvz.vi.util.Constants.NotificationType;
-import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.TaskType;
 import hr.tvz.vi.util.Constants.ThemeAttribute;
-import lombok.extern.slf4j.Slf4j;
+import hr.tvz.vi.util.Utils;
 
 /**
  * The Class ReportEventView.
@@ -60,7 +57,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 4:05:32 PM Aug 20, 2021
  */
-@Slf4j
 @Route(value = Routes.REPORT_EVENT, layout = MainAppLayout.class)
 public class ReportEventView extends VVerticalLayout implements HasDynamicTitle{
 

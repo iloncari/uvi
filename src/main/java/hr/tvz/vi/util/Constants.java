@@ -22,12 +22,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * The Class Constants.
  *
- * @author Igor Lončarić (iloncari2@optimit.hr)
+ * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 2:12:27 PM Aug 7, 2021
- */
-
-/**
- * Instantiates a new constants.
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Constants {
@@ -50,7 +46,7 @@ public final class Constants {
  /**
   * The Enum FieldType.
   *
-  * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
+  * @author Igor Lončarić (iloncari2@tvz.hr)
   * @since 9:20:15 AM Sep 2, 2021
   */
  public enum FieldType {
@@ -449,7 +445,7 @@ public final class Constants {
   /**
    * Instantiates a new event activity.
    *
-   * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
+   * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 6:20:37 PM Aug 26, 2021
    */
   
@@ -693,15 +689,9 @@ public final class Constants {
   /**
 	 * Instantiates a new duty.
 	 *
-	 * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
+	 * @author Igor Lončarić (iloncari2@tvz.hr)
 	 * @since 1:38:32 PM Aug 22, 2021
 	 */
-  
-  /**
-   * Instantiates a new duty.
-   *
-   * @param name the name
-   */
   @RequiredArgsConstructor
   public enum Duty {
 
@@ -778,7 +768,7 @@ public final class Constants {
   /**
    * The Interface Searchable.
    *
-   * @author Igor LonÄ�ariÄ‡ (iloncari2@tvz.hr)
+   * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 7:09:10 PM Sep 1, 2021
    */
   @Retention(RetentionPolicy.RUNTIME)
@@ -793,19 +783,7 @@ public final class Constants {
    * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 5:41:51 PM Aug 12, 2021
    */
-  
-  /**
-   * Gets the name.
-   *
-   * @return the name
-   */
   @Getter
-  
-  /**
-   * Instantiates a new gender.
-   *
-   * @param name the name
-   */
   @RequiredArgsConstructor
   public enum Gender {
     
@@ -845,7 +823,7 @@ public final class Constants {
   /**
    * The Enum ImageConstants.
    *
-   * @author Igor Lončarić (iloncari2@optimit.hr)
+   * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 3:12:45 PM Aug 7, 2021
    */
   @RequiredArgsConstructor
@@ -1213,7 +1191,7 @@ public final class Constants {
   /**
    * The Class ThemeAttribute.
    *
-   * @author Igor Lončarić (iloncari2@optimit.hr)
+   * @author Igor Lončarić (iloncari2@tvz.hr)
    * @since 4:18:17 PM Aug 7, 2021
    */
   

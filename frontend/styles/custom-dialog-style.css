@@ -1,7 +1,7 @@
 [part="overlay"] {
-	background-color: var(--docdocc-color-overlay);
+	background-color: var(--uvi-color-overlay);
 }
 
 [part="backdrop"] {
-	background-color: var(--docdocc-shape-backdrop);
+	background-color: var(--uvi-shape-backdrop);
 }

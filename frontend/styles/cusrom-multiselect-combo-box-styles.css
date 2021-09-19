@@ -4,8 +4,8 @@
 }
 
 [part="label"] {
-    font-weight: var(--docdoc-font-weight-semibold);
-    color: var(--docdocc-label-color-ship-gray);
+    font-weight: var(--uvi-font-weight-semibold);
+    color: var(--uvi-label-color-ship-gray);
     font-size: 14px;
     cursor: auto;
 }

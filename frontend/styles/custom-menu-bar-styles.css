@@ -1,6 +1,6 @@
 [part="menu-bar-button"] .notification-number {
-  background-color: var(--docdocc-notification-background-color-vivid-violet);
-  color: var(--docdocc-notification-color-white) !important;
+  background-color: var(--uvi-notification-background-color-vivid-violet);
+  color: var(--uvi-notification-color-white) !important;
   line-height: 24px;
   display: inline-block;
   border-radius: 24px;
@@ -56,12 +56,12 @@
 }
 
 :host([theme="header-items"]) [part="menu-bar-button"]:hover span:not(.notification-content) .notification-number {
-    color: var(--docdocc-color-san-marino);
+    color: var(--uvi-color-san-marino);
     opacity: .6;
 }
 
 :host([theme="header-items"]) [part="menu-bar-button"]:hover span:not(.notification-content):not(.notification-number) {
-    color: var(--docdocc-color-san-marino);
+    color: var(--uvi-color-san-marino);
     opacity: .6;
 }
 

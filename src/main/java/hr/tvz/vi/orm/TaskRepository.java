@@ -1,8 +1,8 @@
 /*
- * VechileRepository VechileRepository.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * TaskRepository TaskRepository.java.
+ * 
  */
+
 package hr.tvz.vi.orm;
 
 import java.util.List;
@@ -60,9 +60,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
    */
   List<Task> findByOrganizationAssignee_IdAndAssignee_Id(Long organizationId, Long assigneeId);
   
-  
 
-  
   /**
    * Delete by report id.
    *

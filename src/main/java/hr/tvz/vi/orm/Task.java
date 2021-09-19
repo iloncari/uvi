@@ -1,35 +1,29 @@
 /*
  * Task Task.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * 
  */
+
 package hr.tvz.vi.orm;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import hr.tvz.vi.util.Constants.EventActivity;
-import hr.tvz.vi.util.Constants.Searchable;
 import hr.tvz.vi.util.Constants.TaskType;
 import lombok.Data;
-import lombok.experimental.FieldNameConstants;
 
 /**
  * Instantiates a new task.
+ *
+ * @author Igor Lončarić (iloncari2@tvz.hr)
+ * @since 6:44:38 PM Sep 19, 2021
  */
 @Data
 @Entity

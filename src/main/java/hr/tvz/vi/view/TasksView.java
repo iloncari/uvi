@@ -5,7 +5,6 @@
 package hr.tvz.vi.view;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +18,14 @@ import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Location;
 import com.vaadin.flow.router.OptionalParameter;
-import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
 
 import de.codecamp.vaadin.serviceref.ServiceRef;
-import edu.emory.mathcs.backport.java.util.Arrays;
 import hr.tvz.vi.components.GroupTasksTab;
 import hr.tvz.vi.components.MyTasksTab;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.ReportService;
 import hr.tvz.vi.util.Constants.Routes;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * The Class TasksView.
@@ -37,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 12:41:26 AM Aug 28, 2021
  */
-@Slf4j
 @Route(value = Routes.TASKS, layout = MainAppLayout.class)
 public class TasksView extends VVerticalLayout implements HasDynamicTitle, HasUrlParameter<String>{
 

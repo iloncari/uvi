@@ -9,11 +9,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -21,13 +18,9 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.firitin.components.button.DeleteButton;
 import org.vaadin.firitin.components.button.VButton;
-import org.vaadin.firitin.components.grid.VGrid;
 import org.vaadin.firitin.components.html.VAnchor;
 import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
-import org.vaadin.firitin.components.textfield.VTextArea;
-import org.vandeseer.easytable.TableDrawer;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
@@ -39,15 +32,8 @@ import com.vaadin.flow.server.StreamResource;
 import com.vaadin.flow.shared.Registration;
 
 import de.codecamp.vaadin.serviceref.ServiceRef;
-import hr.tvz.vi.auth.CurrentUser;
-import hr.tvz.vi.event.ChangeBroadcaster;
-import hr.tvz.vi.event.VechileChangedChangedEvent;
-import hr.tvz.vi.orm.EventOrganization;
-import hr.tvz.vi.orm.Organization;
 import hr.tvz.vi.orm.Report;
 import hr.tvz.vi.service.ReportService;
-import hr.tvz.vi.util.Utils;
-import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.ReportStatus;
 import hr.tvz.vi.util.Constants.Routes;
@@ -66,7 +52,6 @@ import lombok.extern.slf4j.Slf4j;
 @Route(value = Routes.REPORTS, layout = MainAppLayout.class)
 public class ReportsView extends AbstractGridView<Report>{
 
-
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -1372381528372139683L;
 	
@@ -75,7 +60,6 @@ public class ReportsView extends AbstractGridView<Report>{
 	
 	/** The export anchor. */
 	private VAnchor exportAnchor;
-	
 	
 	/** The report service ref. */
 	@Autowired

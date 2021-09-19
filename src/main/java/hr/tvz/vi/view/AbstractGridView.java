@@ -4,8 +4,21 @@
  */
 package hr.tvz.vi.view;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.firitin.components.button.VButton;
+import org.vaadin.firitin.components.grid.VGrid;
+import org.vaadin.firitin.components.html.VH3;
+import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
+import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
+
 import com.vaadin.flow.component.AttachEvent;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.BeforeEvent;
@@ -22,7 +35,6 @@ import hr.tvz.vi.components.SimpleSearch;
 import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.orm.City;
 import hr.tvz.vi.orm.Organization;
-import hr.tvz.vi.orm.Person;
 import hr.tvz.vi.service.AddressService;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.util.Constants.EventSubscriber;
@@ -37,31 +49,7 @@ import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.util.Constants.VechileCondition;
 import hr.tvz.vi.util.Constants.VechileType;
 import hr.tvz.vi.util.Utils;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.firitin.components.button.VButton;
-import org.vaadin.firitin.components.grid.VGrid;
-import org.vaadin.firitin.components.html.VH3;
-import org.vaadin.firitin.components.html.VSpan;
-import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
-import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
-
 import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * The Class AbstractGridView.
@@ -71,7 +59,6 @@ import lombok.extern.slf4j.Slf4j;
  * @since 6:10:55 PM Aug 14, 2021
  */
 @EventSubscriber(scope = SubscriberScope.PUSH)
-@Slf4j
 public abstract class AbstractGridView<T> extends VVerticalLayout implements HasDynamicTitle, HasUrlParameter<String> {
 
   /** The Constant serialVersionUID. */

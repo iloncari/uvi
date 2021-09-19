@@ -4,17 +4,6 @@
  */
 package hr.tvz.vi.service;
 
-import hr.tvz.vi.orm.Organization;
-import hr.tvz.vi.orm.Person;
-import hr.tvz.vi.orm.ServiceRepository;
-import hr.tvz.vi.orm.Vechile;
-import hr.tvz.vi.orm.VechileRepository;
-import hr.tvz.vi.util.Utils;
-import hr.tvz.vi.util.Constants.Gender;
-import hr.tvz.vi.util.Constants.Professions;
-import hr.tvz.vi.util.Constants.VechileCondition;
-import hr.tvz.vi.util.Constants.VechileType;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +13,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import hr.tvz.vi.orm.Organization;
+import hr.tvz.vi.orm.ServiceRepository;
+import hr.tvz.vi.orm.Vechile;
+import hr.tvz.vi.orm.VechileRepository;
+import hr.tvz.vi.util.Constants.VechileCondition;
+import hr.tvz.vi.util.Constants.VechileType;
+import hr.tvz.vi.util.Utils;
 
 /**
  * The Class VechileService.

@@ -1,8 +1,8 @@
 /*
  * SimpleI18NProvider SimpleI18NProvider.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * 
  */
+
 package hr.tvz.vi;
 
 import com.vaadin.flow.component.UI;

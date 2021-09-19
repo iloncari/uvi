@@ -6,28 +6,20 @@ package hr.tvz.vi.components;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
-import org.vaadin.firitin.components.button.VButton;
-import org.vaadin.firitin.components.html.VUnorderedList;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.components.select.VSelect;
 import org.vaadin.firitin.components.textfield.VNumberField;
-import org.vaadin.firitin.components.textfield.VTextField;
 import org.vaadin.gatanaso.MultiselectComboBox;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToBooleanConverter;
 
 import hr.tvz.vi.converter.DoubleToIntegerConverter;
-import hr.tvz.vi.event.EventTypeChangedObserver;
 import hr.tvz.vi.orm.Report;
-import hr.tvz.vi.service.ReportService;
 import hr.tvz.vi.util.Constants.BuildingStatus;
 import hr.tvz.vi.util.Constants.BuildingType;
 import hr.tvz.vi.util.Constants.EventActivity;
@@ -39,7 +31,6 @@ import hr.tvz.vi.util.Constants.OpenSpaceFireType;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.util.Constants.TrafficFireVechileType;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * The Class FireEventTypeDataTab.
@@ -47,7 +38,6 @@ import lombok.extern.slf4j.Slf4j;
  * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 11:22:05 PM Aug 25, 2021
  */
-@Slf4j
 public class FireEventTypeDataTab extends VVerticalLayout{
 
   /** The Constant serialVersionUID. */
@@ -64,35 +54,49 @@ public class FireEventTypeDataTab extends VVerticalLayout{
   /** The items on fire. */
   private MultiselectComboBox<ItemOnFire> itemsOnFire = new MultiselectComboBox<ItemOnFire>();
   
-  VSelect<String> explosion = new VSelect<String>();
+  /** The explosion. */
+  private VSelect<String> explosion = new VSelect<String>();
   
-  VSelect<String> fireRepeated = new VSelect<String>();
+  /** The fire repeated. */
+  private VSelect<String> fireRepeated = new VSelect<String>();
   
-  VSelect<BuildingType> buildingType = new VSelect<BuildingType>();
+  /** The building type. */
+  private VSelect<BuildingType> buildingType = new VSelect<BuildingType>();
   
-  VNumberField height = new VNumberField();
+  /** The height. */
+  private VNumberField height = new VNumberField();
   
-  VNumberField floor = new VNumberField();
+  /** The floor. */
+  private VNumberField floor = new VNumberField();
   
-  VSelect<BuildingStatus> buildingStatus = new VSelect<BuildingStatus>();
+  /** The building status. */
+  private VSelect<BuildingStatus> buildingStatus = new VSelect<BuildingStatus>();
   
-  VSelect<FireSize> fireSize = new VSelect<FireSize>();
+  /** The fire size. */
+  private VSelect<FireSize> fireSize = new VSelect<FireSize>();
   
-  VSelect<IndustrialPlantType> industrialPlantType = new VSelect<IndustrialPlantType>();
+  /** The industrial plant type. */
+  private VSelect<IndustrialPlantType> industrialPlantType = new VSelect<IndustrialPlantType>();
   
-  VSelect<OpenSpaceFireType> openSpaceFireType = new VSelect<OpenSpaceFireType>();
+  /** The open space fire type. */
+  private VSelect<OpenSpaceFireType> openSpaceFireType = new VSelect<OpenSpaceFireType>();
   
-  VNumberField width = new VNumberField();
+  /** The width. */
+  private VNumberField width = new VNumberField();
 
-  VNumberField lenght = new VNumberField();
+  /** The lenght. */
+  private VNumberField lenght = new VNumberField();
   
-  VNumberField number = new VNumberField();
+  /** The number. */
+  private VNumberField number = new VNumberField();
   
-  VSelect<TrafficFireVechileType> trafficFireVechileType = new VSelect<TrafficFireVechileType>();
+  /** The traffic fire vechile type. */
+  private VSelect<TrafficFireVechileType> trafficFireVechileType = new VSelect<TrafficFireVechileType>();
   
   /** The binder. */
   private Binder<Report> binder;
   
+  /** The tab component map. */
   private  Map<Component, Integer> tabComponentMap;
   
   /**
@@ -155,8 +159,6 @@ public class FireEventTypeDataTab extends VVerticalLayout{
     binder.removeBinding(explosion);
     binder.removeBinding(fireRepeated);
     
-    
-   
     new HashSet<Component>(tabComponentMap.keySet()).forEach(component -> {
       if(tabComponentMap.get(component) == 2) {
         tabComponentMap.remove(component);

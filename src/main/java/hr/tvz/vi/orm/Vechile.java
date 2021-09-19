@@ -1,8 +1,8 @@
 /*
  * Vechile Vechile.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * 
  */
+
 package hr.tvz.vi.orm;
 
 import hr.tvz.vi.util.Constants.Searchable;
@@ -29,6 +29,12 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 
+/**
+ * The Class Vechile.
+ *
+ * @author Igor Lončarić (iloncari2@tvz.hr)
+ * @since 6:45:08 PM Sep 19, 2021
+ */
 @Data
 @Entity
 @Table
@@ -36,45 +42,60 @@ import lombok.experimental.FieldNameConstants;
 @EqualsAndHashCode(exclude = "services")
 public class Vechile {
 
+  /** The id. */
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  /** The make. */
   @Searchable
   public String make;
   
+  /** The model. */
   @Searchable
   public String model;
 
+  /** The model year. */
   private int modelYear;
 
+  /** The licence plate number. */
   @Searchable
   public String licencePlateNumber;
 
+  /** The registration valid until. */
   private LocalDate registrationValidUntil;
 
+  /** The vechile number. */
   @Searchable
   public String vechileNumber;
 
+  /** The first registration date. */
   private LocalDate firstRegistrationDate;
 
+  /** The description. */
   private String description;
 
+  /** The condition. */
   @Enumerated(EnumType.STRING)
   public VechileCondition condition;
 
+  /** The type. */
   @Enumerated(EnumType.STRING)
   public VechileType type;
 
+  /** The organization. */
   @ManyToOne
   private Organization organization;
   
+  /** The active. */
   private Boolean active;
 
+  /** The services. */
   @ToString.Exclude
   @OneToMany(mappedBy = "serviceVechile", fetch = FetchType.EAGER)
   private Set<Service> services;
 
+  /** The fuel consuptions. */
   @ToString.Exclude
   @OneToMany(mappedBy = "fuelVechile", fetch = FetchType.LAZY)
   private List<FuelConsuption> fuelConsuptions;

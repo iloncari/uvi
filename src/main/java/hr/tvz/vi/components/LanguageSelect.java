@@ -1,8 +1,8 @@
 /*
  * LanguageSelect LanguageSelect.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * 
  */
+
 package hr.tvz.vi.components;
 
 import com.vaadin.flow.component.UI;
@@ -18,7 +18,7 @@ import java.util.Map.Entry;
 /**
  * The Class LanguageSelect.
  *
- * @author Ime i prezime (ime.prezime@optimit.hr)
+ * @author Igor Lončarić (iloncari2@tvz.hr)
  * @since 4:42:56 PM Aug 7, 2021
  */
 public class LanguageSelect extends com.vaadin.flow.component.select.Select<String> {
@@ -27,7 +27,6 @@ public class LanguageSelect extends com.vaadin.flow.component.select.Select<Stri
   private static final long serialVersionUID = 5043437674797042582L;
 
   /** The translation provider. */
-
   private final SimpleI18NProvider translationProvider = new SimpleI18NProvider();
 
   /**

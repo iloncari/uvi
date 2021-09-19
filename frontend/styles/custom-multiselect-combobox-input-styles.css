@@ -4,7 +4,7 @@
 }
 
 :host([theme~="white"]) [part="toggle-button"] {
-	color: var(--docdocc-select-dropdown-icon-color-dove-gray);
+	color: var(--uvi-select-dropdown-icon-color-dove-gray);
 	font-weight: normal;
 }
 

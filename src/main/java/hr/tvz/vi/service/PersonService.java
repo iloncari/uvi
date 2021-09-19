@@ -34,9 +34,11 @@ public class PersonService extends AbstractService<Person> {
   @Autowired
   PersonOrganizationRepository personOrganizationRepository;
   
+  /** The address repository. */
   @Autowired
   AddressRepository addressRepository;
   
+  /** The city repository. */
   @Autowired
   CityRepository cityRepository;
 

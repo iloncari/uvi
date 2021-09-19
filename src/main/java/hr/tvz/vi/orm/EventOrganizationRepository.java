@@ -1,11 +1,9 @@
 /*
- * PersonOrganization PersonOrganization.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * EventOrganizationRepository EventOrganizationRepository.java.
+ * 
  */
-package hr.tvz.vi.orm;
 
-import java.util.List;
+package hr.tvz.vi.orm;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

@@ -1,24 +1,18 @@
 /*
  * HomeView HomeView.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * 
  */
+
 package hr.tvz.vi.view;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.servlet.theme.ThemeChangeInterceptor;
-import org.vaadin.firitin.components.html.VDiv;
 import org.vaadin.firitin.components.html.VH2;
 import org.vaadin.firitin.components.html.VH3;
 import org.vaadin.firitin.components.html.VH4;
-import org.vaadin.firitin.components.html.VH5;
-import org.vaadin.firitin.components.html.VParagaph;
 import org.vaadin.firitin.components.html.VSpan;
 import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
@@ -34,11 +28,8 @@ import com.github.appreciated.apexcharts.config.chart.Type;
 import com.github.appreciated.apexcharts.config.legend.Position;
 import com.github.appreciated.apexcharts.config.responsive.builder.OptionsBuilder;
 import com.google.common.eventbus.Subscribe;
-import com.google.common.util.concurrent.Service;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.dependency.CssImport;
-import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
@@ -46,10 +37,8 @@ import com.vaadin.flow.router.Route;
 import de.codecamp.vaadin.serviceref.ServiceRef;
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.event.TaskChangeEvent;
-import hr.tvz.vi.orm.Task;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.ReportService;
-import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.ReportStatus;
@@ -58,6 +47,7 @@ import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.SubscriberScope;
 import hr.tvz.vi.util.Constants.TaskType;
 import hr.tvz.vi.util.Constants.ThemeAttribute;
+import hr.tvz.vi.util.Utils;
 
 /**
  * The Class HomeView.

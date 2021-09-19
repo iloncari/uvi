@@ -9,24 +9,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vaadin.firitin.components.html.VSpan;
 
-import hr.tvz.vi.orm.Address;
-import hr.tvz.vi.orm.AddressRepository;
-import hr.tvz.vi.orm.City;
-import hr.tvz.vi.orm.CityRepository;
-import hr.tvz.vi.orm.County;
-import hr.tvz.vi.orm.CountyRepository;
 import hr.tvz.vi.orm.Notification;
 import hr.tvz.vi.orm.NotificationRepository;
 import hr.tvz.vi.orm.NotificationUserMapping;
 import hr.tvz.vi.orm.NotificationUserMappingRepository;
-import hr.tvz.vi.orm.OrganizationRepository;
 import hr.tvz.vi.orm.PersonRepository;
 import hr.tvz.vi.orm.VechileRegistrationReminder;
 import hr.tvz.vi.orm.VechileReminderRepository;
@@ -120,7 +112,6 @@ public class NotificationService extends AbstractService<Notification> {
 	public void markNotificationAsRead(Long notificationId, Long userId) {
 	  NotificationUserMapping mapping = notificationUserMappingRepository.findByUserIdAndNotificationId(userId, notificationId);
 	  if(mapping != null) {
-	    log.info("setting on read");
 	    mapping.setReadAt(LocalDateTime.now());
 	    notificationUserMappingRepository.save(mapping);
 	  }

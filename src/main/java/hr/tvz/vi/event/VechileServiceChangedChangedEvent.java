@@ -7,7 +7,6 @@ package hr.tvz.vi.event;
 
 import hr.tvz.vi.orm.Service;
 import hr.tvz.vi.orm.Vechile;
-import hr.tvz.vi.service.VechileService;
 import hr.tvz.vi.util.Constants.EventAction;
 
 import java.util.EventObject;

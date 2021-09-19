@@ -1,8 +1,8 @@
 /*
  * InitListener InitListener.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * 
  */
+
 package hr.tvz.vi;
 
 import com.vaadin.flow.component.ComponentUtil;
@@ -40,7 +40,6 @@ import de.codecamp.vaadin.serviceref.ServiceRef;
  * @see InitEvent
  */
 @Service
-@Slf4j
 public class InitListener implements VaadinServiceInitListener {
 
   /** The Constant serialVersionUID. */

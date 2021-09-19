@@ -13,7 +13,7 @@
 	height: auto;
 	padding: 7px 20px;
 	margin: 0;
-	font-weight: var(--docdoc-font-weight-semibold);
+	font-weight: var(--uvi-font-weight-semibold);
 	font-size: 16px;
 	line-height: 1.25;
 	cursor: pointer;
@@ -26,60 +26,60 @@
 }
 
 :host([theme~="blue"]) {
-	background-color: var(--docdocc-color-lochmara);
-	color: var(--docdocc-color-white);
+	background-color: var(--uvi-color-lochmara);
+	color: var(--uvi-color-white);
 }
 
 :host([theme~="blue"][disabled]) {
-	background-color: var(--docdocc-color-lochmara);
-	color: var(--docdocc-color-white);
+	background-color: var(--uvi-color-lochmara);
+	color: var(--uvi-color-white);
 }
 
 :host([theme~="blue"]:hover) {
-	background-color: var(--docdocc-color-san-marino);
+	background-color: var(--uvi-color-san-marino);
 }
 
 :host([theme~="outline-blue"]) {
-	border: 1px solid var(--docdocc-color-cerulean-blue);
-	color: var(--docdocc-color-cerulean-blue);
+	border: 1px solid var(--uvi-color-cerulean-blue);
+	color: var(--uvi-color-cerulean-blue);
 	background-color: transparent;
 }
 
 :host([theme~="outline-blue"][disabled]) {
-	border: 1px solid var(--docdocc-color-cerulean-blue);
-	color: var(--docdocc-color-cerulean-blue);
+	border: 1px solid var(--uvi-color-cerulean-blue);
+	color: var(--uvi-color-cerulean-blue);
 	background-color: transparent;
 }
 
 :host([theme~="outline-blue"]:hover) {
-	background-color: var(--docdocc-color-pattens-blue);
+	background-color: var(--uvi-color-pattens-blue);
 }
 
 :host([theme~="outline-red"]) {
-	border: 1px solid var(--docdocc-color-monza);
-	color: var(--docdocc-color-monza);
+	border: 1px solid var(--uvi-color-monza);
+	color: var(--uvi-color-monza);
 	background-color: transparent;
 }
 
 :host([theme~="outline-red"][disabled]) {
-	border: 1px solid var(--docdocc-color-monza);
-	color: var(--docdocc-color-monza);
+	border: 1px solid var(--uvi-color-monza);
+	color: var(--uvi-color-monza);
 	background-color: transparent;
 }
 
 :host([theme~="outline-red"]:hover) {
-	background-color: var(--docdocc-color-pastel-pink);
+	background-color: var(--uvi-color-pastel-pink);
 }
 
 :host([theme~="outline-green"]) {
-	border: 1px solid var(--docdocc-color-jade);
-	color: var(--docdocc-color-jade);
+	border: 1px solid var(--uvi-color-jade);
+	color: var(--uvi-color-jade);
 	background-color: transparent;
 }
 
 :host([theme~="outline-green"][disabled]) {
-	border: 1px solid var(--docdocc-color-jade);
-	color: var(--docdocc-color-jade);
+	border: 1px solid var(--uvi-color-jade);
+	color: var(--uvi-color-jade);
 	background-color: transparent;
 }
 
@@ -130,13 +130,13 @@
 	height: auto;
 	padding: 2px 8px 2px 8px;
 	margin: 0 5px 5px 0;
-	font-weight: var(--docdoc-font-weight-semibold);
+	font-weight: var(--uvi-font-weight-semibold);
 	font-size: 12px;
 	line-height: 1.25;
 	cursor: pointer;
 	transition: color .3s, background-color .3s;
-	color: var(--docdocc-color-white);
-	background-color: var(--docdocc-color-egg-blue);
+	color: var(--uvi-color-white);
+	background-color: var(--uvi-color-egg-blue);
 }
 
 

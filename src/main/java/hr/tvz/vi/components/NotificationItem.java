@@ -53,7 +53,6 @@ public class NotificationItem extends VHorizontalLayout{
    * @param notification the notification
    */
   public NotificationItem(final Notification notification) {
-    //remove all therme
     Utils.removeAllThemes(this);
     addClassName(StyleConstants.NOTIFICATION_ITEM.getName());
 

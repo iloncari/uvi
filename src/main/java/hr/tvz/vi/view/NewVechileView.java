@@ -18,6 +18,12 @@ import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 
 import de.codecamp.vaadin.serviceref.ServiceRef;
 
+/**
+ * The Class NewVechileView.
+ *
+ * @author Igor Lončarić (iloncari2@tvz.hr)
+ * @since 6:53:20 PM Sep 19, 2021
+ */
 @Route(value = Routes.NEW_VECHILE, layout = MainAppLayout.class)
 public class NewVechileView extends VVerticalLayout implements HasDynamicTitle {
 

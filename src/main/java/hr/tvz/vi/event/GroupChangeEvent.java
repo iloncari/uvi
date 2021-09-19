@@ -25,6 +25,7 @@ public class GroupChangeEvent extends EventObject{
   @Getter
   private final GroupMember groupMember;
   
+  /** The action. */
   @Getter
   private final EventAction action;
   

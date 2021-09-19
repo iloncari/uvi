@@ -1,3 +1,7 @@
+/*
+ * Address Address.java.
+ * 
+ */
 package hr.tvz.vi.orm;
 
 import javax.persistence.Entity;
@@ -9,28 +13,41 @@ import javax.persistence.Table;
 
 import lombok.Data;
 
+/**
+ * The Class Address.
+ *
+ * @author Igor Lončarić (iloncari2@tvz.hr)
+ * @since 6:32:01 PM Sep 19, 2021
+ */
 @Entity
 @Data
 @Table
 public class Address {
 
-	  @Id
-	  @GeneratedValue(strategy = GenerationType.IDENTITY)
-	  private Long id;
+	/** The id. */
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	  
-	  @OneToOne
-	  private City city;
+	/** The city. */
+	@OneToOne
+  private City city;
+	   
+	/** The street. */
+	private String street;
 	  
+	/** The street number. */
+	private String streetNumber;
 	  
-	  private String street;
-	  
-	  private String streetNumber;
-	  
-	  public City getCity() {
-		  if(city==null) {
-			  city = new City();
-		  }
-		  return city;
-	  }
-	  
+	/**
+   * Gets the city.
+   *
+   * @return the city
+   */
+	public City getCity() {
+	 if(city==null) {
+		city = new City();
+	 }
+	 return city;
+	}
 }

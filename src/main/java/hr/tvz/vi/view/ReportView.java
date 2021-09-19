@@ -18,7 +18,6 @@ import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.layouts.VTabSheet;
 
-import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.DetachEvent;
@@ -41,7 +40,6 @@ import hr.tvz.vi.components.ReportBasicDataTab;
 import hr.tvz.vi.components.ReportForcesTab;
 import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.event.EventTypeChangedObserver;
-import hr.tvz.vi.event.VechileChangedChangedEvent;
 import hr.tvz.vi.orm.Report;
 import hr.tvz.vi.orm.Task;
 import hr.tvz.vi.service.AddressService;
@@ -52,17 +50,13 @@ import hr.tvz.vi.service.VechileService;
 import hr.tvz.vi.util.Constants.EventSubscriber;
 import hr.tvz.vi.util.Constants.EventType;
 import hr.tvz.vi.util.Constants.GroupType;
-import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.ReportStatus;
 import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.SubscriberScope;
 import hr.tvz.vi.util.Constants.TaskType;
 import hr.tvz.vi.util.Constants.ThemeAttribute;
-import lombok.extern.slf4j.Slf4j;
 import hr.tvz.vi.util.Utils;
 
-/** The Constant log. */
-@Slf4j
 @Route(value = Routes.REPORT, layout = MainAppLayout.class)
 @EventSubscriber(scope = SubscriberScope.PUSH)
 public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasUrlParameter<String>, BeforeLeaveObserver, EventTypeChangedObserver{
@@ -77,8 +71,6 @@ public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasU
 	/** The fire event tab. */
 	private Tab fireEventTab;
 	
-	/** The current user. */
-	private final CurrentUser currentUser = Utils.getCurrentUser(UI.getCurrent());
 	
 	/** The report service ref. */
 	@Autowired

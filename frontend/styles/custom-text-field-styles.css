@@ -1,35 +1,35 @@
 [part="input-field"]{
-  background-color: var(--docdocc-input-background-color);
-  border: 1px solid var( --docdocc-input-border-color);
-  box-shadow: var( --docdocc-input-box-shadow);
-  color: var(--docdocc-input-color-ship-gray);
-  font-weight: var(--docdoc-font-weight-semibold);
+  background-color: var(--uvi-input-background-color);
+  border: 1px solid var( --uvi-input-border-color);
+  box-shadow: var( --uvi-input-box-shadow);
+  color: var(--uvi-input-color-ship-gray);
+  font-weight: var(--uvi-font-weight-semibold);
   transition: all .3s;
 }
 
 
 :host([invalid]) [part="error-message"] {
-	font-weight: var(--docdoc-font-weight-semibold);
-	color: var(--docdocc-input-error-color);
+	font-weight: var(--uvi-font-weight-semibold);
+	color: var(--uvi-input-error-color);
 	font-size: 14px;
 }
 
 
 /*dropdown multibox*/
 :host([theme~="blue"]) [part="input-field"] {
-	border: 1px solid var(--docdocc-color-lochmara);
-	font-weight: var(--docdoc-font-weight-semibold);
+	border: 1px solid var(--uvi-color-lochmara);
+	font-weight: var(--uvi-font-weight-semibold);
 	transition: all .3s;
-	background-color: var(--docdocc-color-lochmara) !important;
-    color: var(--docdocc-color-white);
+	background-color: var(--uvi-color-lochmara) !important;
+    color: var(--uvi-color-white);
     box-shadow: none;
 }
 
 :host([theme~="white"]) [part="input-field"] {
-	background-color: var(--docdocc-input-background-color) !important;
-    border: 1px solid var(--docdocc-input-border-color);
-    box-shadow: var(--docdocc-input-box-shadow);
-    color: var(--docdocc-input-color-ship-gray);
-    font-weight: var(--docdoc-font-weight-semibold);
+	background-color: var(--uvi-input-background-color) !important;
+    border: 1px solid var(--uvi-input-border-color);
+    box-shadow: var(--uvi-input-box-shadow);
+    color: var(--uvi-input-color-ship-gray);
+    font-weight: var(--uvi-font-weight-semibold);
     transition: all .3s;
 }

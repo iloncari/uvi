@@ -1,8 +1,8 @@
 /*
  * Service Service.java.
- *
- * Copyright (c) 2018 OptimIT d.o.o.. All rights reserved.
+ * 
  */
+
 package hr.tvz.vi.orm;
 
 import java.time.LocalDate;
@@ -20,6 +20,9 @@ import lombok.ToString;
 
 /**
  * Instantiates a new service.
+ *
+ * @author Igor Lončarić (iloncari2@tvz.hr)
+ * @since 6:44:04 PM Sep 19, 2021
  */
 @Data
 @Entity
