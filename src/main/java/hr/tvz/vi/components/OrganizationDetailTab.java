@@ -77,16 +77,16 @@ public class OrganizationDetailTab extends VVerticalLayout{
     organizationFormLayout = new CustomFormLayout<>(new Binder<>(Organization.class), activeOrganization);
     organizationFormLayout.setFormTitle("organizationView.activeOrganization.title");
 
-    final VTextField activeOrgName = new VTextField();
+    final VTextField activeOrgName = new VTextField().withEnabled(currentUser.hasManagerRole());
     organizationFormLayout.setLabel(activeOrgName, "organizationView.form.field.name");
     organizationFormLayout.processBinder(activeOrgName, null, null, true, "name");
     organizationFormLayout.addTwoColumnItemsLayout(activeOrgName, StyleConstants.WIDTH_75, null, null);
     
-    county = new VSelect<County>();
+    county = new VSelect<County>().withEnabled(currentUser.hasManagerRole());
     county.setItems(addressService.getAllCounties());
     county.setItemLabelGenerator(c -> c.getName());
     organizationFormLayout.setLabel(county, "organizationView.form.field.county");
-    city = new VSelect<City>();
+    city = new VSelect<City>().withEnabled(currentUser.hasManagerRole());
     city.setItemLabelGenerator(c -> c.getName());
     county.addValueChangeListener(e -> city.setItems(addressService.getCities(e.getValue())));
     organizationFormLayout.setLabel(city, "organizationView.form.field.city");
@@ -108,7 +108,7 @@ public class OrganizationDetailTab extends VVerticalLayout{
     });
     organizationFormLayout.addTwoColumnItemsLayout(county, city);
   
-    final VTextField activeOrgStreet = new VTextField();
+    final VTextField activeOrgStreet = new VTextField().withEnabled(currentUser.hasManagerRole());
     organizationFormLayout.setLabel(activeOrgStreet, "organizationView.form.field.street");
     organizationFormLayout.processBinder(activeOrgStreet, null, null, true, org -> {
     if(org.getAddress()==null) {
@@ -124,7 +124,7 @@ public class OrganizationDetailTab extends VVerticalLayout{
     org.setAddress(address);
   });
    
-    final VTextField activeOrgStreetNumber = new VTextField();
+    final VTextField activeOrgStreetNumber = new VTextField().withEnabled(currentUser.hasManagerRole());
     organizationFormLayout.setLabel(activeOrgStreetNumber, "organizationView.form.field.streetNumber");
     organizationFormLayout.processBinder(activeOrgStreetNumber, null, null, true, org -> {
     if(org.getAddress()==null) {
@@ -141,15 +141,15 @@ public class OrganizationDetailTab extends VVerticalLayout{
   });
     organizationFormLayout.addTwoColumnItemsLayout(activeOrgStreet, StyleConstants.WIDTH_75, activeOrgStreetNumber, StyleConstants.WIDTH_25);
 
-    final VTextField activeOrgIDNumber = new VTextField();
+    final VTextField activeOrgIDNumber = new VTextField().withEnabled(currentUser.hasManagerRole());
     organizationFormLayout.setLabel(activeOrgIDNumber, "organizationView.form.field.identificationNumber");
     organizationFormLayout.processBinder(activeOrgIDNumber, null, null, true, "identificationNumber");
-    final VTextField activeOrgIban = new VTextField();
+    final VTextField activeOrgIban = new VTextField().withEnabled(currentUser.hasManagerRole());
     organizationFormLayout.setLabel(activeOrgIban, "organizationView.form.field.iban");
     organizationFormLayout.processBinder(activeOrgIban, null, null, false, "iban");
     organizationFormLayout.addTwoColumnItemsLayout(activeOrgIDNumber, activeOrgIban);
 
-    final VDatePicker activeOrgEstablishmentDate = new VDatePicker();
+    final VDatePicker activeOrgEstablishmentDate = new VDatePicker().withEnabled(currentUser.hasManagerRole());
     organizationFormLayout.setLabel(activeOrgEstablishmentDate, "organizationView.form.field.establishmentDate");
     organizationFormLayout.processBinder(activeOrgEstablishmentDate, null, null, false, "establishmentDate");
     organizationFormLayout.addTwoColumnItemsLayout(activeOrgEstablishmentDate, null);
@@ -160,7 +160,7 @@ public class OrganizationDetailTab extends VVerticalLayout{
         organizationService.saveOrUpdateOrganization(activeOrganization);
         Utils.showSuccessNotification(2000, Position.TOP_CENTER, "organizationView.notification.saveSuccess");
       }
-    }).getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_BLUE);
+    }).withEnabled(currentUser.hasManagerRole()).getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_BLUE);
 
     add(organizationFormLayout);
     if(activeOrganization.getAddress() != null ) {

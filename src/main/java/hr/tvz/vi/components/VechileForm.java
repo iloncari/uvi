@@ -65,54 +65,57 @@ public class VechileForm extends AbstractForm<Vechile> {
     formLayout.setFormTitle("vechileForm.title.label");
 
     final VSelect<VechileType> typeSelect = new VSelect<>();
+    typeSelect.setEnabled(getCurrentUser().hasManagerRole());
     formLayout.setLabel(typeSelect, "vechileForm.field.type");
     formLayout.processBinder(typeSelect, null, null, true, "type");
     typeSelect.setItemLabelGenerator(type -> getTranslation(type.getLabelKey()));
     typeSelect.setItems(Arrays.asList(VechileType.values()));
     final VSelect<VechileCondition> conditionSelect = new VSelect<>();
+    conditionSelect.setEnabled(getCurrentUser().hasManagerRole());
     formLayout.setLabel(conditionSelect, "vechileForm.field.condition");
     formLayout.processBinder(conditionSelect, null, null, true, "condition");
     conditionSelect.setItemLabelGenerator(condition -> getTranslation(condition.getLabelKey()));
     conditionSelect.setItems(Arrays.asList(VechileCondition.values()));
     formLayout.addTwoColumnItemsLayout(typeSelect, conditionSelect);
 
-    final VTextField makeField = new VTextField();
+    final VTextField makeField = new VTextField().withEnabled(getCurrentUser().hasManagerRole());
     formLayout.setLabel(makeField, "vechileForm.field.make");
     formLayout.processBinder(makeField, null, null, false, "make");
-    final VTextField modelField = new VTextField().withEnabled(!StringUtils.isBlank(formEntity.getMake()));
+    
+    final VTextField modelField = new VTextField().withEnabled(!StringUtils.isBlank(formEntity.getMake()) && getCurrentUser().hasManagerRole());
     formLayout.setLabel(modelField, "vechileForm.field.model");
     formLayout.processBinder(modelField, null, null, false, "model");
-    makeField.addValueChangeListener(e -> modelField.setEnabled(!e.getValue().isBlank()));
+    makeField.addValueChangeListener(e -> modelField.setEnabled(!e.getValue().isBlank() && getCurrentUser().hasManagerRole()));
     formLayout.addTwoColumnItemsLayout(makeField, modelField);
 
-    final VNumberField modelYear = new VNumberField();
+    final VNumberField modelYear = new VNumberField().withEnabled(getCurrentUser().hasManagerRole());
     formLayout.setLabel(modelYear, "vechileForm.field.modelYear");
     formLayout.processBinder(modelYear, new DoubleToIntegerConverter(), null, false, "modelYear");
-    final VTextField vechileNumberField = new VTextField();
+    final VTextField vechileNumberField = new VTextField().withEnabled(getCurrentUser().hasManagerRole());
     formLayout.setLabel(vechileNumberField, "vechileForm.field.vechileNumber");
     formLayout.processBinder(vechileNumberField, null, null, true, "vechileNumber");
     formLayout.addTwoColumnItemsLayout(modelYear, vechileNumberField);
 
-    final VTextArea descField = new VTextArea();
+    final VTextArea descField = new VTextArea().withEnabled(getCurrentUser().hasManagerRole());
     formLayout.setLabel(descField, "vechileForm.field.description");
     formLayout.processBinder(descField, null, null, false, "description");
     formLayout.addTwoColumnItemsLayout(descField, null);
 
-    final VDatePicker firstRegistrationField = new VDatePicker();
+    final VDatePicker firstRegistrationField = new VDatePicker().withEnabled(getCurrentUser().hasManagerRole());
     formLayout.setLabel(firstRegistrationField, "vechileForm.field.firstRegistrationDate");
     formLayout.processBinder(firstRegistrationField, null, null, false, "firstRegistrationDate");
     formLayout.addTwoColumnItemsLayout(firstRegistrationField, null);
 
-    final VTextField licencePlateNumberField = new VTextField();
+    final VTextField licencePlateNumberField = new VTextField().withEnabled(getCurrentUser().hasManagerRole());
     formLayout.setLabel(licencePlateNumberField, "vechileForm.field.licencePlateNumber");
     formLayout.processBinder(licencePlateNumberField, null, null, false, "licencePlateNumber");
-    final VDatePicker registrationValidUntil = new VDatePicker().withEnabled(StringUtils.isNotBlank(formEntity.getLicencePlateNumber()));
+    final VDatePicker registrationValidUntil = new VDatePicker().withEnabled(StringUtils.isNotBlank(formEntity.getLicencePlateNumber()) && getCurrentUser().hasManagerRole());
     formLayout.setLabel(registrationValidUntil, "vechileForm.field.registrationValidUntil");
     formLayout.processBinder(registrationValidUntil, null, null, false, "registrationValidUntil");
     licencePlateNumberField.addValueChangeListener(e -> registrationValidUntil.setEnabled(!e.getValue().isBlank()));
     formLayout.addTwoColumnItemsLayout(licencePlateNumberField, registrationValidUntil);
 
-    final VButton saveButton = new VButton(getTranslation("button.save"));
+    final VButton saveButton = new VButton(getTranslation("button.save")).withEnabled(getCurrentUser().hasManagerRole());
     saveButton.getElement().getThemeList().add(ThemeAttribute.BUTTON_BLUE);
     saveButton.addClickListener(e -> {
       if (formLayout.writeBean()) {

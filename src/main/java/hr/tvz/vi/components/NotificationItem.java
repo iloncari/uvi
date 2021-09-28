@@ -4,6 +4,9 @@
  */
 package hr.tvz.vi.components;
 
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.html.VDiv;
@@ -13,12 +16,14 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.shared.Registration;
 
 import hr.tvz.vi.orm.Notification;
 import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.util.Constants.ImageConstants;
 import hr.tvz.vi.util.Constants.NotificationType;
+import hr.tvz.vi.util.Constants.Routes;
 import hr.tvz.vi.util.Constants.StyleConstants;
 import hr.tvz.vi.util.Constants.ThemeAttribute;
 import hr.tvz.vi.view.OrganizationView;
@@ -68,7 +73,7 @@ public class NotificationItem extends VHorizontalLayout{
 
     clickRegistration = addClickListener(event -> {
       if(NotificationType.GROUP.equals(notification.getType())) {
-        UI.getCurrent().navigate(OrganizationView.class);
+        UI.getCurrent().navigate(Routes.ORGANIZATION, new QueryParameters(Map.of("tab", List.of("groupMembers"))));
       }else if(NotificationType.TASK.equals(notification.getType())){
         UI.getCurrent().navigate(ReportView.class, notification.getSourceId().toString());
       }else if(NotificationType.VECHILE.equals(notification.getType())){

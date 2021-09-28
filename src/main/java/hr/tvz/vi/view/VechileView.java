@@ -68,6 +68,9 @@ public class VechileView extends VVerticalLayout implements HasDynamicTitle, Has
 
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = -2439319352713321517L;
+  
+  /** The current user. */
+  private final transient CurrentUser currentUser = Utils.getCurrentUser(UI.getCurrent());
 
   /** The vechile. */
   private Vechile vechile;
@@ -145,6 +148,9 @@ public class VechileView extends VVerticalLayout implements HasDynamicTitle, Has
       Icon delete = VaadinIcon.TRASH.create();
     
       delete.addClickListener(deleteEvent ->{ 
+        if(!currentUser.hasManagerRole()) {
+          return;
+        }
         vechileServiceRef.get().deleteServiceRecord(service);
         ChangeBroadcaster.firePushEvent(new VechileServiceChangedChangedEvent(this, vechile, service, EventAction.REMOVED));
       });
@@ -162,7 +168,7 @@ public class VechileView extends VVerticalLayout implements HasDynamicTitle, Has
 
     layout.add(servicesGrid);
 
-    final VButton addServiceButton = new VButton(getTranslation("button.add")).withClickListener(e -> showNewServiceDialog());
+    final VButton addServiceButton = new VButton(getTranslation("button.add")).withClickListener(e -> showNewServiceDialog()).withEnabled(currentUser.hasManagerRole());
     layout.add(addServiceButton);
 
     return layout;

@@ -16,6 +16,7 @@ import org.vaadin.firitin.components.html.VH4;
 import org.vaadin.firitin.components.html.VSpan;
 import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
+import org.vaadin.firitin.components.textfield.VTextField;
 
 import com.github.appreciated.apexcharts.ApexCharts;
 import com.github.appreciated.apexcharts.ApexChartsBuilder;
@@ -30,6 +31,7 @@ import com.github.appreciated.apexcharts.config.responsive.builder.OptionsBuilde
 import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.HasDynamicTitle;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
@@ -37,6 +39,7 @@ import com.vaadin.flow.router.Route;
 import de.codecamp.vaadin.serviceref.ServiceRef;
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.event.TaskChangeEvent;
+import hr.tvz.vi.orm.Person;
 import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.ReportService;
 import hr.tvz.vi.util.Constants.EventAction;
@@ -89,6 +92,8 @@ public class HomeView extends VVerticalLayout implements HasDynamicTitle {
   private VHorizontalLayout boxes = new VHorizontalLayout();
   
   private VVerticalLayout graphLayout = new VVerticalLayout();
+ 
+  
   
   /**
    * Instantiates a new home view.
@@ -216,5 +221,9 @@ public class HomeView extends VVerticalLayout implements HasDynamicTitle {
   public String getPageTitle() {
     return getTranslation(Routes.getPageTitleKey(Routes.HOME));
   }
+  
+  
 
 }
+
+

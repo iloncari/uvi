@@ -43,6 +43,21 @@ public final class Constants {
     PREPARATION_TASK;
   }
   
+  /**
+   * The Enum TaskOutcome.
+   *
+   * @author Igor Lončarić (iloncari2@tvz.hr)
+   * @since 8:18:56 PM Aug 27, 2021
+   */
+  public enum TaskOutcome{
+    
+    /** The finsihed. */
+    FINSIHED,
+    
+    /** The rejected. */
+    REJECTED;
+  }
+  
  /**
   * The Enum FieldType.
   *

@@ -131,7 +131,7 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
   protected VHorizontalLayout initBellowButtonLayout() {
     final VHorizontalLayout buttonsLayout = new VHorizontalLayout();
 
-    final VButton newVehcileButton = new VButton(getTranslation("vechilesView.button.newVechile.label"));
+    final VButton newVehcileButton = new VButton(getTranslation("vechilesView.button.newVechile.label")).withEnabled(getCurrentUser().hasManagerRole());
     newVehcileButton.addClickListener(e -> UI.getCurrent().navigate(NewVechileView.class));
     newVehcileButton.getThemeList().add(ThemeAttribute.BUTTON_BLUE);
     buttonsLayout.add(newVehcileButton);
@@ -168,8 +168,8 @@ public class VechilesView extends AbstractGridView<Vechile> implements HasDynami
     getGrid().removeAllColumns();
     getGrid().setSelectionMode(SelectionMode.SINGLE);
     getGrid().addSelectionListener(e -> {
-      deleteVechileButton.setEnabled(!e.getFirstSelectedItem().isEmpty());
-      transferVechileButton.setEnabled(!e.getFirstSelectedItem().isEmpty());
+      deleteVechileButton.setEnabled(!e.getFirstSelectedItem().isEmpty() && getCurrentUser().hasManagerRole());
+      transferVechileButton.setEnabled(!e.getFirstSelectedItem().isEmpty() && getCurrentUser().hasManagerRole());
     });
 
     getGrid().addComponentColumn(vechile -> new RouterLink(vechile.getVechileNumber(), VechileView.class, vechile.getId().toString()))

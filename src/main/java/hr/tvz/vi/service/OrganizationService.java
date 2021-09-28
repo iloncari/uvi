@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -276,7 +277,9 @@ public class OrganizationService extends AbstractService<Organization> {
     if (person == null || organization == null) {
       return false;
     }
-    return person.getOrgList().stream().filter(perOrg -> perOrg.getExitDate() == null)
+    
+    
+    return ObjectUtils.defaultIfNull(person.getOrgList(), new ArrayList<PersonOrganization>()).stream().filter(perOrg -> perOrg.getExitDate() == null)
       .anyMatch(perOrg -> perOrg.getOrganization().getId().equals(organization.getId()));
 
   }

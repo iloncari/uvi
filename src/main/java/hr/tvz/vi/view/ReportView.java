@@ -18,12 +18,15 @@ import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 import org.vaadin.firitin.layouts.VTabSheet;
 
+import com.google.common.eventbus.Subscribe;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.tabs.Tab;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.BeforeEvent;
 import com.vaadin.flow.router.BeforeLeaveEvent;
 import com.vaadin.flow.router.BeforeLeaveObserver;
@@ -40,6 +43,7 @@ import hr.tvz.vi.components.ReportBasicDataTab;
 import hr.tvz.vi.components.ReportForcesTab;
 import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.event.EventTypeChangedObserver;
+import hr.tvz.vi.event.NotificationEvent;
 import hr.tvz.vi.orm.Report;
 import hr.tvz.vi.orm.Task;
 import hr.tvz.vi.service.AddressService;
@@ -225,10 +229,12 @@ public class ReportView extends VVerticalLayout implements HasDynamicTitle, HasU
    */
   @Override
   public void beforeLeave(BeforeLeaveEvent event) {
+    
     report.setLocked(false);
     report.setLockOwner(null);
     reportServiceRef.get().updateReport(report);
   }
+  
 
   /**
    * Event type changed.

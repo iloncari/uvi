@@ -13,8 +13,10 @@ import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import org.vaadin.firitin.components.select.VSelect;
 
 import com.google.common.eventbus.Subscribe;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.data.provider.ListDataProvider;
 
+import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.event.ChangeBroadcaster;
 import hr.tvz.vi.event.GroupChangeEvent;
 import hr.tvz.vi.event.NotificationEvent;
@@ -23,6 +25,7 @@ import hr.tvz.vi.orm.Notification;
 import hr.tvz.vi.orm.Person;
 import hr.tvz.vi.service.NotificationService;
 import hr.tvz.vi.service.OrganizationService;
+import hr.tvz.vi.util.Utils;
 import hr.tvz.vi.util.Constants.EventAction;
 import hr.tvz.vi.util.Constants.GroupType;
 import hr.tvz.vi.util.Constants.NotificationType;
@@ -41,6 +44,9 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
 
   /** The Constant serialVersionUID. */
   private static final long serialVersionUID = 1919043495982070794L;
+  
+  /** The current user. */
+  private transient CurrentUser currentUser = Utils.getCurrentUser(UI.getCurrent());
   
   /** The organization service. */
   private OrganizationService organizationService;
@@ -91,7 +97,7 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
         ((ListDataProvider<GroupMember>)getGrid().getDataProvider()).getItems().remove(event.getGroupMember());
         members.add(event.getGroupMember().getPerson());
         membersSelect.setItems(members);
-        notification.setMessage("Uklonjeni ste iz grupu");
+        notification.setMessage("Uklonjeni ste iz grupe");
       }
       notificationService.saveOrUpdateNotification(notification);
       notificationService.mapNotificationToUser(notification.getId(), event.getGroupMember().getPerson().getId());
@@ -177,7 +183,7 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
                                                 .withConfirmHandler(() -> {
                                                   organizationService.deleteGroupMember(groupMember);
                                                   ChangeBroadcaster.firePushEvent(new GroupChangeEvent(this, groupMember, EventAction.REMOVED));
-                                                });
+                                                }).withEnabled(getCurrentUser().hasManagerRole());
         delete.getElement().getThemeList().add(ThemeAttribute.BUTTON_OUTLINE_RED);
         return delete;
       });
@@ -190,7 +196,7 @@ public class GroupMembersTab extends AbstractGridView<GroupMember>{
    */
   @Override
   protected VHorizontalLayout initAboveLayout() {
-    membersSelect = new VSelect<Person>();
+    membersSelect = new VSelect<Person>().withEnabled(getCurrentUser().hasManagerRole());
     membersSelect.setLabel(getTranslation("groupMembersTab.field.members"));
     membersSelect.setItemLabelGenerator(m -> m.getName() + " " + m.getLastname());
     members=organizationService.getOrganizationMembers(getCurrentUser().getActiveOrganization().getOrganization());

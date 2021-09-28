@@ -16,6 +16,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.springframework.boot.devtools.restart.FailureHandler.Outcome;
+
+import hr.tvz.vi.util.Constants.TaskOutcome;
 import hr.tvz.vi.util.Constants.TaskType;
 import lombok.Data;
 
@@ -41,6 +44,13 @@ public class Task {
   /** The type. */
   @Enumerated(EnumType.STRING)
   public TaskType type;
+  
+  /** The outcome. */
+  @Enumerated(EnumType.STRING)
+  public TaskOutcome outcome;
+  
+  /** The outcome message. */
+  public String outcomeMessage;
   
   /** The assignee. */
   @OneToOne

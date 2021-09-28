@@ -132,8 +132,9 @@ public class AdvancedSearch<T> extends VDiv {
   private Component buildFilterForm() {
     VVerticalLayout layout = new VVerticalLayout();
     Utils.removeAllThemes(layout);
-    layout.getThemeList().add(ThemeAttribute.PADDING);
     CustomFormLayout<T> formLayout = new CustomFormLayout<T>(null, null);
+    formLayout.getElement().removeAttribute("style");
+    formLayout.getElement().setAttribute("style", "margin: 5px 0px 5px 10px");
     layout.addClassName(StyleConstants.POPUP_FORM.getName());
     layout.setWidth("470px");
     VDiv headerDiv = new VDiv();

@@ -53,6 +53,10 @@ public class AddressService extends AbstractService<Address> {
 		if(address==null) {
 			return;
 		}
+		if(address.getCity()!=null){
+		  cityRepository.save(address.getCity());
+		}
+		
 		((AddressRepository)repository).save(address);
 	}
 	

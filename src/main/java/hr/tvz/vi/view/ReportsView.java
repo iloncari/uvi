@@ -9,8 +9,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -192,9 +196,9 @@ public class ReportsView extends AbstractGridView<Report>{
    */
  	private void setPdfResource(final VAnchor exportAnchor, final VButton exportButton) {
  	    Report report = getGrid().getSelectedItems().stream().findFirst().orElse(null);
- 	    String documentTitle = getTranslation("exportedReport.title", report.getIdentificationNumber());
- 	    
- 	   
+ 	    String eventType = getTranslation(report.getEventType().getEventTypeTranslationKey());
+ 	    List<String> eventActivity = report.getEventActivities().stream().map(a -> getTranslation(a.getEventActivityTranslationKey())).collect(Collectors.toList());
+ 	   String fireSize = report.getFireSize() != null ? getTranslation(report.getFireSize().getFireSizeTranslationKey()) : "";
 	    final StreamResource streamResource = new StreamResource(exportAnchor.getTranslation("exportedReport.fileName", report.getIdentificationNumber(), LocalDateTime.now().toString()).replace("/",  "-"), () -> {
 	      final PDDocument document = new PDDocument();
 	      final PDPage page = new PDPage(PDRectangle.A4);
@@ -213,7 +217,7 @@ public class ReportsView extends AbstractGridView<Report>{
 	       final PDFont font = PDType0Font.load(document, is);
 	        final PDPageContentStream contentStream = new PDPageContentStream(document, page);
 	        
-	        text = "task.form.exportedFiles.title";
+	        text = "Izvješće sa intervencije " + report.getIdentificationNumber();
 	        fontSize = 16;
 	        textWidth = font.getStringWidth(text) / 1000 * fontSize;
 	        textHeight = font.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize;
@@ -227,13 +231,31 @@ public class ReportsView extends AbstractGridView<Report>{
 	        
 	        
 	        //alert
-	        yposition = writeLine("Dojava", contentStream, 20, yposition, 40, 14, font);	        
-	        yposition = writeLine("Vrijeme dojave: " + report.getEventDateTime(), contentStream, 20 + 10, yposition, 10, 12, font);
-	        yposition = writeLine("Lokacija: " + report.getEventAddress().getCity().getCounty().getName(), contentStream, 20 + 10, yposition, 10, 12, font);
+	        yposition = writeLine("Dojava", contentStream, 20, yposition, 40, 14, font);	     
+	        
+	        yposition = writeLine("Vrijeme dojave: " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)
+          .withLocale(getLocale())
+          .format(report.getEventDateTime()), contentStream, 20 + 10, yposition, 10, 12, font);
+	        yposition = writeLine("Lokacija: " + report.getEventAddress().getCity().getCounty().getName()+ ", " + report.getEventAddress().getCity().getName()
+	          + (StringUtils.isNotBlank(report.getEventAddress().getStreet()) ? ", " : "") + report.getEventAddress().getStreet() + " " + report.getEventAddress().getStreetNumber(), contentStream, 20 + 10, yposition, 10, 12, font);
 	        
 	        //intervencija
 	        yposition = writeLine("Intervencija", contentStream, 20, yposition, 20, 14, font);
-	        yposition = writeLine("Vrsta intervencije: " + report.getEventType().getName(), contentStream, 20 + 10, yposition, 10, 12, font);
+	        yposition = writeLine("Vrsta intervencije: " + eventType, contentStream, 20 + 10, yposition, 10, 12, font);
+	        if(StringUtils.isNotBlank(report.getReporter())) {
+	          yposition = writeLine("Dojavitelj: " + report.getReporter(), contentStream, 20 + 10, yposition, 10, 12, font);
+	        }
+	        if(StringUtils.isNotBlank(report.getEventDescription())) {
+            yposition = writeLine("Sadržaj dojave: " + report.getEventDescription(), contentStream, 20 + 10, yposition, 10, 12, font);
+          }
+	        
+	        if(!eventActivity.isEmpty()) {
+            yposition = writeLine("Aktivnost na intervenciji: " + eventActivity.toString().replaceAll("[", "").replace("]", ""), contentStream, 20 + 10, yposition, 10, 12, font);
+          }
+
+	        if(StringUtils.isNotBlank(fireSize)) {
+	          yposition = writeLine("Veličina požara: " +fireSize, contentStream, 20 + 10, yposition, 10, 12, font);
+	        }
           
 	        //SNAGE
 	        yposition = writeLine("Snage na intervenciji", contentStream, 20, yposition, 20, 14, font);
@@ -245,11 +267,39 @@ public class ReportsView extends AbstractGridView<Report>{
 	            yPosition.setPosition(writeLine(counter + ". " + eventOrg.getOrganization().getName(), contentStream, 20 + 10, yPosition.getPosition(), 15, 13, font));
 	            
 	            yPosition.setPosition(writeLine("Vremena postrojbe", contentStream, 20 + 10 + 10, yPosition.getPosition(), 10, 12, font));
-	            yPosition.setPosition(writeLine("Izlatak: ", contentStream, 20 + 10 + 10 + 5, yPosition.getPosition(), 10, 11, font));
+	            yPosition.setPosition(writeLine("Izlazak: " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)
+	            .withLocale(getLocale())
+	            .format(reportServiceRef.get().getOrganizationBaseDeparture(eventOrg)) 
+	            + "     "
+	            +"Dolazak: " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)
+              .withLocale(getLocale())
+              .format(reportServiceRef.get().getOrganizationFieldArrived(eventOrg))
+	            , contentStream, 20 + 10 + 10 + 5, yPosition.getPosition(), 10, 11, font));
+	         
 	            
+	            yPosition.setPosition(writeLine("Odlazak: " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)
+              .withLocale(getLocale())
+              .format(reportServiceRef.get().getOrganizationFieldDeparture(eventOrg))
+              + "   "
+              + "Povratak: " + DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.MEDIUM)
+              .withLocale(getLocale())
+              .format(reportServiceRef.get().getOrganizationBaseArrived(eventOrg))
+              , contentStream, 20 + 10 + 10 + 5, yPosition.getPosition(), 10, 11, font));
+             
+              
 	            yPosition.setPosition(writeLine("Vozila postrojbe", contentStream, 20 + 10 + 10, yPosition.getPosition(), 10, 12, font));
 	            
+	            reportServiceRef.get().getVechilesByEventOrganization(eventOrg).forEach(vechile -> {
+	              yPosition.setPosition(writeLine(vechile.getVechile().getMake() + " " + vechile.getVechile().getModel() + 
+	                ", prošlo " + vechile.getDistance() + " km, prevozilo " + vechile.getPeopleNumber() + " vatrogasaca", contentStream, 20 + 10 + 10 + 5, yPosition.getPosition(), 10, 11, font));
+	            });
+	  
 	            yPosition.setPosition(writeLine("Vatrogasci", contentStream, 20 + 10 + 10, yPosition.getPosition(), 10, 12, font));
+	            reportServiceRef.get().getPersonsByEventOrganization(eventOrg).forEach(per -> {
+	              yPosition.setPosition(writeLine(per.getPerson().getName() + " " + per.getPerson().getLastname() + 
+	                " - Vrijeme provedeno na intervenciji: " + generateDurationLabel(per.getTimeInSeconds()) + ", Vozilo: " + per.getVechile().getMake()+ " "+ per.getVechile().getModel(), contentStream, 20 + 10 + 10 + 5, yPosition.getPosition(), 10, 11, font));
+	            });
+
 	          }else {
 	            yPosition.setPosition(writeLine(counter + ". " + eventOrg.getOrganization().getName(), contentStream, 20 + 10, yPosition.getPosition(), 15, 13, font));
 	          }
@@ -322,6 +372,23 @@ public class ReportsView extends AbstractGridView<Report>{
   @Override
   public String getRoute() {
     return Routes.REPORTS;
+  }
+  
+  /**
+   * Generate duration label.
+   *
+   * @param seconds the seconds
+   * @return the string
+   */
+  private String generateDurationLabel(long seconds) {
+    if(seconds == 0) {
+      return "-";
+    }
+    int hours = (int) seconds / 3600;
+    int remainder = (int) seconds - hours * 3600;
+    int mins = remainder / 60;
+    
+    return hours + " sati i "+mins+ " minuta";
   }
   
   

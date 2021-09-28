@@ -130,6 +130,7 @@ public class LoginView extends VVerticalLayout implements HasDynamicTitle {
     formLayout.add(signInButton);
 
     final RouterLink forgottenPasswordLink = new RouterLink(getTranslation("loginView.form.button.resetPassword.label"), ResetPasswordView.class);
+    forgottenPasswordLink.setVisible(false);
     formLayout.add(forgottenPasswordLink);
 
     final LanguageSelect languageSelect = new LanguageSelect();

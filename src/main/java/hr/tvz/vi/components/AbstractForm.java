@@ -9,6 +9,7 @@ import com.vaadin.flow.component.UI;
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.service.AbstractService;
 import hr.tvz.vi.util.Utils;
+import lombok.Getter;
 
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
 
@@ -28,6 +29,7 @@ public abstract class AbstractForm<T> extends VVerticalLayout {
   protected final T formEntity;
 
   /** The current user. */
+  @Getter
   protected final CurrentUser currentUser = Utils.getCurrentUser(UI.getCurrent());
 
   /** The entity service. */

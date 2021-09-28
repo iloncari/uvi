@@ -50,6 +50,7 @@ import hr.tvz.vi.service.OrganizationService;
 import hr.tvz.vi.service.ReportService;
 import hr.tvz.vi.service.VechileService;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
+import lombok.extern.slf4j.Slf4j;
 import hr.tvz.vi.util.Utils;
 
 /**
@@ -316,6 +317,7 @@ public class ReportForcesTab extends VVerticalLayout{
         eventVechiles.stream().filter(eventVechile -> eventVechile.getVechile().getId().equals(eventPerson.getVechile().getId())).findFirst().ifPresent(eventVechile -> {
         long durationSecond =  Math.abs(eventVechile.getBaseArrivedDateTime().toEpochSecond(ZoneOffset.UTC) - eventVechile.getBaseDepartureDateTime().toEpochSecond(ZoneOffset.UTC));
         eventPerson.setTimeInSeconds(durationSecond);
+        reportService.saveEventOrganizationPerson(eventPerson);
         eventFightersGrid.getDataProvider().refreshAll();
         });
       });

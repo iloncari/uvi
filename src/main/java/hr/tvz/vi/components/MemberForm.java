@@ -133,7 +133,7 @@ public class MemberForm extends AbstractForm<Person> {
     VSelect<City> city = new VSelect<City>();
 	city.setItemLabelGenerator(c -> c.getName());
 	county.addValueChangeListener(e -> city.setItems(addressService.getCities(e.getValue())));
-	contactLayout.setLabel(city, "memberForm.field.residenceCounty");
+	contactLayout.setLabel(city, "memberForm.field.residenceAddress.city");
 	contactLayout.processBinder(city, null, null, false, "residenceAddress.city");
 	contactLayout.addTwoColumnItemsLayout(county, city);
    
@@ -198,10 +198,10 @@ public class MemberForm extends AbstractForm<Person> {
         
         addressService.saveOrUpdateAddress(formEntity.getResidenceAddress());
         ((PersonService) entityService).saveOrUpdatePerson(formEntity);
-        formEntity.getOrgList().stream().filter(po -> po.getOrganization().getId().equals(currentUser.getActiveOrganization().getId())).findFirst()
-          .ifPresent(po -> po.setAppRights(accessRight.getValue()));
+       //formEntity.getOrgList().stream().filter(po -> po.getOrganization().getId().equals(currentUser.getActiveOrganization().getId())).findFirst()
+      //    .ifPresent(po -> po.setAppRights(accessRight.getValue()));
 
-        if (accessRight.getValue() && !organizationService.isPersonOrganizationMember(formEntity, currentUser.getActiveOrganization().getOrganization())) {
+        if (!organizationService.isPersonOrganizationMember(formEntity, currentUser.getActiveOrganization().getOrganization())) {
           organizationService.joinOrganization(formEntity, currentUser.getActiveOrganization().getOrganization(), true);
         }
         Utils.showSuccessNotification(2000, Position.TOP_CENTER, "memberForm.notification.memberSaved");

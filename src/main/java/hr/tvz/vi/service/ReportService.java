@@ -6,11 +6,13 @@
 package hr.tvz.vi.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -352,6 +354,46 @@ public class ReportService extends AbstractService<Report> {
     }
     
    return eventOrganizationVechileRepository.findByEventOrganizationId(eventOrganization.getId());
+  }
+  
+  /**
+   * Gets the organization base departure.
+   *
+   * @param eventOrge the event orge
+   * @return the organization base departure
+   */
+  public LocalDateTime getOrganizationBaseDeparture(EventOrganization eventOrge) {
+    return getVechilesByEventOrganization(eventOrge).stream().map(EventOrganizationVechile::getBaseDepartureDateTime).filter(Objects::nonNull).min(Comparator.naturalOrder()).orElseGet(() -> LocalDateTime.now());
+  }
+  
+  /**
+   * Gets the organization field arrived.
+   *
+   * @param eventOrge the event orge
+   * @return the organization field arrived
+   */
+  public LocalDateTime getOrganizationFieldArrived(EventOrganization eventOrge) {
+    return getVechilesByEventOrganization(eventOrge).stream().map(EventOrganizationVechile::getFieldArrivedDateTime).filter(Objects::nonNull).min(Comparator.naturalOrder()).orElseGet(() -> LocalDateTime.now());
+  }
+  
+  /**
+   * Gets the organization field departure.
+   *
+   * @param eventOrge the event orge
+   * @return the organization field departure
+   */
+  public LocalDateTime getOrganizationFieldDeparture(EventOrganization eventOrge) {
+    return getVechilesByEventOrganization(eventOrge).stream().map(EventOrganizationVechile::getFieldDepartureDateTime).filter(Objects::nonNull).max(Comparator.naturalOrder()).orElseGet(() -> LocalDateTime.now());
+  }
+  
+  /**
+   * Gets the organization base arrived.
+   *
+   * @param eventOrge the event orge
+   * @return the organization base arrived
+   */
+  public LocalDateTime getOrganizationBaseArrived(EventOrganization eventOrge) {
+    return getVechilesByEventOrganization(eventOrge).stream().map(EventOrganizationVechile::getBaseArrivedDateTime).filter(Objects::nonNull).max(Comparator.naturalOrder()).orElseGet(() -> LocalDateTime.now());
   }
   
   /**

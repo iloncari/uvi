@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.vaadin.firitin.components.button.VButton;
 import org.vaadin.firitin.components.dialog.VDialog;
 import org.vaadin.firitin.components.grid.VGrid;
+import org.vaadin.firitin.components.html.VParagaph;
 import org.vaadin.firitin.components.html.VSpan;
 import org.vaadin.firitin.components.orderedlayout.VHorizontalLayout;
 import org.vaadin.firitin.components.orderedlayout.VVerticalLayout;
@@ -27,6 +28,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 
 import hr.tvz.vi.auth.CurrentUser;
 import hr.tvz.vi.event.ChangeBroadcaster;
@@ -46,6 +48,7 @@ import hr.tvz.vi.util.Constants.NotificationType;
 import hr.tvz.vi.util.Constants.OrganizationLevel;
 import hr.tvz.vi.util.Constants.ReportStatus;
 import hr.tvz.vi.util.Constants.SubscriberScope;
+import hr.tvz.vi.util.Constants.TaskOutcome;
 import hr.tvz.vi.util.Constants.TaskType;
 import hr.tvz.vi.util.Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -254,16 +257,26 @@ public class ReportAuthorizationTab extends VVerticalLayout{
     List<Long> approversIds =  organizationService.getOrganizationGroupMembers(GroupType.APPROVERS, currentUser.getActiveOrganizationObject().getId()).stream()
       .map(gm -> gm.getPerson().getId()).collect(Collectors.toList());
     
+    authorizationTasksGrid.setItemDetailsRenderer(new ComponentRenderer<>(task ->  
+       new VParagaph(task.getOutcomeMessage())
+    ));
+    
     authorizationTasksGrid.addComponentColumn(task -> {
       if(task.getExecutionDateTime()!=null) {
-        //task is inactive
-        return VaadinIcon.CHECK.create();
+        VaadinIcon icon = VaadinIcon.CHECK;
+        
+        if(TaskOutcome.REJECTED.equals(task.getOutcome())) {
+          icon = VaadinIcon.CLOSE_CIRCLE_O;
+        }
+        
+        return icon.create();
       }else if(task.getAssignee() != null && task.getAssignee().getId().equals(currentUser.getPerson().getId())) {
         log.info("assignam na usera " + task.getName());
         //task is asigned to currentuser
         VHorizontalLayout buttons = new VHorizontalLayout();
         VButton authorize = new VButton(getTranslation("reportView.reportAuthorizationTab.button.authorize")).withClickListener(authEvent -> {
           task.setExecutionDateTime(LocalDateTime.now());
+          task.setOutcome(TaskOutcome.FINSIHED);
           reportService.saveReportTask(task);
           ChangeBroadcaster.firePushEvent(new TaskChangeEvent(this, task, EventAction.MODIFIED));
           
@@ -310,42 +323,63 @@ public class ReportAuthorizationTab extends VVerticalLayout{
         buttons.add(authorize);
         if(task.getType().equals(TaskType.APPROVE_TASK)) {
           VButton reject = new VButton(getTranslation("reportView.reportAuthorizationTab.button.reject")).withClickListener(authEvent -> {
-            task.setExecutionDateTime(LocalDateTime.now());
-            reportService.saveReportTask(task);
-            tasksList.removeIf(t -> t.getId().equals(task.getId()));
-            tasksList.add(task);
-            authorizationTasksGrid.getDataProvider().refreshAll();
-            currentUser.getActiveOrganization().getOrganization().getChilds().stream().filter(org -> report.getEventOrganizationList().stream()
-              .anyMatch(eo -> eo.getOrganization().getId().equals(org.getId()))).forEach(child -> {
-                Task preparationTask = new Task();
-                preparationTask.setCreationDateTime(LocalDateTime.now());
-                preparationTask.setName(getTranslation("task.preparation.label", report.getIdentificationNumber()));
-                preparationTask.setOrganizationAssignee(child);
-                preparationTask.setReportId(report.getId());
-                preparationTask.setType(TaskType.PREPARATION_TASK);
-                reportService.saveReportTask(preparationTask);
-                ChangeBroadcaster.firePushEvent(new TaskChangeEvent(this, preparationTask, EventAction.ADDED));
-                
-                Notification notification = new Notification();
-                notification.setCreationDateTime(LocalDateTime.now());
-                notification.setMessage(getTranslation("task.preparation.label", report.getIdentificationNumber()));
-                notification.setOrganizationId(currentUser.getParentOrganization().getId());
-                notification.setRecipientId(null);
-                notification.setSourceId(report.getId());
-                notification.setTitle(getTranslation("task.new.label"));
-                notification.setType(NotificationType.TASK);
-                notificationService.saveOrUpdateNotification(notification);
-                preparersIds.forEach(preparerId -> notificationService.mapNotificationToUser(notification.getId(),preparerId));
-                ChangeBroadcaster.firePushEvent(new NotificationEvent(this, notification));
-              });
-            report.setStatus(ReportStatus.NEW);
-            reportService.updateReport(report);   
+            
+            
+            VDialog rejectDialog = new VDialog();
+            VVerticalLayout dialogLayout = new VVerticalLayout();
+            rejectDialog.add(dialogLayout);
+            VTextArea rejectMessage = new VTextArea(getTranslation("reportView.reportAuthorizationTab.rejectMessage")).withSizeFull();
+            
+            VButton rejectDialogReject = new VButton(getTranslation("reportView.reportAuthorizationTab.button.reject")).withClickListener(cancelEvent -> {
+              rejectDialog.close();
+              task.setExecutionDateTime(LocalDateTime.now());
+              task.setOutcome(TaskOutcome.REJECTED);
+              task.setOutcomeMessage(rejectMessage.getValue());
+              reportService.saveReportTask(task);
+              tasksList.removeIf(t -> t.getId().equals(task.getId()));
+              tasksList.add(task);
+              authorizationTasksGrid.getDataProvider().refreshAll();
+              currentUser.getActiveOrganization().getOrganization().getChilds().stream().filter(org -> report.getEventOrganizationList().stream()
+                .anyMatch(eo -> eo.getOrganization().getId().equals(org.getId()))).forEach(child -> {
+                  Task preparationTask = new Task();
+                  preparationTask.setCreationDateTime(LocalDateTime.now());
+                  preparationTask.setName(getTranslation("task.preparation.label", report.getIdentificationNumber()));
+                  preparationTask.setOrganizationAssignee(child);
+                  preparationTask.setReportId(report.getId());
+                  preparationTask.setType(TaskType.PREPARATION_TASK);
+                  reportService.saveReportTask(preparationTask);
+                  ChangeBroadcaster.firePushEvent(new TaskChangeEvent(this, preparationTask, EventAction.ADDED));
+                  
+                  Notification notification = new Notification();
+                  notification.setCreationDateTime(LocalDateTime.now());
+                  notification.setMessage(getTranslation("task.preparation.label", report.getIdentificationNumber()));
+                  notification.setOrganizationId(currentUser.getParentOrganization().getId());
+                  notification.setRecipientId(null);
+                  notification.setSourceId(report.getId());
+                  notification.setTitle(getTranslation("task.new.label"));
+                  notification.setType(NotificationType.TASK);
+                  notificationService.saveOrUpdateNotification(notification);
+                  preparersIds.forEach(preparerId -> notificationService.mapNotificationToUser(notification.getId(),preparerId));
+                  ChangeBroadcaster.firePushEvent(new NotificationEvent(this, notification));
+                });
+              report.setStatus(ReportStatus.NEW);
+              reportService.updateReport(report);
+              
+            });
+            VHorizontalLayout rejectDialogButtons = new VHorizontalLayout(rejectDialogReject);
+            dialogLayout.add(rejectMessage);
+            dialogLayout.add(rejectDialogButtons);
+            rejectDialog.open();
+            
+            
+            
+               
           });
           reject.setEnabled(taskExecutionRight || task.getAssignee().getId().equals(currentUser.getPerson().getId()));
           buttons.add(reject);
         }
         return buttons;
-      }else if((task.getType().equals(TaskType.PREPARATION_TASK) && preparersIds.contains(currentUser.getPerson().getId()) && OrganizationLevel.OPERATIONAL_LEVEL.equals(currentUser.getActiveOrganizationObject().getLevel()) ) ||
+      }else if(task.getOrganizationAssignee().getId().equals(currentUser.getActiveOrganizationObject().getId()) && (task.getType().equals(TaskType.PREPARATION_TASK) && preparersIds.contains(currentUser.getPerson().getId()) && OrganizationLevel.OPERATIONAL_LEVEL.equals(currentUser.getActiveOrganizationObject().getLevel()) ) ||
         (task.getType().equals(TaskType.APPROVE_TASK) && approversIds.contains(currentUser.getPerson().getId())  && OrganizationLevel.CITY_LEVEL.equals(currentUser.getActiveOrganizationObject().getLevel()) ) ) {
         VButton assignToMe = new VButton(getTranslation("reportView.reportAuthorizationTab.button.assignToMe")).withClickListener(assignEvent -> {
           task.setAssignee(currentUser.getPerson());
@@ -360,6 +394,11 @@ public class ReportAuthorizationTab extends VVerticalLayout{
     authorizationTasksGrid.setItems(tasksList);
     authorizationLayout.add(authorizationTasksGrid);
     add(authorizationLayout);
+    tasksList.forEach(task -> {
+      if(TaskOutcome.REJECTED.equals(task.getOutcome()) && StringUtils.isNotBlank(task.getOutcomeMessage())){
+        authorizationTasksGrid.setDetailsVisible(task, true);
+      }
+    });
   }//metoda
 
 }
